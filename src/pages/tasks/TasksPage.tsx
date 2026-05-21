@@ -1,14 +1,7 @@
 // TasksPage.tsx
 
 import { useMemo, useState } from "react";
-import {
-  CalendarDays,
-  CheckCircle2,
-  Clock3,
-  Plus,
-  Search,
-  User2,
-} from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";

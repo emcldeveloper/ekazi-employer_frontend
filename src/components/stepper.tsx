@@ -108,7 +108,7 @@ interface StepperSeparatorProps {
 }
 
 export function StepperSeparator({ className }: StepperSeparatorProps) {
-  const { value } = useStepper();
+  // const { value } = useStepper();
 
   return <div className={cn("h-[2px] flex-1 bg-muted", className)} />;
 }
