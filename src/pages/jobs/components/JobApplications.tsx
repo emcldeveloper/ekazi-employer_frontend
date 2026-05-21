@@ -98,7 +98,7 @@ const applications = [
   },
 ];
 
-const JobApplicationsPage = () => {
+const JobApplications = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
@@ -196,4 +196,4 @@ const JobApplicationsPage = () => {
   );
 };
 
-export default JobApplicationsPage;
+export default JobApplications;

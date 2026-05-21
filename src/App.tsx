@@ -8,6 +8,12 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import JobsPage from "./pages/jobs/JobsPage";
 import JobDetails from "./pages/jobs/components/JobDetails";
 import CreateJob from "./pages/jobs/components/CreateJob";
+import JobApplications from "./pages/jobs/components/JobApplications";
+import UsersPage from "./pages/users/UsersPage";
+import ClientsPage from "./pages/clients/ClientsPage";
+import ClientDetails from "./pages/clients/components/ClientDetails";
+import TasksPage from "./pages/tasks/TasksPage";
+import TaskDetails from "./pages/tasks/components/TaskDetails";
 
 const App = () => {
   return (
@@ -21,11 +27,19 @@ const App = () => {
 
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/jobs/:id" element={<JobDetails />} />
+            <Route
+              path="/jobs/:id/applications"
+              element={<JobApplications />}
+            />
             <Route path="/jobs/create" element={<CreateJob />} />
 
-            <Route path="/clients" element={<Dashboard />} />
-            <Route path="/tasks" element={<Dashboard />} />
-            <Route path="/users" element={<Dashboard />} />
+            <Route path="/clients" element={<ClientsPage />} />
+            <Route path="/clients/:id" element={<ClientDetails />} />
+
+            <Route path="/tasks" element={<TasksPage />} />
+            <Route path="/tasks/:id" element={<TaskDetails />} />
+
+            <Route path="/users" element={<UsersPage />} />
             <Route path="/reports" element={<Dashboard />} />
             <Route path="/settings" element={<Dashboard />} />
           </Route>
