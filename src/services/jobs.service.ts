@@ -20,3 +20,8 @@ export const getJob = async () => {
   const res = await api.get("/employer-jobs");
   return res.data;
 };
+
+export const getJobMeta = async () => {
+  const res = await api.get("/employer-job-meta");
+  return res.data;
+};
