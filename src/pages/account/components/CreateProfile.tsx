@@ -51,7 +51,7 @@ import { toast } from "sonner";
 const CreateProfile = () => {
   const navigate = useNavigate();
 
-  const [industrySearch, setIndustrySearch] = useState("");
+  const [industrySearch, setIndustrySearch] = useState<string | null>(null);
 
   const {
     register,
