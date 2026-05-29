@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -24,6 +23,8 @@ import {
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import ApplicantDetails from "./components/ApplicantDetails";
 
 const applications = [
   {
@@ -158,7 +159,7 @@ const JobApplications = () => {
                 <TableCell>{application.stage}</TableCell>
                 <TableCell>{application.status}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="link">View</Button>
+                  <ApplicantDetails />
                 </TableCell>
               </TableRow>
             ))}

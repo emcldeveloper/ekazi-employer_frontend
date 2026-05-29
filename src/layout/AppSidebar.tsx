@@ -27,6 +27,7 @@ import {
   Users,
   LayoutList,
   BriefcaseBusiness,
+  SquareUser,
 } from "lucide-react";
 import { isRouteActive } from "@/utils/helpers";
 import { NavUser } from "@/components/nav-user";
@@ -36,6 +37,11 @@ const navItems = [
     title: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Profile",
+    url: "/profile",
+    icon: SquareUser,
   },
   {
     title: "Jobs",

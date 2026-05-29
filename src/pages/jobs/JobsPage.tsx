@@ -152,7 +152,7 @@ const JobsPage = () => {
       <div className="flex flex-col gap-2 lg:flex-row lg:justify-between mb-4">
         <h2 className="text-xl font-bold">All Jobs</h2>
 
-        <Button onClick={handlePostJob}>Post Job</Button>
+        <Button onClick={handlePostJob}>Create Job</Button>
       </div>
 
       <Card>

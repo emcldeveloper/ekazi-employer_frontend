@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useUser } from "@/hooks/auth";
 
 import {
   ChevronsUpDownIcon,
@@ -26,6 +27,14 @@ import {
 
 export function NavUser() {
   const { isMobile } = useSidebar();
+
+  const { data: userAccount } = useUser();
+  const user = userAccount?.data;
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
 
   return (
     <SidebarMenu>
@@ -41,8 +50,8 @@ export function NavUser() {
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Admin</span>
-                <span className="truncate text-xs">admin@gmail.com</span>
+                <span className="truncate font-medium">{user.username}</span>
+                <span className="truncate text-xs">{user.email}</span>
               </div>
               <ChevronsUpDownIcon className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -78,7 +87,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOutIcon />
               Log out
             </DropdownMenuItem>
