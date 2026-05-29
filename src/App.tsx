@@ -18,7 +18,6 @@ import AccountProfile from "./pages/account/AccountProfile";
 import CreateProfile from "./pages/account/components/CreateProfile";
 import AuthCallback from "./pages/auth/AuthCallback";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
-import Unauthorized from "./pages/auth/Unauthorized";
 
 const App = () => {
   return (
@@ -56,8 +55,6 @@ const App = () => {
               <Route path="/settings" element={<Dashboard />} />
             </Route>
           </Route>
-
-          <Route path="/unauthorized" element={<Unauthorized />} />
         </Routes>
       </TooltipProvider>
     </BrowserRouter>
