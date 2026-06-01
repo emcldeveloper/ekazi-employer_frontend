@@ -1,8 +1,14 @@
-import type { JobCreateForm } from "@/@types/jobs";
+import type {
+  JobCreateForm,
+  JobEducationData,
+  JobLanguageData,
+  JobOtherRequirementData,
+  JobRequirementData,
+} from "@/@types/jobs";
 import api from "@/lib/axios";
 
-export const createJob = async (data: JobCreateForm) => {
-  const res = await api.post("/employer-jobs", data);
+export const createJob = async (payload: JobCreateForm) => {
+  const res = await api.post("/employer-jobs", payload);
   return res.data;
 };
 
@@ -23,5 +29,31 @@ export const getJob = async () => {
 
 export const getJobMeta = async () => {
   const res = await api.get("/employer-job-meta");
+  return res.data;
+};
+
+//Sub forms on job creation
+export const addEducation = async (payload: JobEducationData) => {
+  const res = await api.post("/employer-job-education", payload);
+  return res.data;
+};
+
+export const addLanguage = async (payload: JobLanguageData) => {
+  const res = await api.post("/employer-job-language", payload);
+  return res.data;
+};
+
+export const addRequirements = async (
+  jobId: number,
+  payload: JobRequirementData,
+) => {
+  const res = await api.post(`/employer-job-requirements/${jobId}`, payload);
+  return res.data;
+};
+
+export const addOtherRequirements = async (
+  payload: JobOtherRequirementData,
+) => {
+  const res = await api.post("/employer-job-other-requirement", payload);
   return res.data;
 };

@@ -18,3 +18,44 @@ export type JobCreateForm = {
   from_salary_id?: number | null;
   to_salary_id?: number | null;
 };
+
+export type JobEducationData = {
+  job_id: number;
+
+  education_level_id: number;
+  major_id: number;
+  programme_id: number;
+};
+
+export type JobLanguageData = {
+  job_id: number;
+
+  language_id: number;
+  write_id: number;
+  understand_id: number;
+  speak_id: number;
+  read_id: number;
+};
+
+export type JobRequirementData = {
+  years_experience?: number | null;
+  applicant_min_age?: number | null;
+  applicant_max_age?: number | null;
+  gender_id?: number | null;
+
+  position_experiences?: number[] | null;
+  culture?: string[] | null;
+  knowledge?: string[] | null;
+  personality?: string[] | null;
+  software?: string[] | null;
+  proficiency_id?: number[] | null;
+  tool?: string[] | null;
+};
+
+export type JobOtherRequirementData = {
+  job_id: number;
+
+  other_requirement: string;
+};
+
+export type AllRequirementsData = JobRequirementData & JobOtherRequirementData;

@@ -39,7 +39,11 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const BasicInfoForm = () => {
+interface BasicInfoFormProps {
+  onSuccess: () => void;
+}
+
+const BasicInfoForm = ({ onSuccess: nextStep }: BasicInfoFormProps) => {
   const navigate = useNavigate();
 
   const {
@@ -78,8 +82,9 @@ const BasicInfoForm = () => {
     createJob(data, {
       onSuccess: (res) => {
         const jobId = res.data.id;
+        nextStep();
 
-        navigate(`/jobs/${jobId}`);
+        // navigate(`/jobs/${jobId}`);
 
         toast.success(res?.message || "Job created succesfully");
         reset();

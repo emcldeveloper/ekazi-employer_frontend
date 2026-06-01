@@ -257,23 +257,6 @@
 // FOOOORMS
 // <Card>
 //   <CardContent className="space-y-4">
-//     {/* Basic Info */}
-//     <div className="flex justify-between gap-4">
-//       <div>
-//         <div className="flex items-center gap-2">
-//           <Building className="size-5 text-primary" />
-//           <h2 className="text-lg font-semibold">Create New Job</h2>
-//         </div>
-
-//         <p className="leading-7 text-muted-foreground">
-//           Please add job basic information
-//         </p>
-//       </div>
-
-//       <BasicInfoForm />
-//     </div>
-
-//     {/* <Separator /> */}
 
 //     {/* Keywords */}
 //     {/* <div className="flex justify-between gap-4">

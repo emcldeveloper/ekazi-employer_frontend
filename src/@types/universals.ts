@@ -34,3 +34,55 @@ export type Region = {
   country_id: number;
   region_name: string;
 };
+
+export type EducationLevel = {
+  id: number;
+  education_level: string;
+};
+
+export type Course = {
+  id: number;
+  course_name: string;
+};
+
+export type Major = {
+  id: number;
+  name: string;
+};
+
+export type Gender = {
+  id: number;
+  gender_name: string;
+};
+
+export type Culture = {
+  id: number;
+  culture_name: string;
+};
+
+export type Personality = {
+  id: number;
+  personality_name: string;
+};
+
+export type Knowledge = {
+  id: number;
+  knowledge_name: string;
+};
+
+export type Tool = {
+  id: number;
+  tool_name: string;
+};
+
+export type Software = {
+  id: number;
+  software_name: string;
+};
+
+export type Proficiency = {
+  id: number;
+  proficiency_name: string;
+};
+
+
