@@ -1,14 +1,8 @@
-import type { JobCreateForm } from "@/@types/jobs";
-import type {
-  Country,
-  Industry,
-  JobType,
-  PositionLevel,
-  Region,
-  SalaryRange,
-} from "@/@types/universals";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldError,
@@ -24,6 +18,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+import type { JobCreateForm } from "@/@types/jobs";
+import type {
+  Country,
+  Industry,
+  JobType,
+  PositionLevel,
+  Region,
+  SalaryRange,
+} from "@/@types/universals";
 import { useCreateJob } from "@/hooks/jobs";
 import {
   useCountries,
@@ -34,18 +38,11 @@ import {
 } from "@/hooks/universals";
 import { usePositionLevels } from "@/hooks/universals/usePositionLevels";
 
-import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-
 interface BasicInfoFormProps {
-  onSuccess: () => void;
+  onSuccess: (jobId: number) => void;
 }
 
 const BasicInfoForm = ({ onSuccess: nextStep }: BasicInfoFormProps) => {
-  const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
@@ -82,11 +79,9 @@ const BasicInfoForm = ({ onSuccess: nextStep }: BasicInfoFormProps) => {
     createJob(data, {
       onSuccess: (res) => {
         const jobId = res.data.id;
-        nextStep();
-
-        // navigate(`/jobs/${jobId}`);
 
         toast.success(res?.message || "Job created succesfully");
+        nextStep(jobId);
         reset();
       },
     });

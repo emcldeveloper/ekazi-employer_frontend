@@ -2,7 +2,11 @@ import type {
   JobCreateForm,
   JobEducationData,
   JobLanguageData,
+  JobLocationData,
+  JobMainDutiesData,
+  JobMetaData,
   JobOtherRequirementData,
+  JobReportingData,
   JobRequirementData,
 } from "@/@types/jobs";
 import api from "@/lib/axios";
@@ -55,5 +59,25 @@ export const addOtherRequirements = async (
   payload: JobOtherRequirementData,
 ) => {
   const res = await api.post("/employer-job-other-requirement", payload);
+  return res.data;
+};
+
+export const addMainDuties = async (payload: JobMainDutiesData) => {
+  const res = await api.post("/employer-job-duty", payload);
+  return res.data;
+};
+
+export const addReporting = async (payload: JobReportingData) => {
+  const res = await api.post("/employer-job-structure", payload);
+  return res.data;
+};
+
+export const addLocation = async (payload: JobLocationData) => {
+  const res = await api.post("/employer-job-location", payload);
+  return res.data;
+};
+
+export const addMetaData = async (payload: JobMetaData) => {
+  const res = await api.post("/employer-job-meta", payload);
   return res.data;
 };

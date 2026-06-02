@@ -9,6 +9,7 @@ import type {
   Software,
   Tool,
 } from "@/@types/universals";
+import { Button } from "@/components/ui/button";
 
 import {
   Field,
@@ -42,10 +43,14 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface RequirementsFormProps {
+  jobId: number;
   onSuccess: () => void;
 }
 
-const RequirementsForm = ({ onSuccess: nextStep }: RequirementsFormProps) => {
+const RequirementsForm = ({
+  jobId,
+  onSuccess: nextStep,
+}: RequirementsFormProps) => {
   const {
     register,
     handleSubmit,
@@ -55,7 +60,8 @@ const RequirementsForm = ({ onSuccess: nextStep }: RequirementsFormProps) => {
   } = useForm<AllRequirementsData>();
 
   const { mutate: createJobRequirement } = useAddRequirement();
-  const { mutate: createOtherRequirement } = useAddOtherRequirement();
+  const { mutate: createOtherRequirement, isPending } =
+    useAddOtherRequirement();
 
   // Get Data
   const { data: genders } = useGenders();
@@ -67,8 +73,6 @@ const RequirementsForm = ({ onSuccess: nextStep }: RequirementsFormProps) => {
   const { data: proficiencies } = useProficiencies();
 
   const onSubmit = (data: AllRequirementsData) => {
-    const jobId = 1;
-
     const payload: JobRequirementData = {
       years_experience: data.years_experience,
       applicant_min_age: data.applicant_min_age,
@@ -101,7 +105,6 @@ const RequirementsForm = ({ onSuccess: nextStep }: RequirementsFormProps) => {
       {
         onSuccess: () => {
           nextStep();
-
           reset();
         },
       },
@@ -400,6 +403,10 @@ const RequirementsForm = ({ onSuccess: nextStep }: RequirementsFormProps) => {
             />
           </Field>
         </FieldGroup>
+
+        <Button type="submit" disabled={isPending} className="mt-4">
+          {isPending ? "Adding..." : "Add Requirements"}
+        </Button>
       </form>
     </div>
   );

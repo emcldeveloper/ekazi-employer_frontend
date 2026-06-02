@@ -23,7 +23,7 @@ const Steps = ({
   onStepClick,
 }: StepsProps) => {
   return (
-    <div className={cn("rounded-xl border bg-background p-6", className)}>
+    <div className={cn("rounded-xl bg-background py-6", className)}>
       <div
         className={cn(
           orientation === "horizontal"

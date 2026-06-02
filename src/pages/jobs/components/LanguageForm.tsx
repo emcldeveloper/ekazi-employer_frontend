@@ -6,6 +6,7 @@ import type {
   Understand,
   Write,
 } from "@/@types/language";
+import { Button } from "@/components/ui/button";
 
 import {
   Field,
@@ -34,10 +35,11 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface LanguageFormProps {
+  jobId: number;
   onSuccess: () => void;
 }
 
-const LanguageForm = ({ onSuccess: nextStep }: LanguageFormProps) => {
+const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
   const {
     handleSubmit,
     control,
@@ -45,7 +47,7 @@ const LanguageForm = ({ onSuccess: nextStep }: LanguageFormProps) => {
     reset,
   } = useForm<JobLanguageData>();
 
-  const { mutate: createJobLanguage } = useAddLanguage();
+  const { mutate: createJobLanguage, isPending } = useAddLanguage();
 
   // Get Data
   const { data: languages } = useLanguage();
@@ -55,14 +57,17 @@ const LanguageForm = ({ onSuccess: nextStep }: LanguageFormProps) => {
   const { data: understands } = useLanguageUnderstand();
 
   const onSubmit = (data: JobLanguageData) => {
-    createJobLanguage(data, {
-      onSuccess: (res) => {
-        nextStep();
+    createJobLanguage(
+      { ...data, job_id: jobId },
+      {
+        onSuccess: (res) => {
+          nextStep();
 
-        toast.success(res?.message || "Education Added Succesfully");
-        reset();
+          toast.success(res?.message || "Language Added Succesfully");
+          reset();
+        },
       },
-    });
+    );
   };
 
   //   job_id: number;
@@ -241,6 +246,10 @@ const LanguageForm = ({ onSuccess: nextStep }: LanguageFormProps) => {
             )}
           </Field>
         </FieldGroup>
+
+        <Button type="submit" disabled={isPending} className="mt-4">
+          {isPending ? "Adding..." : "Add Language"}
+        </Button>
       </form>
     </div>
   );

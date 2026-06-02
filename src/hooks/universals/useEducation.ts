@@ -12,16 +12,16 @@ export const useEducationLevels = () => {
   });
 };
 
-export const useCourses = () => {
+export const useCourses = (search: string, page = 1, limit = 50) => {
   return useQuery({
-    queryKey: ["education-courses"],
-    queryFn: getCourses,
+    queryKey: ["courses", search, page, limit],
+    queryFn: () => getCourses(search, page, limit),
   });
 };
 
-export const useMajors = () => {
+export const useMajors = (search: string, page = 1, limit = 50) => {
   return useQuery({
-    queryKey: ["education-majors"],
-    queryFn: getMajors,
+    queryKey: ["majors", search, page, limit],
+    queryFn: () => getMajors(search, page, limit),
   });
 };

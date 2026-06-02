@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 
@@ -35,109 +35,32 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-
-const jobs = [
-  {
-    id: 1,
-    company: "TechNova Ltd",
-    title: "Frontend Developer",
-    date: "2026-05-18",
-    status: "Open",
-    applications: 24,
-  },
-  {
-    id: 2,
-    company: "CloudSync Africa",
-    title: "Backend Engineer",
-    date: "2026-05-16",
-    status: "Closed",
-    applications: 58,
-  },
-  {
-    id: 3,
-    company: "eKazi Solutions",
-    title: "UI/UX Designer",
-    date: "2026-05-14",
-    status: "Open",
-    applications: 12,
-  },
-  {
-    id: 4,
-    company: "FinCore Systems",
-    title: "Mobile App Developer",
-    date: "2026-05-12",
-    status: "Draft",
-    applications: 7,
-  },
-  {
-    id: 5,
-    company: "NextWave Digital",
-    title: "DevOps Engineer",
-    date: "2026-05-10",
-    status: "Open",
-    applications: 31,
-  },
-  {
-    id: 6,
-    company: "BrightTech Hub",
-    title: "Full Stack Developer",
-    date: "2026-05-08",
-    status: "Closed",
-    applications: 42,
-  },
-  {
-    id: 7,
-    company: "Visionary Labs",
-    title: "Data Analyst",
-    date: "2026-05-07",
-    status: "Open",
-    applications: 18,
-  },
-  {
-    id: 8,
-    company: "SmartLink Systems",
-    title: "QA Engineer",
-    date: "2026-05-05",
-    status: "Draft",
-    applications: 5,
-  },
-  {
-    id: 9,
-    company: "PixelCraft Studio",
-    title: "Graphic Designer",
-    date: "2026-05-03",
-    status: "Open",
-    applications: 27,
-  },
-  {
-    id: 10,
-    company: "SecureNet Africa",
-    title: "Cybersecurity Specialist",
-    date: "2026-05-01",
-    status: "Closed",
-    applications: 64,
-  },
-];
+import { useJobs } from "@/hooks/jobs";
+import { formatDate } from "@/utils/helpers";
 
 const JobsPage = () => {
   const navigate = useNavigate();
+
+  const { data: jobsData } = useJobs();
+  const jobs = jobsData?.data ?? [];
+  console.log(jobs);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [featuredFilter, setFeaturedFilter] = useState("All");
 
-  const filteredJobs = useMemo(() => {
-    return jobs.filter((job) => {
-      const matchesSearch =
-        job.company.toLowerCase().includes(search.toLowerCase()) ||
-        job.title.toLowerCase().includes(search.toLowerCase());
+  // const filteredJobs = useMemo(() => {
+  //   return jobs.filter((job) => {
+  //     const matchesSearch =
+  //       job.company.toLowerCase().includes(search.toLowerCase()) ||
+  //       job.title.toLowerCase().includes(search.toLowerCase());
 
-      const matchesStatus =
-        statusFilter === "All" || job.status === statusFilter;
+  //     const matchesStatus =
+  //       statusFilter === "All" || job.status === statusFilter;
 
-      return matchesSearch && matchesStatus;
-    });
-  }, [search, statusFilter]);
+  //     return matchesSearch && matchesStatus;
+  //   });
+  // }, [search, statusFilter]);
 
   const handleView = (id: number) => {
     navigate(`/jobs/${id}`);
@@ -211,22 +134,24 @@ const JobsPage = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Company</TableHead>
+                {/* <TableHead>Company</TableHead> */}
                 <TableHead>Title</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead>Deadline</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Applications</TableHead>
+                {/* <TableHead>Applications</TableHead> */}
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredJobs.map((job) => (
+              {jobs.map((job) => (
                 <TableRow key={job.id}>
-                  <TableCell>{job.company}</TableCell>
-                  <TableCell>{job.title}</TableCell>
-                  <TableCell>{job.date}</TableCell>
+                  {/* <TableCell>{job.company}</TableCell> */}
+                  <TableCell>{job.job_position.position_name}</TableCell>
+                  <TableCell>{formatDate(job.created_at)}</TableCell>
+                  <TableCell>{formatDate(job.created_at)}</TableCell>
                   <TableCell>{job.status}</TableCell>
-                  <TableCell>{job.applications}</TableCell>
+                  {/* <TableCell>{job.applications}</TableCell> */}
                   <TableCell className="text-right">
                     <Button variant="link" onClick={() => handleView(job.id)}>
                       View

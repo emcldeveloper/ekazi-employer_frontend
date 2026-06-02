@@ -59,3 +59,27 @@ export type JobOtherRequirementData = {
 };
 
 export type AllRequirementsData = JobRequirementData & JobOtherRequirementData;
+
+export type JobMainDutiesData = {
+  job_id: number;
+  main_duties: string;
+};
+
+export type JobReportingData = {
+  job_id: number;
+
+  report_to?: string;
+  supervises?: string;
+  interacts_with?: string;
+};
+
+export type JobLocationData = {
+  job_id: number;
+  regions: number[];
+  sub_locations?: number[] | null;
+};
+
+export type JobMetaData = {
+  job_id: number;
+  seo_keyword: string;
+};

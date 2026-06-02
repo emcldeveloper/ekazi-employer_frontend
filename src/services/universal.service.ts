@@ -55,14 +55,28 @@ export const getEducationLevels = async () => {
   return res.data.education_category;
 };
 
-export const getCourses = async () => {
-  const res = await api.get("/universal/course");
-  return res.data.course;
+export const getCourses = async (search = "", page = 1, limit = 50) => {
+  const res = await api.get("/universal/course", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+
+  return res.data;
 };
 
-export const getMajors = async () => {
-  const res = await api.get("/universal/major");
-  return res.data.major;
+export const getMajors = async (search = "", page = 1, limit = 50) => {
+  const res = await api.get("/universal/major", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+
+  return res.data;
 };
 
 // universal language apis
