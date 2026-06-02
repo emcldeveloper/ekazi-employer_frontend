@@ -144,7 +144,7 @@ const JobsPage = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {jobs.map((job) => (
+              {jobs.map((job: any) => (
                 <TableRow key={job.id}>
                   {/* <TableCell>{job.company}</TableCell> */}
                   <TableCell>{job.job_position.position_name}</TableCell>
