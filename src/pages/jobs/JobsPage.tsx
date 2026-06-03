@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 
@@ -19,7 +19,6 @@ import { Button } from "@/components/ui/button";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -37,31 +36,48 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { useJobs } from "@/hooks/jobs";
 import { formatDate } from "@/utils/helpers";
+import { Badge } from "@/components/ui/badge";
+import { useDebounce } from "@/hooks/useDebounce";
+import { Field, FieldLabel } from "@/components/ui/field";
 
 const JobsPage = () => {
   const navigate = useNavigate();
 
-  const { data: jobsData } = useJobs();
-  const jobs = jobsData?.data ?? [];
-  console.log(jobs);
-
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(25);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [featuredFilter, setFeaturedFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [deadlineFilter, setDeadlineFilter] = useState("");
 
-  // const filteredJobs = useMemo(() => {
-  //   return jobs.filter((job) => {
-  //     const matchesSearch =
-  //       job.company.toLowerCase().includes(search.toLowerCase()) ||
-  //       job.title.toLowerCase().includes(search.toLowerCase());
+  const debouncedSearch = useDebounce(search, 500);
 
-  //     const matchesStatus =
-  //       statusFilter === "All" || job.status === statusFilter;
+  const { data: jobsData } = useJobs({
+    page,
+    limit: perPage,
+    search: debouncedSearch,
+    status: statusFilter,
+    deadline: deadlineFilter,
+  });
+  const jobs = jobsData?.data ?? [];
 
-  //     return matchesSearch && matchesStatus;
-  //   });
-  // }, [search, statusFilter]);
+  const visiblePages = useMemo(() => {
+    const totalPages = jobsData?.total_pages ?? 0;
 
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    let start = Math.max(page - 2, 1);
+    const end = Math.min(start + 4, totalPages);
+
+    if (end === totalPages) {
+      start = Math.max(totalPages - 4, 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }, [page, jobsData?.total_pages]);
+
+  // Handlers
   const handleView = (id: number) => {
     navigate(`/jobs/${id}`);
   };
@@ -72,20 +88,49 @@ const JobsPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2 lg:flex-row lg:justify-between mb-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:justify-between mb-4">
         <h2 className="text-xl font-bold">All Jobs</h2>
 
         <Button onClick={handlePostJob}>Create Job</Button>
       </div>
 
       <Card>
-        <CardContent>
-          <div className="flex flex-col gap-2 lg:flex-row mb-4">
+        <CardContent className="space-y-4">
+          <div className="flex flex-col gap-2 sm:flex-row mb-4">
+            {/* Data per page */}
+            <Field orientation="horizontal" className="w-fit sm:mr-8">
+              <FieldLabel htmlFor="select-rows-per-page">
+                Rows per page
+              </FieldLabel>
+              <Select
+                value={String(perPage)}
+                onValueChange={(value) => {
+                  setPerPage(Number(value));
+                  setPage(1); // Reset to first page
+                }}
+              >
+                <SelectTrigger className="w-20" id="select-rows-per-page">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent align="start">
+                  <SelectGroup>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
+
+            {/* Search */}
             <InputGroup className="max-w-md">
               <InputGroupInput
                 placeholder="Search company or title..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
               />
               <InputGroupAddon>
                 <Search />
@@ -96,35 +141,41 @@ const JobsPage = () => {
             <div className="flex gap-2">
               <Select
                 value={statusFilter}
-                onValueChange={(value) => setStatusFilter(value)}
+                onValueChange={(value) => {
+                  setStatusFilter(value === "All" ? "" : value);
+                  setPage(1);
+                }}
               >
                 <SelectTrigger className="w-full max-w-48">
-                  <SelectValue placeholder="Select a fruit" />
+                  <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Status</SelectLabel>
                     <SelectItem value="All">All status</SelectItem>
-                    <SelectItem value="Open">Open</SelectItem>
-                    <SelectItem value="Closed">Closed</SelectItem>
-                    <SelectItem value="Draft">Draft</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                    <SelectItem value="unpublished">Unpublished</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
 
               <Select
-                value={featuredFilter}
-                onValueChange={(value) => setFeaturedFilter(value)}
+                value={deadlineFilter}
+                onValueChange={(value) => {
+                  setDeadlineFilter(value);
+                  setPage(1);
+                }}
               >
                 <SelectTrigger className="w-full max-w-48">
-                  <SelectValue placeholder="Select a fruit" />
+                  <SelectValue placeholder="Deadline" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Featured</SelectLabel>
+                    <SelectLabel>Deadline</SelectLabel>
                     <SelectItem value="All">All Jobs</SelectItem>
-                    <SelectItem value="Featured">Featured</SelectItem>
-                    <SelectItem value="Not Featured">Not Featured</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="expired">Expired</SelectItem>
+                    <SelectItem value="expire_today">Expires Today</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -139,7 +190,7 @@ const JobsPage = () => {
                 <TableHead>Created At</TableHead>
                 <TableHead>Deadline</TableHead>
                 <TableHead>Status</TableHead>
-                {/* <TableHead>Applications</TableHead> */}
+                <TableHead>Applications</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -150,8 +201,18 @@ const JobsPage = () => {
                   <TableCell>{job.job_position.position_name}</TableCell>
                   <TableCell>{formatDate(job.created_at)}</TableCell>
                   <TableCell>{formatDate(job.created_at)}</TableCell>
-                  <TableCell>{job.status}</TableCell>
-                  {/* <TableCell>{job.applications}</TableCell> */}
+                  <TableCell>
+                    {Number(job.published) === 1 ? (
+                      <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                        Published
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                        Unpublished
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>{job.applied_count}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="link" onClick={() => handleView(job.id)}>
                       View
@@ -165,24 +226,28 @@ const JobsPage = () => {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious href="#" />
+                <PaginationPrevious
+                  onClick={() => page > 1 && setPage(page - 1)}
+                />
               </PaginationItem>
+
+              {visiblePages.map((pageNumber) => (
+                <PaginationItem key={pageNumber}>
+                  <PaginationLink
+                    isActive={page === pageNumber}
+                    onClick={() => setPage(pageNumber)}
+                  >
+                    {pageNumber}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+
               <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
+                <PaginationNext
+                  onClick={() =>
+                    page < (jobsData?.total_pages ?? 1) && setPage(page + 1)
+                  }
+                />
               </PaginationItem>
             </PaginationContent>
           </Pagination>

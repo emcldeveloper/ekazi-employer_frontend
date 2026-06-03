@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -11,21 +10,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Banknote,
   BriefcaseBusiness,
-  Building2,
   CalendarX2,
   Eye,
   FileStack,
   GraduationCap,
   Languages,
   MapPin,
+  Pencil,
   PencilLine,
   Plus,
   ShieldCheck,
   Trash2,
   Upload,
-  User,
   Users,
 } from "lucide-react";
 
@@ -42,93 +39,54 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useNavigate, useParams } from "react-router-dom";
-
-const job = {
-  title: "Hr Business Partner (HRBP)",
-  company: "Exact Manpower Consulting Ltd",
-  status: "Published",
-  keywords:
-    "hr business partner jobs, hrbp vacancies, human resources roles tanzania, hr operations jobs, hr advisory positions",
-  location: "Dar es Salaam",
-  industry: "Consultancy",
-  salary: "Negotiable",
-  level: "Mid Management Level",
-  gender: "Both",
-  experience: "3 Years",
-  tools: "Computer",
-};
-
-const education = [
-  {
-    level: "Bachelors Degree",
-    programme: "HR Business Partner",
-    major: "HRBP",
-  },
-];
-
-const languages = [
-  {
-    name: "English",
-    speak: "Excellent",
-    write: "Good",
-    understand: "Excellent",
-    read: "Efficient",
-  },
-  {
-    name: "Kiswahili",
-    speak: "Excellent",
-    write: "Good",
-    understand: "Excellent",
-    read: "Efficient",
-  },
-];
+import { useJob } from "@/hooks/jobs";
+import { formatDate } from "@/utils/helpers";
 
 const JobDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const jobId = Number(id);
+
+  const { data: jobData } = useJob(jobId);
+  const job = jobData?.data;
+  console.log(jobData);
 
   return (
     <div className="flex gap-4">
       <div className="flex-2 space-y-4">
         <Card>
-          <CardContent className="flex items-center justify-between gap-2">
-            <div>
-              <Eye />
-              <p>Views</p>
-            </div>
-            <div>
-              <User />
-              <p>Applicants</p>
-            </div>
-            <div>
-              <BriefcaseBusiness />
-              <p>Job Type</p>
-            </div>
-            <div>
-              <Banknote />
-              <p>Salary</p>
-            </div>
-            <div>
-              <CalendarX2 />
-              <p>Deadline</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-8">
             {/* Basic Info */}
             <div className="flex justify-between gap-4">
-              <div className="flex size-16 items-center justify-center rounded-xl bg-muted">
-                <Building2 className="size-8 text-primary" />
-              </div>
-
               <div>
-                <h1 className="text-2xl font-bold">{job.title}</h1>
+                <h1 className="text-2xl font-bold mb-4">
+                  {job?.job_position?.position_name}
+                </h1>
 
-                <p className="mt-1 text-muted-foreground">{job.company}</p>
+                <div className="flex items-center justify-between gap-2 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Eye size={16} />
+                    <p>{job?.statistic?.job_views}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users size={16} />
+                    <p>{job?.applied_count}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <BriefcaseBusiness size={16} />
+                    <p>{job?.job_type?.type_name}</p>
+                  </div>
+                  {/* <div className="flex items-center gap-2">
+                    <Banknote size={16} />
+                    <p>Salary</p>
+                  </div> */}
+                  <div className="flex items-center gap-2">
+                    <CalendarX2 size={16} />
+                    <p>{formatDate(job?.dead_line)}</p>
+                  </div>
+                </div>
 
-                <div className="mt-4 flex flex-wrap gap-2">
+                {/* <div className="mt-4 flex flex-wrap gap-2">
                   <Badge>{job.status}</Badge>
 
                   <Badge variant="secondary">
@@ -137,7 +95,7 @@ const JobDetails = () => {
                   </Badge>
 
                   <Badge variant="outline">{job.industry}</Badge>
-                </div>
+                </div> */}
               </div>
 
               <Sheet>
@@ -181,22 +139,22 @@ const JobDetails = () => {
             <Separator />
 
             {/* Keywords */}
-            <div className="flex justify-between gap-4">
-              <div>
+            <div>
+              <div className="flex justify-between gap-4">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="size-5 text-primary" />
                   <h2 className="text-lg font-semibold">Meta Keywords (SEO)</h2>
                 </div>
 
-                <p className="leading-7 text-muted-foreground">
-                  {job.keywords}
-                </p>
+                <Button size="sm" variant="outline">
+                  <PencilLine className="mr-2 size-4" />
+                  Edit
+                </Button>
               </div>
 
-              <Button size="sm" variant="outline">
-                <PencilLine className="mr-2 size-4" />
-                Edit
-              </Button>
+              <p className="leading-7 text-muted-foreground">
+                {job?.job_meta_keywords?.meta_keyword?.name}
+              </p>
             </div>
 
             <Separator />
@@ -212,15 +170,35 @@ const JobDetails = () => {
 
                 <div className=" flex flex-col gap-2">
                   <div>
-                    <p className="text-sm text-muted-foreground">Location</p>
+                    <p className="text-sm text-muted-foreground">Country</p>
 
-                    <p className="mt-1 font-medium">{job.location}</p>
+                    <p className="mt-1 font-medium">
+                      {job?.job_addresses?.[0]?.region?.country?.name}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Region</p>
+
+                    <p className="mt-1 font-medium">
+                      {job?.job_addresses?.[0]?.region?.region_name}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      Sub Location
+                    </p>
+
+                    <p className="mt-1 font-medium">
+                      {job?.job_addresses?.[0]?.sub_location}
+                    </p>
                   </div>
 
                   <div>
                     <p className="text-sm text-muted-foreground">Industry</p>
 
-                    <p className="mt-1 font-medium">{job.industry}</p>
+                    <p className="mt-1 font-medium">
+                      {job?.industry?.industry_name}
+                    </p>
                   </div>
 
                   <div>
@@ -229,7 +207,7 @@ const JobDetails = () => {
                     </p>
 
                     <p className="mt-1 font-medium text-primary">
-                      {job.salary}
+                      {job?.entry_salary} - {job?.exit_salary}
                     </p>
                   </div>
                 </div>
@@ -256,14 +234,24 @@ const JobDetails = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Report To</p>
 
-                    <p className="mt-1 font-medium">Supervision</p>
+                    <p className="mt-1 font-medium">
+                      {job?.job_report_to?.report_to}
+                    </p>
                   </div>
 
                   <div>
                     <p className="text-sm text-muted-foreground">Interact</p>
 
                     <p className="mt-1 font-medium">
-                      Employer, Management and Clients
+                      {job?.job_report_to?.interacts_with}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-muted-foreground">Supervises</p>
+
+                    <p className="mt-1 font-medium">
+                      {job?.job_report_to?.supervises}
                     </p>
                   </div>
                 </div>
@@ -278,81 +266,95 @@ const JobDetails = () => {
             <Separator />
 
             {/* Education */}
-            <div className="flex justify-between gap-4">
-              <div>
+            <div>
+              <div className="flex justify-between gap-4 mb-4">
                 <div className="flex items-center gap-2">
                   <GraduationCap className="size-5 text-primary" />
                   <h2 className="text-lg font-semibold">Job Education</h2>
                 </div>
 
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Education Level</TableHead>
-                      <TableHead>Programme Name</TableHead>
-                      <TableHead>Specialized/Major</TableHead>
-                    </TableRow>
-                  </TableHeader>
-
-                  <TableBody>
-                    {education.map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{item.level}</TableCell>
-
-                        <TableCell>{item.programme}</TableCell>
-
-                        <TableCell>{item.major}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                <Button size="sm" variant="outline">
+                  <PencilLine className="mr-2 size-4" />
+                  Add
+                </Button>
               </div>
 
-              <Button size="sm" variant="outline">
-                <PencilLine className="mr-2 size-4" />
-                Edit
-              </Button>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Education Level</TableHead>
+                    <TableHead>Programme Name</TableHead>
+                    <TableHead>Specialized/Major</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                  {job?.job_education?.map((item: any) => (
+                    <TableRow key={item?.id}>
+                      <TableCell>
+                        {item?.education_level?.education_level}
+                      </TableCell>
+                      <TableCell>{item?.course?.course_name}</TableCell>
+                      <TableCell>{item?.major?.name}</TableCell>
+                      <TableCell className="flex items-center gap-2">
+                        <Pencil size={16} /> <Trash2 size={16} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
 
             <Separator />
 
             {/* Languages */}
-            <div className="flex justify-between gap-4">
-              <div>
+            <div>
+              <div className="flex justify-between gap-4 mb-4">
                 <div className="flex items-center gap-2">
                   <Languages className="size-5 text-primary" />
                   <h2 className="text-lg font-semibold">Languages</h2>
                 </div>
 
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Language</TableHead>
-                      <TableHead>Speak</TableHead>
-                      <TableHead>Write</TableHead>
-                      <TableHead>Understand</TableHead>
-                      <TableHead>Read</TableHead>
-                    </TableRow>
-                  </TableHeader>
-
-                  <TableBody>
-                    {languages.map((language, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{language.name}</TableCell>
-                        <TableCell>{language.speak}</TableCell>
-                        <TableCell>{language.write}</TableCell>
-                        <TableCell>{language.understand}</TableCell>
-                        <TableCell>{language.read}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                <Button size="sm" variant="outline">
+                  <PencilLine className="mr-2 size-4" />
+                  Edit
+                </Button>
               </div>
 
-              <Button size="sm" variant="outline">
-                <PencilLine className="mr-2 size-4" />
-                Edit
-              </Button>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Language</TableHead>
+                    <TableHead>Speak</TableHead>
+                    <TableHead>Write</TableHead>
+                    <TableHead>Understand</TableHead>
+                    <TableHead>Read</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                  {job?.job_language.map((item: any) => (
+                    <TableRow key={item?.id}>
+                      <TableCell>{item?.language?.language_name}</TableCell>
+                      <TableCell>
+                        {item?.language_speak?.speak_ability}
+                      </TableCell>
+                      <TableCell>
+                        {item?.language_write?.write_ability}
+                      </TableCell>
+                      <TableCell>
+                        {item?.language_understand?.understand_ability}
+                      </TableCell>
+                      <TableCell>{item?.language_read?.read_ability}</TableCell>
+                      <TableCell className="flex items-center gap-2">
+                        <Pencil size={16} /> <Trash2 size={16} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
 
             <Separator />
@@ -362,32 +364,40 @@ const JobDetails = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <BriefcaseBusiness className="size-5 text-primary" />
-                  <h2 className="text-lg font-semibold">Job Requirements</h2>
+                  <h2 className="text-lg font-semibold">
+                    Candidate Specification
+                  </h2>
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <div>
                     <p className="text-sm text-muted-foreground">Level</p>
 
-                    <p className="mt-1 font-medium">{job.level}</p>
+                    <p className="mt-1 font-medium">
+                      {job?.position_level?.position_name}
+                    </p>
                   </div>
 
                   <div>
                     <p className="text-sm text-muted-foreground">Gender</p>
 
-                    <p className="mt-1 font-medium">{job.gender}</p>
+                    <p className="mt-1 font-medium">
+                      {job?.job_gender?.gender_name}
+                    </p>
                   </div>
 
                   <div>
                     <p className="text-sm text-muted-foreground">Experience</p>
 
-                    <p className="mt-1 font-medium">{job.experience}</p>
+                    <p className="mt-1 font-medium">
+                      {job?.years_experience} Years
+                    </p>
                   </div>
 
                   <div>
                     <p className="text-sm text-muted-foreground">Tools</p>
 
-                    <p className="mt-1 font-medium">{job.tools}</p>
+                    <p className="mt-1 font-medium">{job?.tools}</p>
                   </div>
                 </div>
               </div>
@@ -401,101 +411,53 @@ const JobDetails = () => {
             <Separator />
 
             {/* Main Duties */}
-            <div className="flex justify-between gap-4">
-              <div>
+            <div>
+              <div className="flex justify-between gap-4 mb-4">
                 <div className="flex items-center gap-2">
                   <BriefcaseBusiness className="size-5 text-primary" />
                   <h2 className="text-lg font-semibold">Main Duties</h2>
                 </div>
 
-                <div className="space-y-8">
-                  <div>
-                    <h3 className="mb-3 text-lg font-semibold">Job Purpose</h3>
-
-                    <p className="leading-7 text-muted-foreground">
-                      The HR Business Partner (HRBP) acts as a strategic advisor
-                      to management and employees, ensuring alignment between
-                      business objectives and HR initiatives.
-                    </p>
-                  </div>
-
-                  <Separator />
-
-                  <div>
-                    <h3 className="mb-4 text-lg font-semibold">
-                      Key Responsibilities
-                    </h3>
-
-                    <div className="space-y-6">
-                      <div>
-                        <h4 className="mb-2 font-semibold">
-                          Strategic HR Advisory
-                        </h4>
-
-                        <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
-                          <li>
-                            Partner with business leaders to understand
-                            workforce needs.
-                          </li>
-
-                          <li>
-                            Lead HR initiatives that improve organizational
-                            effectiveness.
-                          </li>
-
-                          <li>
-                            Support workforce planning and talent forecasting.
-                          </li>
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h4 className="mb-2 font-semibold">
-                          Employee Relations & Engagement
-                        </h4>
-
-                        <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
-                          <li>
-                            Build strong relationships with employees and line
-                            managers.
-                          </li>
-
-                          <li>
-                            Address employee concerns and resolve conflicts.
-                          </li>
-
-                          <li>
-                            Support employee satisfaction and retention
-                            initiatives.
-                          </li>
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h4 className="mb-2 font-semibold">
-                          Performance & Talent Management
-                        </h4>
-
-                        <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
-                          <li>Coordinate performance management processes.</li>
-
-                          <li>
-                            Identify talent gaps and support succession
-                            planning.
-                          </li>
-
-                          <li>Facilitate learning and development programs.</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <Button size="sm" variant="outline">
+                  <PencilLine className="mr-2 size-4" />
+                  Edit
+                </Button>
               </div>
 
-              <Button size="sm" variant="outline">
-                <PencilLine className="mr-2 size-4" />
-                Edit
-              </Button>
+              <div
+                className="prose prose-sm max-w-none
+                 prose-headings:font-semibold
+                 prose-ul:list-disc
+                 prose-ul:pl-6"
+                dangerouslySetInnerHTML={{
+                  __html: job?.job_duties?.main_duties,
+                }}
+              />
+            </div>
+
+            {/* Other requirements */}
+            <div>
+              <div className="flex justify-between gap-4 mb-4">
+                <div className="flex items-center gap-2">
+                  <BriefcaseBusiness className="size-5 text-primary" />
+                  <h2 className="text-lg font-semibold">Other Requirements</h2>
+                </div>
+
+                <Button size="sm" variant="outline">
+                  <PencilLine className="mr-2 size-4" />
+                  Edit
+                </Button>
+              </div>
+
+              <div
+                className="prose prose-sm max-w-none
+                 prose-headings:font-semibold
+                 prose-ul:list-disc
+                 prose-ul:pl-6"
+                dangerouslySetInnerHTML={{
+                  __html: job?.job_other_requirement?.other_requirement,
+                }}
+              />
             </div>
           </CardContent>
         </Card>
@@ -504,7 +466,7 @@ const JobDetails = () => {
       <div className="flex-1 space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>HR Business Partner (HRBP)</CardTitle>
+            <CardTitle>Actions</CardTitle>
             <Separator />
           </CardHeader>
           <CardContent className="space-y-4">

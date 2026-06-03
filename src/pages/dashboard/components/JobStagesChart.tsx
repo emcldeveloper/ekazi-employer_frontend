@@ -12,25 +12,32 @@ import {
 
 export const description = "A bar chart with a label";
 
-const chartData = [
-  { month: "Applied", desktop: 186 },
-  { month: "Shortlisted", desktop: 305 },
-  { month: "Screening", desktop: 237 },
-  { month: "Interview", desktop: 73 },
-  { month: "Selection", desktop: 209 },
-  { month: "Background Check", desktop: 114 },
-  { month: "Offer", desktop: 312 },
-  { month: "Employed", desktop: 274 },
-];
+export default function JobStagesChart({ data }: { data: any }) {
+  const applied = data?.pipeline?.[0]?.total;
+  const shortlisted = data?.pipeline?.[1]?.total;
+  const screening = data?.pipeline?.[2]?.total;
+  const interview = data?.pipeline?.[3]?.total;
+  const selected = data?.pipeline?.[4]?.total;
+  const employed = data?.pipeline?.[5]?.total;
+  const declined = data?.pipeline?.[6]?.total;
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
-  },
-} satisfies ChartConfig;
+  const chartData = [
+    { month: "Applied", desktop: applied },
+    { month: "Shortlist", desktop: shortlisted },
+    { month: "Screening", desktop: screening },
+    { month: "Interview", desktop: interview },
+    { month: "Selected", desktop: selected },
+    { month: "Employed", desktop: employed },
+    { month: "Declined", desktop: declined },
+  ];
 
-export default function JobStagesChart() {
+  const chartConfig = {
+    desktop: {
+      label: "Desktop",
+      color: "var(--chart-1)",
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card>
       <CardHeader>

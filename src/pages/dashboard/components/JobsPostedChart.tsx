@@ -14,26 +14,37 @@ import {
 
 export const description = "A pie chart with a label";
 
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-];
+export default function JobsPostedChart({ data }: { data: any }) {
+  const activeJobs = data?.active_jobs;
+  const expiredJobs = data?.expired_jobs;
 
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Active",
-    color: "var(--chart-1)",
-  },
-  safari: {
-    label: "Expired",
-    color: "var(--chart-2)",
-  },
-} satisfies ChartConfig;
+  const chartData = [
+    {
+      browser: "chrome",
+      visitors: activeJobs,
+      fill: "var(--color-chrome)",
+    },
+    {
+      browser: "safari",
+      visitors: expiredJobs,
+      fill: "var(--color-safari)",
+    },
+  ];
 
-export default function JobsPostedChart() {
+  const chartConfig = {
+    visitors: {
+      label: "Jobs",
+    },
+    chrome: {
+      label: "Active",
+      color: "var(--chart-1)",
+    },
+    safari: {
+      label: "Expired",
+      color: "var(--chart-2)",
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">

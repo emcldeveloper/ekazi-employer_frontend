@@ -83,3 +83,12 @@ export type JobMetaData = {
   job_id: number;
   seo_keyword: string;
 };
+
+//
+export type JobFilters = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string; //published
+  deadline?: string; // active, expired, expire_today
+};

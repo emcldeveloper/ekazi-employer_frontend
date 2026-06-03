@@ -20,8 +20,6 @@ const AccountProfile = () => {
   const { data: companyProfile, isLoading } = useProfile();
   const profile = companyProfile?.data;
 
-  console.log(profile);
-
   const handleEditProfile = () => {
     navigate("/profile/create");
   };

@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { isRouteActive } from "@/utils/helpers";
 import { NavUser } from "@/components/nav-user";
+import { useProfile } from "@/hooks/profile";
 
 const navItems = [
   {
@@ -85,6 +86,10 @@ const navItems = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
 
+  // Custom Logo for each company
+  const { data: companyProfile } = useProfile();
+  const profile = companyProfile?.data;
+
   const [openMenus, setOpenMenus] = React.useState<string[]>(() => {
     // auto open parent if child route is active
     return navItems
@@ -109,7 +114,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link to="/dashboard">
-                <img src="/images/logo.png" alt="Logo" className="w-24" />
+                <img
+                  src={profile?.logo || "/images/logo.png"}
+                  alt="Logo"
+                  className="w-24"
+                />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

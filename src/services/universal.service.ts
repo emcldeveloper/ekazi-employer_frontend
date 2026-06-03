@@ -20,10 +20,12 @@ export const getIndustry = async () => {
   return res.data?.industry;
 };
 
-export const getPosition = async (search = "") => {
+export const getPositions = async (search = "", page = 1, limit = 50) => {
   const res = await api.get("/universal/position", {
     params: {
       search,
+      page,
+      limit,
     },
   });
   return res.data;

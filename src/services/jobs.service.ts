@@ -1,6 +1,7 @@
 import type {
   JobCreateForm,
   JobEducationData,
+  JobFilters,
   JobLanguageData,
   JobLocationData,
   JobMainDutiesData,
@@ -21,13 +22,17 @@ export const updateJob = async () => {
   return res.data;
 };
 
-export const getJobs = async () => {
-  const res = await api.get("/employer-jobs");
+// Data
+export const getJobs = async (params: JobFilters = {}) => {
+  const res = await api.get("/employer-jobs", {
+    params,
+  });
+
   return res.data;
 };
 
-export const getJob = async () => {
-  const res = await api.get("/employer-jobs");
+export const getJob = async (id: any) => {
+  const res = await api.get(`/employer-jobs/show/${id}`);
   return res.data;
 };
 
