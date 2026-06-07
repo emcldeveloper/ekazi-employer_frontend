@@ -72,152 +72,145 @@ const EducationForm = ({ jobId, onSuccess: nextStep }: EducationFormProps) => {
   //   job_id: number;
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Field>
-            <FieldLabel htmlFor="education_level_id">
-              Education Level
-            </FieldLabel>
-            <Controller
-              name="education_level_id"
-              control={control}
-              rules={{
-                required: "Education level is required",
-              }}
-              render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select education level" />
-                  </SelectTrigger>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Field>
+          <FieldLabel htmlFor="education_level_id">Education Level</FieldLabel>
+          <Controller
+            name="education_level_id"
+            control={control}
+            rules={{
+              required: "Education level is required",
+            }}
+            render={({ field }) => (
+              <Select
+                value={field.value?.toString()}
+                onValueChange={(value) => field.onChange(Number(value))}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select education level" />
+                </SelectTrigger>
 
-                  <SelectContent>
-                    <SelectGroup>
-                      {levels?.map((level: EducationLevel) => (
-                        <SelectItem key={level.id} value={level.id.toString()}>
-                          {level.education_level}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.education_level_id && (
-              <FieldError>{errors.education_level_id.message}</FieldError>
+                <SelectContent>
+                  <SelectGroup>
+                    {levels?.map((level: EducationLevel) => (
+                      <SelectItem key={level.id} value={level.id.toString()}>
+                        {level.education_level}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             )}
-          </Field>
+          />
+          {errors.education_level_id && (
+            <FieldError>{errors.education_level_id.message}</FieldError>
+          )}
+        </Field>
 
-          <Field>
-            <FieldLabel htmlFor="programme_id">Course/Programme</FieldLabel>
+        <Field>
+          <FieldLabel htmlFor="programme_id">Course/Programme</FieldLabel>
 
-            <Controller
-              name="programme_id"
-              control={control}
-              rules={{
-                required: "Course/Programme is required",
-              }}
-              render={({ field }) => (
-                <Combobox
-                  items={courses ?? []}
-                  value={
-                    courses?.find((course: Course) => course.id === field.value)
-                      ?.course_name ?? ""
-                  }
-                  onValueChange={(value) => {
-                    const selectedCourse = courses?.find(
-                      (course: Course) => course.course_name === value,
-                    );
+          <Controller
+            name="programme_id"
+            control={control}
+            rules={{
+              required: "Course/Programme is required",
+            }}
+            render={({ field }) => (
+              <Combobox
+                items={courses ?? []}
+                value={
+                  courses?.find((course: Course) => course.id === field.value)
+                    ?.course_name ?? ""
+                }
+                onValueChange={(value) => {
+                  const selectedCourse = courses?.find(
+                    (course: Course) => course.course_name === value,
+                  );
 
-                    field.onChange(selectedCourse?.id);
-                  }}
-                >
-                  <ComboboxInput
-                    placeholder="Search course..."
-                    onChange={(e) => setCourseSearch(e.target.value)}
-                  />
+                  field.onChange(selectedCourse?.id);
+                }}
+              >
+                <ComboboxInput
+                  placeholder="Search course..."
+                  onChange={(e) => setCourseSearch(e.target.value)}
+                />
 
-                  <ComboboxContent>
-                    <ComboboxEmpty>No course found.</ComboboxEmpty>
+                <ComboboxContent>
+                  <ComboboxEmpty>No course found.</ComboboxEmpty>
 
-                    <ComboboxList>
-                      {courses?.map((course: Course) => (
-                        <ComboboxItem
-                          key={course.id}
-                          value={course.course_name}
-                        >
-                          {course.course_name}
-                        </ComboboxItem>
-                      ))}
-                    </ComboboxList>
-                  </ComboboxContent>
-                </Combobox>
-              )}
-            />
-
-            {errors.programme_id && (
-              <FieldError>{errors.programme_id.message}</FieldError>
+                  <ComboboxList>
+                    {courses?.map((course: Course) => (
+                      <ComboboxItem key={course.id} value={course.course_name}>
+                        {course.course_name}
+                      </ComboboxItem>
+                    ))}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
             )}
-          </Field>
+          />
 
-          <Field>
-            <FieldLabel htmlFor="major_id">Major / Specialized In</FieldLabel>
+          {errors.programme_id && (
+            <FieldError>{errors.programme_id.message}</FieldError>
+          )}
+        </Field>
 
-            <Controller
-              name="major_id"
-              control={control}
-              rules={{
-                required: "Major is required",
-              }}
-              render={({ field }) => (
-                <Combobox
-                  items={majors ?? []}
-                  value={
-                    majors?.find((major: Major) => major.id === field.value)
-                      ?.name ?? ""
-                  }
-                  onValueChange={(value) => {
-                    const selectedMajor = majors?.find(
-                      (major: Major) => major.name === value,
-                    );
+        <Field>
+          <FieldLabel htmlFor="major_id">Major / Specialized In</FieldLabel>
 
-                    field.onChange(selectedMajor?.id);
-                  }}
-                >
-                  <ComboboxInput
-                    placeholder="Search major..."
-                    onChange={(e) => setMajorSearch(e.target.value)}
-                  />
+          <Controller
+            name="major_id"
+            control={control}
+            rules={{
+              required: "Major is required",
+            }}
+            render={({ field }) => (
+              <Combobox
+                items={majors ?? []}
+                value={
+                  majors?.find((major: Major) => major.id === field.value)
+                    ?.name ?? ""
+                }
+                onValueChange={(value) => {
+                  const selectedMajor = majors?.find(
+                    (major: Major) => major.name === value,
+                  );
 
-                  <ComboboxContent>
-                    <ComboboxEmpty>No major found.</ComboboxEmpty>
+                  field.onChange(selectedMajor?.id);
+                }}
+              >
+                <ComboboxInput
+                  placeholder="Search major..."
+                  onChange={(e) => setMajorSearch(e.target.value)}
+                />
 
-                    <ComboboxList>
-                      {majors?.map((major: Major) => (
-                        <ComboboxItem key={major.id} value={major.name}>
-                          {major.name}
-                        </ComboboxItem>
-                      ))}
-                    </ComboboxList>
-                  </ComboboxContent>
-                </Combobox>
-              )}
-            />
+                <ComboboxContent>
+                  <ComboboxEmpty>No major found.</ComboboxEmpty>
 
-            {errors.major_id && (
-              <FieldError>{errors.major_id.message}</FieldError>
+                  <ComboboxList>
+                    {majors?.map((major: Major) => (
+                      <ComboboxItem key={major.id} value={major.name}>
+                        {major.name}
+                      </ComboboxItem>
+                    ))}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
             )}
-          </Field>
-        </FieldGroup>
+          />
 
-        <Button type="submit" disabled={isPending} className="mt-4">
-          {isPending ? "Adding..." : "Add Job"}
-        </Button>
-      </form>
-    </div>
+          {errors.major_id && (
+            <FieldError>{errors.major_id.message}</FieldError>
+          )}
+        </Field>
+      </FieldGroup>
+
+      <Button type="submit" disabled={isPending} className="mt-4">
+        {isPending ? "Saving..." : "Save"}
+      </Button>
+    </form>
   );
 };
 

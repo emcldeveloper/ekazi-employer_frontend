@@ -36,6 +36,16 @@ export const getJob = async (id: any) => {
   return res.data;
 };
 
+export const getApplications = async (id: any) => {
+  const res = await api.get(`/employer-jobs/applicant/${id}`);
+  return res.data;
+};
+
+// export const getJobApplication = async (id: any) => {
+//   const res = await api.get(`employer-jobs/applicant/{id}`);
+//   return res.data;
+// };
+
 export const getJobMeta = async () => {
   const res = await api.get("/employer-job-meta");
   return res.data;

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BasicInfoForm from "./components/BasicInfoForm";
 import StepWizard from "@/components/step-wizard";
 import EducationForm from "./components/EducationForm";
@@ -14,59 +14,70 @@ const CreateJob = () => {
   return (
     <Card>
       <CardHeader>
-        <div className="flex justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-semibold">Create New Job</h2>
-            </div>
-
-            <p className="leading-7 text-muted-foreground">
-              Please add job information
-            </p>
-          </div>
-        </div>
+        <CardTitle className="text-xl">Create New Job</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <StepWizard
           steps={[
             {
-              title: "Basic",
+              // title: "Basic",
               content: ({ next }) => (
-                <BasicInfoForm
-                  onSuccess={(id) => {
-                    setJobId(id);
-                    next();
-                  }}
-                />
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="font-heading text-base leading-normal font-semibold">
+                      Basic Information
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Please add the basic information for the job.
+                    </p>
+                  </div>
+
+                  <BasicInfoForm
+                    onSuccess={(id) => {
+                      setJobId(id);
+                      next();
+                    }}
+                  />
+                </div>
               ),
             },
             {
-              title: "Education",
+              // title: "Education",
               content: ({ next }) => (
-                <EducationForm jobId={jobId!} onSuccess={next} />
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="font-heading text-base leading-normal font-semibold">
+                      Education Requirements
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Please add the education requirements for the job.
+                    </p>
+                  </div>
+                  <EducationForm jobId={jobId!} onSuccess={next} />
+                </div>
               ),
             },
             {
-              title: "Language",
+              // title: "Language",
               content: ({ next }) => (
                 <LanguageForm jobId={jobId!} onSuccess={next} />
               ),
             },
             {
-              title: "Requirements",
+              // title: "Requirements",
               content: ({ next }) => (
                 <RequirementsForm jobId={jobId!} onSuccess={next} />
               ),
             },
             {
-              title: "Duties",
+              // title: "Duties",
               content: ({ next }) => (
                 <MainDutiesForm jobId={jobId!} onSuccess={next} />
               ),
             },
             {
-              title: "Reporting",
+              // title: "Reporting",
               content: ({ next }) => (
                 <ReportingForm jobId={jobId!} onSuccess={next} />
               ),

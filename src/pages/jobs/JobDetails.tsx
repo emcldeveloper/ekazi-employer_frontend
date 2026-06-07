@@ -10,6 +10,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   BriefcaseBusiness,
   CalendarX2,
   Eye,
@@ -26,21 +34,10 @@ import {
   Users,
 } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { useNavigate, useParams } from "react-router-dom";
 import { useJob } from "@/hooks/jobs";
 import { formatDate } from "@/utils/helpers";
+import { Badge } from "@/components/ui/badge";
 
 const JobDetails = () => {
   const navigate = useNavigate();
@@ -52,8 +49,8 @@ const JobDetails = () => {
   console.log(jobData);
 
   return (
-    <div className="flex gap-4">
-      <div className="flex-2 space-y-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+      <div className="md:col-span-2 space-y-4">
         <Card>
           <CardContent className="space-y-8">
             {/* Basic Info */}
@@ -86,54 +83,30 @@ const JobDetails = () => {
                   </div>
                 </div>
 
-                {/* <div className="mt-4 flex flex-wrap gap-2">
-                  <Badge>{job.status}</Badge>
-
-                  <Badge variant="secondary">
-                    <MapPin className="mr-1 size-3" />
-                    {job.location}
-                  </Badge>
-
-                  <Badge variant="outline">{job.industry}</Badge>
-                </div> */}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Badge>{job?.status}</Badge>
+                </div>
               </div>
 
-              <Sheet>
-                <SheetTrigger asChild>
+              <Dialog>
+                <DialogTrigger asChild>
                   <Button size="sm" variant="outline">
                     <PencilLine className="mr-2 size-4" />
                     Edit
                   </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Edit profile</SheetTitle>
-                    <SheetDescription>
-                      Make changes to your profile here. Click save when
-                      you&apos;re done.
-                    </SheetDescription>
-                  </SheetHeader>
-                  <div className="grid flex-1 auto-rows-min gap-6 px-4">
-                    <div className="grid gap-3">
-                      <Label htmlFor="sheet-demo-name">Name</Label>
-                      <Input id="sheet-demo-name" defaultValue="Pedro Duarte" />
-                    </div>
-                    <div className="grid gap-3">
-                      <Label htmlFor="sheet-demo-username">Username</Label>
-                      <Input
-                        id="sheet-demo-username"
-                        defaultValue="@peduarte"
-                      />
-                    </div>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle> Basic Information</DialogTitle>
+                    <DialogDescription>
+                      Edit job basic information.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                    {/* <BasicInfoForm /> */}
                   </div>
-                  <SheetFooter>
-                    <Button type="submit">Save changes</Button>
-                    <SheetClose asChild>
-                      <Button variant="outline">Close</Button>
-                    </SheetClose>
-                  </SheetFooter>
-                </SheetContent>
-              </Sheet>
+                </DialogContent>
+              </Dialog>
             </div>
 
             <Separator />
@@ -146,10 +119,25 @@ const JobDetails = () => {
                   <h2 className="text-lg font-semibold">Meta Keywords (SEO)</h2>
                 </div>
 
-                <Button size="sm" variant="outline">
-                  <PencilLine className="mr-2 size-4" />
-                  Edit
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      <PencilLine className="mr-2 size-4" />
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Meta Keywords (SEO)</DialogTitle>
+                      <DialogDescription>
+                        Edit job meta keywords.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                      {/* <MetaForm /> */}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               <p className="leading-7 text-muted-foreground">
@@ -193,7 +181,7 @@ const JobDetails = () => {
                     </p>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <p className="text-sm text-muted-foreground">Industry</p>
 
                     <p className="mt-1 font-medium">
@@ -209,14 +197,27 @@ const JobDetails = () => {
                     <p className="mt-1 font-medium text-primary">
                       {job?.entry_salary} - {job?.exit_salary}
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
-              <Button size="sm" variant="outline">
-                <PencilLine className="mr-2 size-4" />
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="sm" variant="outline">
+                    <PencilLine className="mr-2 size-4" />
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Job Location</DialogTitle>
+                    <DialogDescription>Edit job location.</DialogDescription>
+                  </DialogHeader>
+                  <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                    {/* <LocationForm /> */}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             <Separator />
@@ -257,10 +258,25 @@ const JobDetails = () => {
                 </div>
               </div>
 
-              <Button size="sm" variant="outline">
-                <PencilLine className="mr-2 size-4" />
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="sm" variant="outline">
+                    <PencilLine className="mr-2 size-4" />
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Reporting Structure</DialogTitle>
+                    <DialogDescription>
+                      Edit reporting structure.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                    {/* <BasicInfoForm /> */}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             <Separator />
@@ -273,10 +289,25 @@ const JobDetails = () => {
                   <h2 className="text-lg font-semibold">Job Education</h2>
                 </div>
 
-                <Button size="sm" variant="outline">
-                  <PencilLine className="mr-2 size-4" />
-                  Add
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      <PencilLine className="mr-2 size-4" />
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Job Education</DialogTitle>
+                      <DialogDescription>
+                        Edit job education information.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                      {/* <BasicInfoForm /> */}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               <Table>
@@ -316,10 +347,25 @@ const JobDetails = () => {
                   <h2 className="text-lg font-semibold">Languages</h2>
                 </div>
 
-                <Button size="sm" variant="outline">
-                  <PencilLine className="mr-2 size-4" />
-                  Edit
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      <PencilLine className="mr-2 size-4" />
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Languages</DialogTitle>
+                      <DialogDescription>
+                        Edit job languages information.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                      {/* <BasicInfoForm /> */}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               <Table>
@@ -402,10 +448,25 @@ const JobDetails = () => {
                 </div>
               </div>
 
-              <Button size="sm" variant="outline">
-                <PencilLine className="mr-2 size-4" />
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="sm" variant="outline">
+                    <PencilLine className="mr-2 size-4" />
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Candidate Specification</DialogTitle>
+                    <DialogDescription>
+                      Edit candidate specification information.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                    {/* <BasicInfoForm /> */}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             <Separator />
@@ -418,10 +479,25 @@ const JobDetails = () => {
                   <h2 className="text-lg font-semibold">Main Duties</h2>
                 </div>
 
-                <Button size="sm" variant="outline">
-                  <PencilLine className="mr-2 size-4" />
-                  Edit
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      <PencilLine className="mr-2 size-4" />
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Main Duties</DialogTitle>
+                      <DialogDescription>
+                        Edit main duties information.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                      {/* <BasicInfoForm /> */}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               <div
@@ -443,10 +519,25 @@ const JobDetails = () => {
                   <h2 className="text-lg font-semibold">Other Requirements</h2>
                 </div>
 
-                <Button size="sm" variant="outline">
-                  <PencilLine className="mr-2 size-4" />
-                  Edit
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      <PencilLine className="mr-2 size-4" />
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Other Requirements</DialogTitle>
+                      <DialogDescription>
+                        Edit other requirements information.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                      {/* <BasicInfoForm /> */}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               <div
@@ -463,40 +554,53 @@ const JobDetails = () => {
         </Card>
       </div>
 
-      <div className="flex-1 space-y-4">
+      <div className="md:col-span-1 space-y-4">
         <Card>
           <CardHeader>
             <CardTitle>Actions</CardTitle>
             <Separator />
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <p>Publish</p>
+            <Button variant="outline" className="w-full justify-between">
+              Publish
               <Upload size={16} />
-            </div>
-            <Separator />
-            <div
+            </Button>
+
+            <Button
+              variant="outline"
               onClick={() => navigate(`/jobs/${id}/applications`)}
-              className="flex items-center justify-between cursor-pointer hover:bg-gray-200"
+              className="w-full justify-between"
             >
-              <p>View Applications</p>
+              View Applications
               <FileStack size={16} />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <p>Selected Applicants</p>
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={() => {}}
+              className="w-full justify-between"
+            >
+              Selected Applicants
               <Users size={16} />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <p>Add Screener</p>
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={() => {}}
+              className="w-full justify-between"
+            >
+              Add Screener
               <Plus size={16} />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <p>Delete Job</p>
+            </Button>
+
+            <Button
+              variant="destructive"
+              onClick={() => {}}
+              className="w-full justify-between"
+            >
+              Delete Job
               <Trash2 size={16} />
-            </div>
+            </Button>
           </CardContent>
         </Card>
 

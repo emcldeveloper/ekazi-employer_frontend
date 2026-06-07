@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface StepItem {
-  title: string;
+  title?: string;
   description?: string;
 }
 

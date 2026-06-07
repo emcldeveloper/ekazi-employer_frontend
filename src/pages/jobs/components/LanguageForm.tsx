@@ -73,7 +73,16 @@ const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
   //   job_id: number;
 
   return (
-    <div>
+    <div className="space-y-6">
+      <div className="space-y-1">
+        <h2 className="font-heading text-base leading-normal font-semibold">
+          Language Requirements
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Please add the language requirements for the job.
+        </p>
+      </div>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field>

@@ -1,4 +1,4 @@
-import { Building2, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -44,8 +44,8 @@ import type {
   Region,
 } from "@/@types/universals";
 import { useEffect, useState } from "react";
-import { useUser } from "@/hooks/auth/useUser";
-import { useCreateProfile } from "@/hooks/profile";
+
+import { useCreateProfile, useProfile } from "@/hooks/profile";
 import { toast } from "sonner";
 
 const CreateProfile = () => {
@@ -63,16 +63,17 @@ const CreateProfile = () => {
     formState: { errors },
   } = useForm<CreateProfileData>();
 
+  // create/update profile mutation
   const { mutate: createProfile, isPending } = useCreateProfile();
 
   // data fetch
-  const { data: user } = useUser();
+  const { data: companyProfile } = useProfile();
+  const profile = companyProfile?.data;
+
   const { data: industries } = useIndustries();
   const { data: companySizes } = useCompanySizes();
   const { data: countries } = useCountries();
   const { data: regions } = useRegions();
-
-  const company = user?.data?.username;
 
   const selectedCountry = watch("country");
   const selectedRegion = watch("region");
@@ -83,9 +84,45 @@ const CreateProfile = () => {
     ) || [];
 
   useEffect(() => {
-    setValue("region", undefined);
-    setValue("sub_location", "");
-  }, [selectedCountry, setValue]);
+    if (selectedCountry) {
+      setValue("region", undefined);
+      setValue("sub_location", "");
+    }
+  }, [selectedCountry]);
+
+  useEffect(() => {
+    if (!profile) return;
+
+    reset({
+      name: profile.name,
+      tin: profile.tin,
+      business: profile.business,
+
+      industry_id: profile.industry?.id,
+      company_size_id: profile.company_size?.id,
+
+      country: profile.country?.id,
+      region: profile.region?.id,
+
+      sub_location: profile.sub_location,
+      location_notes: profile.location_notes,
+
+      about_company: profile.description,
+
+      website: profile.website,
+      fax: profile.fax,
+      extra_communication: profile.extra_communication,
+    });
+
+    // For displaying selected industry name in Combobox
+    const selectedIndustry = industries?.find(
+      (industry: Industry) => industry.id === profile.industry.id,
+    );
+
+    if (selectedIndustry) {
+      setIndustrySearch(selectedIndustry.industry_name);
+    }
+  }, [profile, industries, reset]);
 
   const onSubmit = (data: CreateProfileData) => {
     const formData = new FormData();
@@ -101,6 +138,8 @@ const CreateProfile = () => {
     formData.append("location_notes", data.location_notes || "");
     formData.append("about_company", data.about_company || "");
     formData.append("website", data.website || "");
+    formData.append("fax", data.fax || "");
+    formData.append("extra_communication", data.extra_communication || "");
 
     if (data.attachment?.[0]) {
       formData.append("attachment", data.attachment[0]);
@@ -111,6 +150,9 @@ const CreateProfile = () => {
         toast.success(res?.message || "Profile created successfully");
         navigate("/profile");
         reset();
+      },
+      onError: () => {
+        toast.error("Failed to create profile");
       },
     });
   };
@@ -140,14 +182,24 @@ const CreateProfile = () => {
 
             <CardContent>
               <div className="flex flex-col items-center gap-4">
-                <div className="flex h-32 w-32 items-center justify-center rounded-2xl border bg-muted">
-                  <Building2 className="h-12 w-12 text-muted-foreground" />
+                <div className="flex p-2 h-32 w-32 items-center justify-center rounded-2xl border bg-muted">
+                  {/* <Building2 className="h-12 w-12 text-muted-foreground" /> */}
+                  <img
+                    src={profile?.logo || "/images/default-img.jpeg"}
+                    alt="Company Logo"
+                    className="w-full object-cover"
+                  />
                 </div>
 
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="logo-upload">
-                      <Button type="button" variant="outline" asChild>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        asChild
+                        className="w-full"
+                      >
                         <span>
                           <Upload className="mr-2 h-4 w-4" />
                           Upload Logo
@@ -181,7 +233,6 @@ const CreateProfile = () => {
                 <Field>
                   <FieldLabel>Company Name</FieldLabel>
                   <Input
-                    defaultValue={company}
                     {...register("name", {
                       required: "Company name is required",
                     })}
@@ -256,7 +307,7 @@ const CreateProfile = () => {
                     }}
                     render={({ field }) => (
                       <Select
-                        value={field.value?.toString()}
+                        value={field.value?.toString() ?? ""}
                         onValueChange={(value) => field.onChange(Number(value))}
                       >
                         <SelectTrigger className="w-full">
@@ -287,6 +338,7 @@ const CreateProfile = () => {
                 <Field>
                   <FieldLabel>Founded Year</FieldLabel>
                   <Input
+                    type="date"
                     placeholder="2022"
                     {...register("founded_year", {
                       required: "Founded year is required",
@@ -302,12 +354,14 @@ const CreateProfile = () => {
         <Card>
           <CardHeader>
             <CardTitle>About Company</CardTitle>
+            <CardDescription>
+              Describe your company, mission, vision, culture and values...
+            </CardDescription>
           </CardHeader>
 
           <CardContent>
             <Textarea
               rows={8}
-              placeholder="Describe your company, mission, vision, culture and values..."
               {...register("about_company", {
                 required: "Company description is required",
               })}
@@ -319,10 +373,13 @@ const CreateProfile = () => {
         <Card>
           <CardHeader>
             <CardTitle>Location</CardTitle>
+            <CardDescription>
+              Provide your company location details
+            </CardDescription>
           </CardHeader>
 
           <CardContent>
-            <FieldGroup className="grid gap-4 md:grid-cols-3">
+            <FieldGroup className="grid gap-4 md:grid-cols-3 mb-4">
               <Field>
                 <FieldLabel>Country</FieldLabel>
                 <Controller
@@ -333,7 +390,7 @@ const CreateProfile = () => {
                   }}
                   render={({ field }) => (
                     <Select
-                      value={field.value?.toString()}
+                      value={field.value?.toString() ?? ""}
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
                       <SelectTrigger className="w-full">
@@ -373,7 +430,7 @@ const CreateProfile = () => {
                   render={({ field }) => (
                     <Select
                       disabled={!selectedCountry}
-                      value={field.value?.toString()}
+                      value={field.value?.toString() ?? ""}
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
                       <SelectTrigger className="w-full">
@@ -410,18 +467,30 @@ const CreateProfile = () => {
                 />
               </Field>
             </FieldGroup>
+
+            <FieldGroup>
+              <Field>
+                <FieldLabel>Location Notes</FieldLabel>
+                <Textarea
+                  rows={8}
+                  placeholder="Describe your company location and directions..."
+                  {...register("location_notes", {
+                    required: "Location notes are required",
+                  })}
+                />
+              </Field>
+            </FieldGroup>
           </CardContent>
         </Card>
 
         {/* Business Verification */}
-
         <Card>
           <CardHeader>
             <CardTitle>Business Verification</CardTitle>
 
-            {/* <CardDescription>
-              Upload company verification documents.
-            </CardDescription> */}
+            <CardDescription>
+              Add business information of your company for verification.
+            </CardDescription>
           </CardHeader>
 
           <CardContent>
@@ -437,6 +506,42 @@ const CreateProfile = () => {
               <Field>
                 <FieldLabel>TIN Number</FieldLabel>
                 <Input type="text" {...register("tin")} />
+              </Field>
+            </FieldGroup>
+          </CardContent>
+        </Card>
+
+        {/* Contact Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Contact Information</CardTitle>
+            <CardDescription>
+              Provide contact details for your company.
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <FieldGroup className="grid gap-4 md:grid-cols-2">
+              <Field>
+                <FieldLabel>Website</FieldLabel>
+                <Input
+                  placeholder="https://yourcompany.com"
+                  {...register("website")}
+                />
+              </Field>
+
+              <Field>
+                <FieldLabel>Fax</FieldLabel>
+                <Input
+                  type="text"
+                  placeholder="Enter fax number"
+                  {...register("fax")}
+                />
+              </Field>
+
+              <Field>
+                <FieldLabel>Extra Communication</FieldLabel>
+                <Input type="text" {...register("extra_communication")} />
               </Field>
             </FieldGroup>
           </CardContent>

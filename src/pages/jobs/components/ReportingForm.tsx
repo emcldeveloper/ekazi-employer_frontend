@@ -45,7 +45,16 @@ const ReportingForm = ({ jobId, onSuccess: nextStep }: ReportingFormProps) => {
   //   job_id: number;
 
   return (
-    <div>
+    <div className="space-y-6">
+      <div className="space-y-1">
+        <h2 className="font-heading text-base leading-normal font-semibold">
+          Reporting Structure
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Please add the reporting structure information for the job.
+        </p>
+      </div>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup className="grid gap-4 sm:grid-cols-2">
           <Field>

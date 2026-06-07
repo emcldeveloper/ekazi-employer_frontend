@@ -32,7 +32,7 @@ export type CreateProfileData = {
   business?: string;
   industry_id?: number;
 
-  founded_year?: string | number;
+  founded_year?: Date;
   company_size_id?: number;
 
   country?: number | null;

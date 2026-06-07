@@ -15,9 +15,15 @@ export const getRegions = async () => {
   return res.data?.region;
 };
 
-export const getIndustry = async () => {
-  const res = await api.get("/universal/industry");
-  return res.data?.industry;
+export const getIndustry = async (search = "", page = 1, limit = 50) => {
+  const res = await api.get("/universal/industry", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data?.data;
 };
 
 export const getPositions = async (search = "", page = 1, limit = 50) => {

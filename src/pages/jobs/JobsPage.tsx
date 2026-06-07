@@ -39,6 +39,7 @@ import { formatDate } from "@/utils/helpers";
 import { Badge } from "@/components/ui/badge";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Field, FieldLabel } from "@/components/ui/field";
+import { Spinner } from "@/components/ui/spinner";
 
 const JobsPage = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const JobsPage = () => {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data: jobsData } = useJobs({
+  const { data: jobsData, isLoading } = useJobs({
     page,
     limit: perPage,
     search: debouncedSearch,
@@ -194,32 +195,51 @@ const JobsPage = () => {
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
-              {jobs.map((job: any) => (
-                <TableRow key={job.id}>
-                  {/* <TableCell>{job.company}</TableCell> */}
-                  <TableCell>{job.job_position.position_name}</TableCell>
-                  <TableCell>{formatDate(job.created_at)}</TableCell>
-                  <TableCell>{formatDate(job.created_at)}</TableCell>
-                  <TableCell>
-                    {Number(job.published) === 1 ? (
-                      <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-                        Published
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                        Unpublished
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>{job.applied_count}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="link" onClick={() => handleView(job.id)}>
-                      View
-                    </Button>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-40">
+                    <div className="flex items-center justify-center">
+                      <Spinner className="size-6" />
+                    </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : jobs.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="h-40 text-center text-muted-foreground"
+                  >
+                    No jobs found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                jobs.map((job: any) => (
+                  <TableRow key={job.id}>
+                    <TableCell>{job.job_position.position_name}</TableCell>
+                    <TableCell>{formatDate(job.created_at)}</TableCell>
+                    <TableCell>{formatDate(job.created_at)}</TableCell>
+                    <TableCell>
+                      {Number(job.published) === 1 ? (
+                        <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                          Published
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                          Unpublished
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>{job.applied_count}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="link" onClick={() => handleView(job.id)}>
+                        View
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
 

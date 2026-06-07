@@ -14,14 +14,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useProfile } from "@/hooks/profile";
 import { useNavigate } from "react-router-dom";
+import { formatDate } from "@/utils/helpers";
 
 const AccountProfile = () => {
   const navigate = useNavigate();
   const { data: companyProfile, isLoading } = useProfile();
   const profile = companyProfile?.data;
+  console.log("Profile Data:", profile);
 
   const handleEditProfile = () => {
-    navigate("/profile/create");
+    navigate("/profile/edit");
   };
 
   if (isLoading) {
@@ -53,17 +55,17 @@ const AccountProfile = () => {
             <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Building2 className="h-4 w-4" />
-                {profile?.industtry_name}
+                {profile?.industry?.name}
               </div>
 
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
-                {profile?.company_size}
+                {profile?.company_size?.name}
               </div>
 
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                Founded {profile?.founded_year}
+                Founded {formatDate(profile?.founded_year)}
               </div>
             </div>
           </div>
@@ -106,6 +108,24 @@ const AccountProfile = () => {
               </p>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Location Notes</CardTitle>
+            </CardHeader>
+
+            <CardContent>
+              <div
+                className="prose prose-sm max-w-none
+                 prose-headings:font-semibold
+                 prose-ul:list-disc
+                 prose-ul:pl-6 leading-7 text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: profile?.location_notes,
+                }}
+              />
+            </CardContent>
+          </Card>
         </div>
 
         <div className="space-y-6">
@@ -119,22 +139,39 @@ const AccountProfile = () => {
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-muted-foreground" />
-                <span>{profile?.email}</span>
+                <a
+                  href={`mailto:${profile?.email}`}
+                  className="text-primary hover:underline"
+                >
+                  {profile?.email}
+                </a>
               </div>
 
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-muted-foreground" />
-                <span>{profile?.phone}</span>
+                <a
+                  href={`tel:${profile?.phone}`}
+                  className="text-primary hover:underline"
+                >
+                  {profile?.phone}
+                </a>
               </div>
 
               <div className="flex items-center gap-3">
                 <Globe className="h-4 w-4 text-muted-foreground" />
-                <span>{profile?.website}</span>
+                <a
+                  href={profile?.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  {profile?.website}
+                </a>
               </div>
 
               <div className="flex items-center gap-3">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span>{`${profile?.sub_location}, ${profile?.region} ${profile?.country}`}</span>
+                <span>{`${profile?.sub_location}, ${profile?.region?.name} ${profile?.country?.name}`}</span>
               </div>
             </CardContent>
           </Card>

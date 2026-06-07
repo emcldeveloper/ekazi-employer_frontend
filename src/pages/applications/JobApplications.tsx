@@ -25,88 +25,25 @@ import { Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import ApplicantDetails from "./components/ApplicantDetails";
-
-const applications = [
-  {
-    id: 2,
-    appliedTime: "2026-05-18 09:15 AM",
-    applicantName: "John Michael",
-    stage: "Applied",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    appliedTime: "2026-05-18 10:42 AM",
-    applicantName: "Aisha Suleiman",
-    stage: "Shortlisted",
-    status: "Reviewed",
-  },
-  {
-    id: 3,
-    appliedTime: "2026-05-18 11:05 AM",
-    applicantName: "Daniel Kimaro",
-    stage: "Screening",
-    status: "In Progress",
-  },
-  {
-    id: 4,
-    appliedTime: "2026-05-18 12:30 PM",
-    applicantName: "Neema Joseph",
-    stage: "Interview",
-    status: "Rejected",
-  },
-  {
-    id: 5,
-    appliedTime: "2026-05-18 01:18 PM",
-    applicantName: "Brian Charles",
-    stage: "Selection",
-    status: "Pending",
-  },
-  {
-    id: 6,
-    appliedTime: "2026-05-18 02:10 PM",
-    applicantName: "Sophia Andrew",
-    stage: "Background Check",
-    status: "Approved",
-  },
-  {
-    id: 7,
-    appliedTime: "2026-05-18 03:22 PM",
-    applicantName: "Kevin Mushi",
-    stage: "Offer",
-    status: "Accepted",
-  },
-  {
-    id: 8,
-    appliedTime: "2026-05-18 04:45 PM",
-    applicantName: "Fatma Omary",
-    stage: "Applied",
-    status: "Pending",
-  },
-  {
-    id: 9,
-    appliedTime: "2026-05-18 05:12 PM",
-    applicantName: "Peter Mwakyusa",
-    stage: "Interview",
-    status: "Reviewed",
-  },
-  {
-    id: 10,
-    appliedTime: "2026-05-18 06:00 PM",
-    applicantName: "Grace Emmanuel",
-    stage: "Offer",
-    status: "Rejected",
-  },
-];
+import { useApplications } from "@/hooks/jobs/useApplications";
+import { useParams } from "react-router-dom";
+import { formatDate } from "@/utils/helpers";
+import { Spinner } from "@/components/ui/spinner";
 
 const JobApplications = () => {
+  const { id } = useParams();
+  const jobId = Number(id);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
+  const { data: applicationsData, isLoading } = useApplications(jobId);
+  const applications = applicationsData?.data ?? [];
+  console.log(applications);
+
   return (
-    <div className="flex gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* left side */}
-      <div className="flex-2 space-y-4">
+      <div className="md:col-span-2 space-y-4">
         <div className="flex flex-col gap-2 lg:flex-row mb-4">
           <InputGroup className="max-w-md">
             <InputGroupInput
@@ -152,23 +89,46 @@ const JobApplications = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {applications.map((application) => (
-              <TableRow key={application.id}>
-                <TableCell>{application.appliedTime}</TableCell>
-                <TableCell>{application.applicantName}</TableCell>
-                <TableCell>{application.stage}</TableCell>
-                <TableCell>{application.status}</TableCell>
-                <TableCell className="text-right">
-                  <ApplicantDetails />
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={6} className="h-40">
+                  <div className="flex items-center justify-center">
+                    <Spinner className="size-6" />
+                  </div>
                 </TableCell>
               </TableRow>
-            ))}
+            ) : applications.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="h-40 text-center text-muted-foreground"
+                >
+                  No applications found
+                </TableCell>
+              </TableRow>
+            ) : (
+              applications.map((application: any) => (
+                <TableRow key={application?.id}>
+                  <TableCell>{formatDate(application?.created_at)}</TableCell>
+                  <TableCell>
+                    {application?.applicant?.first_name}{" "}
+                    {application?.applicant?.middle_name}{" "}
+                    {application?.applicant?.last_name}
+                  </TableCell>
+                  <TableCell>{application?.stage?.stage_name}</TableCell>
+                  <TableCell>{application?.status}</TableCell>
+                  <TableCell className="text-right">
+                    <ApplicantDetails />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
 
       {/* right side */}
-      <div className="flex-2">
+      <div className="md:col-span-1">
         <Card>
           <CardHeader>
             <CardTitle>Application Stages</CardTitle>

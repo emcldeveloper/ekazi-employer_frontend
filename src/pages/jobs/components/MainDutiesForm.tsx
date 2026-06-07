@@ -46,7 +46,16 @@ const MainDutiesForm = ({
   };
 
   return (
-    <div>
+    <div className="space-y-6">
+      <div className="space-y-1">
+        <h2 className="font-heading text-base leading-normal font-semibold">
+          Main Duties
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Please add the main duties for the job.
+        </p>
+      </div>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup>
           <Field>
