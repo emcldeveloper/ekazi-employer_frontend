@@ -39,7 +39,7 @@ const AccountProfile = () => {
       <Card>
         <CardContent className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-10">
-            <div className="w-30 bg-amber-200">
+            <div className="w-30">
               <img src={profile?.logo} alt={profile?.name} />
             </div>
 
