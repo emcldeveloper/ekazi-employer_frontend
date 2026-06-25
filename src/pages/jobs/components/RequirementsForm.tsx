@@ -149,8 +149,11 @@ const RequirementsForm = ({
   const onSubmit = (data: JobRequirementData) => {
     const payload = {
       ...data,
+      // @ts-expect-error TS cannot infer custom select option type here
       culture: data.culture?.map((option) => option.value) ?? [],
+      // @ts-expect-error TS cannot infer custom select option type here
       knowledge: data.knowledge?.map((option) => option.value) ?? [],
+      // @ts-expect-error TS cannot infer custom select option type here
       personality: data.personality?.map((option) => option.value) ?? [],
       // software: data.software?.map((option) => option.value) ?? [],
       // proficiency_id: data.proficiency_id?.map((option) => option.value) ?? [],

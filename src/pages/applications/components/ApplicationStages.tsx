@@ -1,18 +1,17 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
 
 interface ApplicationStagesProps {
   applied?: number;
 }
 
 const ApplicationStages = ({ applied }: ApplicationStagesProps) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const handleApplied = () => {
-    navigate(`/jobs/${jobId}/applications`);
-  };
+  // const handleApplied = () => {
+  //   navigate(`/jobs/${jobId}/applications`);
+  // };
 
   return (
     <>

@@ -28,7 +28,7 @@ const LanguageSection = ({ applicant }: { applicant: any }) => {
           </TableHeader>
 
           <TableBody>
-            {languages.map((item) => (
+            {languages.map((item: any) => (
               <TableRow key={item.id}>
                 <TableCell>{item.language?.language_name ?? "-"}</TableCell>
                 <TableCell>{item.read?.read_ability ?? "-"}</TableCell>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   CalendarDays,
   CheckCircle2,
@@ -6,10 +6,6 @@ import {
   ListTodoIcon,
   Search,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 import {
   InputGroup,
@@ -27,48 +23,9 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import CreateTask from "./components/CreateTask";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const TasksPage = () => {
   const [search, setSearch] = useState("");
-  const isLoading = false;
-
-  const tasks = [];
-
-  const getPriorityVariant = (priority: string) => {
-    switch (priority) {
-      case "High":
-        return "destructive";
-
-      case "Medium":
-        return "secondary";
-
-      default:
-        return "outline";
-    }
-  };
-
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case "Completed":
-        return "default";
-
-      case "In Progress":
-        return "secondary";
-
-      default:
-        return "outline";
-    }
-  };
-
-  const filteredTasks = useMemo(() => {
-    return tasks.filter((task) =>
-      [task.title, task.assignedTo, task.priority, task.status]
-        .join(" ")
-        .toLowerCase()
-        .includes(search.toLowerCase()),
-    );
-  }, [search]);
 
   return (
     <div className="mt-4 space-y-4">
@@ -169,67 +126,14 @@ const TasksPage = () => {
             </TableHeader>
 
             <TableBody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <Skeleton className="h-4 w-40" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-32" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-6 w-20 rounded-full" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-6 w-24 rounded-full" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-24" />
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Skeleton className="ml-auto h-4 w-12" />
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : filteredTasks.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="h-32 text-center text-muted-foreground"
-                  >
-                    No tasks available.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredTasks.map((task) => (
-                  <TableRow key={task.id}>
-                    <TableCell className="font-medium">{task.title}</TableCell>
-
-                    <TableCell>{task.assignedTo}</TableCell>
-
-                    <TableCell>
-                      <Badge variant={getPriorityVariant(task.priority)}>
-                        {task.priority}
-                      </Badge>
-                    </TableCell>
-
-                    <TableCell>
-                      <Badge variant={getStatusVariant(task.status)}>
-                        {task.status}
-                      </Badge>
-                    </TableCell>
-
-                    <TableCell>{task.dueDate}</TableCell>
-
-                    <TableCell className="text-right">
-                      <Button asChild size="sm" variant="link">
-                        <Link to={`/tasks/${task.id}`}>View</Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="h-32 text-center text-muted-foreground"
+                >
+                  No tasks available.
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </CardContent>
