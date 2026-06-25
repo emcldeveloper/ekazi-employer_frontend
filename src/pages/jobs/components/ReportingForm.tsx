@@ -13,13 +13,14 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 interface ReportingFormProps {
-  jobId: number;
-  onSuccess: () => void;
+  job: any;
+  onSuccess?: () => void;
 }
 
-const ReportingForm = ({ jobId, onSuccess: nextStep }: ReportingFormProps) => {
+const ReportingForm = ({ job, onSuccess: closeModal }: ReportingFormProps) => {
   const {
     register,
     handleSubmit,
@@ -29,14 +30,22 @@ const ReportingForm = ({ jobId, onSuccess: nextStep }: ReportingFormProps) => {
 
   const { mutate: createMainDuties, isPending } = useAddReporting();
 
+  useEffect(() => {
+    reset({
+      report_to: job?.job_report_to?.report_to || "",
+      supervises: job?.job_report_to?.supervises || "",
+      interacts_with: job?.job_report_to?.interacts_with || "",
+    });
+  }, [job, reset]);
+
   const onSubmit = (data: JobReportingData) => {
     createMainDuties(
-      { ...data, job_id: jobId },
+      { ...data, job_id: job?.id },
       {
         onSuccess: (res) => {
           toast.success(res?.message || "Requirements Added Succesfully");
-          nextStep();
           reset();
+          closeModal?.();
         },
       },
     );
@@ -46,15 +55,6 @@ const ReportingForm = ({ jobId, onSuccess: nextStep }: ReportingFormProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="font-heading text-base leading-normal font-semibold">
-          Reporting Structure
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          Please add the reporting structure information for the job.
-        </p>
-      </div>
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup className="grid gap-4 sm:grid-cols-2">
           <Field>

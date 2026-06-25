@@ -1,9 +1,9 @@
 import { getTools } from "@/services/universal.service";
 import { useQuery } from "@tanstack/react-query";
 
-export const useTools = () => {
+export const useTools = (search = "", page = 1, limit = 50) => {
   return useQuery({
-    queryKey: ["tools"],
-    queryFn: getTools,
+    queryKey: ["tools", search, page, limit],
+    queryFn: () => getTools(search, page, limit),
   });
 };

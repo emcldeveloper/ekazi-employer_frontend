@@ -20,7 +20,7 @@ export const useAddRequirement = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["job", variables.jobId],
+        queryKey: ["job-details", variables.jobId],
       });
     },
   });

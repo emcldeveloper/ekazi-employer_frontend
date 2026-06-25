@@ -17,8 +17,14 @@ export const createJob = async (payload: JobCreateForm) => {
   return res.data;
 };
 
-export const updateJob = async () => {
-  const res = await api.post("/employer-jobs");
+export const updateJob = async ({
+  id,
+  payload,
+}: {
+  id: number;
+  payload: JobCreateForm;
+}) => {
+  const res = await api.put(`/employer-jobs/${id}`, payload);
   return res.data;
 };
 
@@ -41,10 +47,13 @@ export const getApplications = async (id: any) => {
   return res.data;
 };
 
-// export const getJobApplication = async (id: any) => {
-//   const res = await api.get(`employer-jobs/applicant/{id}`);
-//   return res.data;
-// };
+export const getApplicationsByStage = async (
+  jobId: number,
+  stageId: number,
+) => {
+  const res = await api.get(`/jobs-stages/${stageId}/${jobId}`);
+  return res.data;
+};
 
 export const getJobMeta = async () => {
   const res = await api.get("/employer-job-meta");
@@ -94,5 +103,15 @@ export const addLocation = async (payload: JobLocationData) => {
 
 export const addMetaData = async (payload: JobMetaData) => {
   const res = await api.post("/employer-job-meta", payload);
+  return res.data;
+};
+
+export const publishJob = async (jobId: number) => {
+  const res = await api.post(`/job-publish/${jobId}`);
+  return res.data;
+};
+
+export const deleteJob = async (jobId: number) => {
+  const res = await api.delete(`/job-delete/${jobId}`);
   return res.data;
 };

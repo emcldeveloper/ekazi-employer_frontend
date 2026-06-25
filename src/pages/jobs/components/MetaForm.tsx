@@ -1,42 +1,43 @@
-import type { JobMainDutiesData } from "@/@types/jobs";
-import { Button } from "@/components/ui/button";
-
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-
-import { Textarea } from "@/components/ui/textarea";
-import { useAddMainDuties } from "@/hooks/jobs";
-
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import SearchSelect from "react-select";
+
+import { Button } from "@/components/ui/button";
+import { Field, FieldGroup } from "@/components/ui/field";
+
+import { useAddMetaData } from "@/hooks/jobs";
+import type { JobMetaKeywords } from "@/@types/jobs";
+import { useEffect } from "react";
 
 interface MetaFormProps {
-  jobId: number;
-  onSuccess: () => void;
+  job: any;
+  onSuccess?: () => void;
 }
 
-const MetaForm = ({ jobId, onSuccess: nextStep }: MetaFormProps) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<JobMainDutiesData>();
+const MetaForm = ({ job, onSuccess: closeModal }: MetaFormProps) => {
+  const metaData = job?.job_meta_keywords?.meta_keyword?.name;
 
-  const { mutate: createMainDuties, isPending } = useAddMainDuties();
+  const { control, reset, handleSubmit } = useForm<JobMetaKeywords>();
 
-  const onSubmit = (data: JobMainDutiesData) => {
-    createMainDuties(
-      { ...data, job_id: jobId },
+  const { mutate: createMetaData, isPending } = useAddMetaData();
+
+  // Pre fill data for editing
+  useEffect(() => {
+    if (metaData) {
+      reset({
+        seo_keyword: metaData || "",
+      });
+    }
+  }, [metaData, reset]);
+
+  const onSubmit = (data: JobMetaKeywords) => {
+    createMetaData(
+      { ...data, job_id: job?.id },
       {
         onSuccess: (res) => {
-          nextStep();
-          toast.success(res?.message || "Main Duties Added Succesfully");
+          toast.success(res?.message || "Metadata Added Succesfully");
           reset();
+          closeModal?.();
         },
       },
     );
@@ -46,16 +47,16 @@ const MetaForm = ({ jobId, onSuccess: nextStep }: MetaFormProps) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup>
         <Field>
-          <FieldLabel>Main Duties</FieldLabel>
-          <Textarea
-            placeholder="Enter other requirements..."
-            {...register("main_duties", {
-              required: "Other requirements are required",
-            })}
+          <Controller
+            name="seo_keyword"
+            control={control}
+            rules={{
+              required: "SEO Keywords is required",
+            }}
+            render={({ field }) => (
+              <SearchSelect {...field} isClearable options={[]} />
+            )}
           />
-          {errors.main_duties && (
-            <FieldError>{errors.main_duties.message}</FieldError>
-          )}
         </Field>
       </FieldGroup>
 

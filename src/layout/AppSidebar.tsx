@@ -21,13 +21,13 @@ import {
 import {
   Settings2Icon,
   LayoutDashboard,
-  ChartColumn,
   Briefcase,
   ChevronDown,
   Users,
   LayoutList,
-  BriefcaseBusiness,
   SquareUser,
+  WalletCardsIcon,
+  UserSearchIcon,
 } from "lucide-react";
 import { isRouteActive } from "@/utils/helpers";
 import { NavUser } from "@/components/nav-user";
@@ -50,10 +50,15 @@ const navItems = [
     icon: Briefcase,
   },
   {
-    title: "Clients",
-    url: "/clients",
-    icon: BriefcaseBusiness,
+    title: "Candidates",
+    url: "/candidates",
+    icon: UserSearchIcon,
   },
+  // {
+  //   title: "Clients",
+  //   url: "/clients",
+  //   icon: BriefcaseBusiness,
+  // },
   {
     title: "Tasks",
     url: "/tasks",
@@ -65,10 +70,16 @@ const navItems = [
     icon: Users,
   },
   {
-    title: "Reports",
-    url: "/reports",
-    icon: ChartColumn,
+    title: "Subscription",
+    url: "/subscription",
+    icon: WalletCardsIcon,
   },
+  // {
+  //   title: "Reports",
+  //   url: "/reports",
+  //   icon: ChartColumn,
+  // },
+
   {
     title: "Settings",
     url: "/settings",

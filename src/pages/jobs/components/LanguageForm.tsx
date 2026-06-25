@@ -1,4 +1,7 @@
-import type { JobLanguageData } from "@/@types/jobs";
+import { Controller, useForm } from "react-hook-form";
+import SearchSelect from "react-select";
+import { toast } from "sonner";
+
 import type {
   Language,
   Read,
@@ -7,21 +10,12 @@ import type {
   Write,
 } from "@/@types/language";
 import { Button } from "@/components/ui/button";
-
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import { useAddLanguage } from "@/hooks/jobs/useAddLanguage";
 import {
@@ -31,15 +25,14 @@ import {
   useLanguageUnderstand,
   useLanguageWrite,
 } from "@/hooks/universals";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
+import type { JobLanguageData, OptionType } from "@/@types/jobs";
 
 interface LanguageFormProps {
-  jobId: number;
-  onSuccess: () => void;
+  job: any;
+  onSuccess?: () => void;
 }
 
-const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
+const LanguageForm = ({ job, onSuccess: closeModal }: LanguageFormProps) => {
   const {
     handleSubmit,
     control,
@@ -49,22 +42,54 @@ const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
 
   const { mutate: createJobLanguage, isPending } = useAddLanguage();
 
-  // Get Data
+  // Fetch Languages
   const { data: languages } = useLanguage();
+  const languageOptions: OptionType[] =
+    languages?.map((language: Language) => ({
+      value: language.id,
+      label: language.language_name,
+    })) ?? [];
+
+  // fetch read abilities
   const { data: reads } = useLanguageRead();
+  const readOptions: OptionType[] =
+    reads?.map((read: Read) => ({
+      value: read.id,
+      label: read.read_ability,
+    })) ?? [];
+
+  // fetch speak abilities
   const { data: speaks } = useLanguageSpeak();
+  const speakOptions: OptionType[] =
+    speaks?.map((read: Speak) => ({
+      value: read.id,
+      label: read.speak_ability,
+    })) ?? [];
+
+  // fetch write abilities
   const { data: writes } = useLanguageWrite();
+  const writeOptions: OptionType[] =
+    writes?.map((write: Write) => ({
+      value: write.id,
+      label: write.write_ability,
+    })) ?? [];
+
+  // fetch understand abilities
   const { data: understands } = useLanguageUnderstand();
+  const understandOptions: OptionType[] =
+    understands?.map((read: Understand) => ({
+      value: read.id,
+      label: read.understand_ability,
+    })) ?? [];
 
   const onSubmit = (data: JobLanguageData) => {
     createJobLanguage(
-      { ...data, job_id: jobId },
+      { ...data, job_id: job?.id },
       {
         onSuccess: (res) => {
-          nextStep();
-
           toast.success(res?.message || "Language Added Succesfully");
           reset();
+          closeModal?.();
         },
       },
     );
@@ -74,15 +99,6 @@ const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="font-heading text-base leading-normal font-semibold">
-          Language Requirements
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          Please add the language requirements for the job.
-        </p>
-      </div>
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field>
@@ -94,24 +110,15 @@ const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
                 required: "Language is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select language" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {languages?.map((item: Language) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.language_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <SearchSelect
+                  {...field}
+                  isClearable
+                  options={languageOptions}
+                  value={languageOptions.find(
+                    (option: OptionType) => option.value === field.value,
+                  )}
+                  onChange={(option) => field.onChange(option?.value ?? null)}
+                />
               )}
             />
             {errors.language_id && (
@@ -128,24 +135,15 @@ const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
                 required: "Write ability is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select ability" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {writes?.map((items: Write) => (
-                        <SelectItem key={items.id} value={items.id.toString()}>
-                          {items.write_ability}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <SearchSelect
+                  {...field}
+                  isClearable
+                  options={writeOptions}
+                  value={writeOptions.find(
+                    (option: OptionType) => option.value === field.value,
+                  )}
+                  onChange={(option) => field.onChange(option?.value ?? null)}
+                />
               )}
             />
             {errors.write_id && (
@@ -162,24 +160,15 @@ const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
                 required: "Read ability is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select ability" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {reads?.map((item: Read) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.read_ability}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <SearchSelect
+                  {...field}
+                  isClearable
+                  options={readOptions}
+                  value={readOptions.find(
+                    (option: OptionType) => option.value === field.value,
+                  )}
+                  onChange={(option) => field.onChange(option?.value ?? null)}
+                />
               )}
             />
             {errors.read_id && (
@@ -196,24 +185,15 @@ const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
                 required: "Speak ability is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select ability" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {speaks?.map((item: Speak) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.speak_ability}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <SearchSelect
+                  {...field}
+                  isClearable
+                  options={speakOptions}
+                  value={speakOptions.find(
+                    (option: OptionType) => option.value === field.value,
+                  )}
+                  onChange={(option) => field.onChange(option?.value ?? null)}
+                />
               )}
             />
             {errors.speak_id && (
@@ -227,27 +207,18 @@ const LanguageForm = ({ jobId, onSuccess: nextStep }: LanguageFormProps) => {
               name="understand_id"
               control={control}
               rules={{
-                required: "Understan ability is required",
+                required: "Understand ability is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select ability" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {understands?.map((item: Understand) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.understand_ability}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <SearchSelect
+                  {...field}
+                  isClearable
+                  options={understandOptions}
+                  value={understandOptions.find(
+                    (option: OptionType) => option.value === field.value,
+                  )}
+                  onChange={(option) => field.onChange(option?.value ?? null)}
+                />
               )}
             />
             {errors.understand_id && (

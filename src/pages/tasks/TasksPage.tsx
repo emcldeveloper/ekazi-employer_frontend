@@ -1,42 +1,21 @@
-// TasksPage.tsx
-
 import { useMemo, useState } from "react";
-import { Plus, Search } from "lucide-react";
+import {
+  CalendarDays,
+  CheckCircle2,
+  Clock3,
+  ListTodoIcon,
+  Search,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-import { Field, FieldGroup } from "@/components/ui/field";
-
-import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-
-import { Input } from "@/components/ui/input";
-
-import { Label } from "@/components/ui/label";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import {
   Table,
@@ -47,102 +26,40 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
-
-const tasks = [
-  {
-    id: 1,
-    title: "Review Frontend Applicants",
-    assignedTo: "Amina Yusuf",
-    priority: "High",
-    status: "In Progress",
-    dueDate: "25 May 2026",
-  },
-  {
-    id: 2,
-    title: "Post UI/UX Designer Job",
-    assignedTo: "Kelvin George",
-    priority: "Medium",
-    status: "Pending",
-    dueDate: "27 May 2026",
-  },
-  {
-    id: 3,
-    title: "Schedule Interviews",
-    assignedTo: "Sophia Andrew",
-    priority: "High",
-    status: "Pending",
-    dueDate: "29 May 2026",
-  },
-  {
-    id: 4,
-    title: "Update Employer Profile",
-    assignedTo: "John Michael",
-    priority: "Low",
-    status: "Completed",
-    dueDate: "20 May 2026",
-  },
-  {
-    id: 5,
-    title: "Approve Candidate Shortlist",
-    assignedTo: "Fatma Ali",
-    priority: "High",
-    status: "In Progress",
-    dueDate: "30 May 2026",
-  },
-  {
-    id: 6,
-    title: "Verify Client Documents",
-    assignedTo: "David Peter",
-    priority: "Medium",
-    status: "Pending",
-    dueDate: "31 May 2026",
-  },
-  {
-    id: 7,
-    title: "Prepare Weekly Report",
-    assignedTo: "Grace William",
-    priority: "Low",
-    status: "Completed",
-    dueDate: "18 May 2026",
-  },
-  {
-    id: 8,
-    title: "Manage Job Applications",
-    assignedTo: "Neema Charles",
-    priority: "Medium",
-    status: "In Progress",
-    dueDate: "28 May 2026",
-  },
-];
-
-const getPriorityVariant = (priority: string) => {
-  switch (priority) {
-    case "High":
-      return "destructive";
-
-    case "Medium":
-      return "secondary";
-
-    default:
-      return "outline";
-  }
-};
-
-const getStatusVariant = (status: string) => {
-  switch (status) {
-    case "Completed":
-      return "default";
-
-    case "In Progress":
-      return "secondary";
-
-    default:
-      return "outline";
-  }
-};
+import CreateTask from "./components/CreateTask";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TasksPage = () => {
   const [search, setSearch] = useState("");
+  const isLoading = false;
+
+  const tasks = [];
+
+  const getPriorityVariant = (priority: string) => {
+    switch (priority) {
+      case "High":
+        return "destructive";
+
+      case "Medium":
+        return "secondary";
+
+      default:
+        return "outline";
+    }
+  };
+
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+      case "Completed":
+        return "default";
+
+      case "In Progress":
+        return "secondary";
+
+      default:
+        return "outline";
+    }
+  };
 
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) =>
@@ -155,162 +72,71 @@ const TasksPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <h2 className="text-xl font-bold">Tasks</h2>
+      <Card size="sm">
+        <CardContent>
+          <div>
+            <h2 className="text-2xl font-bold">Task Management</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Track task progress, monitor workloads, and manage task completion
+              across your team.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Task
-            </Button>
-          </DialogTrigger>
-
-          <DialogContent className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle>Create Task</DialogTitle>
-
-              <DialogDescription>
-                Assign tasks to your recruiters or team members.
-              </DialogDescription>
-            </DialogHeader>
-
-            <FieldGroup>
-              <Field>
-                <Label>Task Title</Label>
-
-                <Input placeholder="Enter task title" />
-              </Field>
-
-              <Field>
-                <Label>Description</Label>
-
-                <Input placeholder="Enter task description" />
-              </Field>
-
-              <Field>
-                <Label>Assign To</Label>
-
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select user" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectItem value="amina">Amina Yusuf</SelectItem>
-
-                    <SelectItem value="kelvin">Kelvin George</SelectItem>
-
-                    <SelectItem value="sophia">Sophia Andrew</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <Field>
-                  <Label>Priority</Label>
-
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Priority" />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      <SelectItem value="low">Low</SelectItem>
-
-                      <SelectItem value="medium">Medium</SelectItem>
-
-                      <SelectItem value="high">High</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </Field>
-
-                <Field>
-                  <Label>Status</Label>
-
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-
-                      <SelectItem value="progress">In Progress</SelectItem>
-
-                      <SelectItem value="completed">Completed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </Field>
-              </div>
-
-              <Field>
-                <Label>Due Date</Label>
-
-                <Input type="date" />
-              </Field>
-            </FieldGroup>
-
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-
-              <Button>Create Task</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      {/* <div className="grid gap-4 md:grid-cols-4">
-        <div className="rounded-2xl border bg-background p-5">
-          <div className="flex items-center justify-between">
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card size="sm">
+          <CardContent className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Total Tasks</p>
-
-              <h2 className="mt-2 text-3xl font-bold">24</h2>
+              <h3 className="text-sm text-muted-foreground">All Tasks</h3>
+              <p className="mt-1 text-3xl font-bold">0</p>
             </div>
 
-            <CheckCircle2 className="h-8 w-8 text-muted-foreground" />
-          </div>
-        </div>
+            <div className="rounded-lg bg-blue-100 p-3 text-blue-600">
+              <ListTodoIcon size={16} />
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="rounded-2xl border bg-background p-5">
-          <div className="flex items-center justify-between">
+        <Card size="sm">
+          <CardContent className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Pending</p>
-
-              <h2 className="mt-2 text-3xl font-bold">10</h2>
+              <h3 className="text-sm text-muted-foreground">Completed</h3>
+              <p className="mt-1 text-3xl font-bold">0</p>
             </div>
 
-            <Clock3 className="h-8 w-8 text-muted-foreground" />
-          </div>
-        </div>
+            <div className="rounded-lg bg-green-100 p-3 text-green-600">
+              <CheckCircle2 size={16} />
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="rounded-2xl border bg-background p-5">
-          <div className="flex items-center justify-between">
+        <Card size="sm">
+          <CardContent className="flex items-center justify-between">
             <div>
               <p className="text-sm text-muted-foreground">In Progress</p>
 
-              <h2 className="mt-2 text-3xl font-bold">8</h2>
+              <h2 className="mt-1 text-3xl font-bold">0</h2>
             </div>
 
-            <CalendarDays className="h-8 w-8 text-muted-foreground" />
-          </div>
-        </div>
+            <div className="rounded-lg bg-amber-100 p-3 text-amber-600">
+              <Clock3 size={16} />
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="rounded-2xl border bg-background p-5">
-          <div className="flex items-center justify-between">
+        <Card size="sm">
+          <CardContent className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Team Members</p>
-
-              <h2 className="mt-2 text-3xl font-bold">12</h2>
+              <p className="text-sm text-muted-foreground">Pending</p>
+              <h2 className="mt-1 text-3xl font-bold">0</h2>
             </div>
-
-            <User2 className="h-8 w-8 text-muted-foreground" />
-          </div>
-        </div>
-      </div> */}
+            <div className="rounded-lg bg-indigo-100 p-3 text-indigo-600">
+              <CalendarDays size={16} />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardContent className="space-y-4">
@@ -326,6 +152,8 @@ const TasksPage = () => {
                 <Search className="h-4 w-4" />
               </InputGroupAddon>
             </InputGroup>
+
+            <CreateTask />
           </div>
 
           <Table>
@@ -341,33 +169,67 @@ const TasksPage = () => {
             </TableHeader>
 
             <TableBody>
-              {filteredTasks.map((task) => (
-                <TableRow key={task.id}>
-                  <TableCell className="font-medium">{task.title}</TableCell>
-
-                  <TableCell>{task.assignedTo}</TableCell>
-
-                  <TableCell>
-                    <Badge variant={getPriorityVariant(task.priority)}>
-                      {task.priority}
-                    </Badge>
-                  </TableCell>
-
-                  <TableCell>
-                    <Badge variant={getStatusVariant(task.status)}>
-                      {task.status}
-                    </Badge>
-                  </TableCell>
-
-                  <TableCell>{task.dueDate}</TableCell>
-
-                  <TableCell className="text-right">
-                    <Button asChild size="sm" variant="link">
-                      <Link to={`/tasks/${task.id}`}>View</Link>
-                    </Button>
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="h-4 w-40" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-32" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-20 rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-24 rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Skeleton className="ml-auto h-4 w-12" />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : filteredTasks.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="h-32 text-center text-muted-foreground"
+                  >
+                    No tasks available.
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                filteredTasks.map((task) => (
+                  <TableRow key={task.id}>
+                    <TableCell className="font-medium">{task.title}</TableCell>
+
+                    <TableCell>{task.assignedTo}</TableCell>
+
+                    <TableCell>
+                      <Badge variant={getPriorityVariant(task.priority)}>
+                        {task.priority}
+                      </Badge>
+                    </TableCell>
+
+                    <TableCell>
+                      <Badge variant={getStatusVariant(task.status)}>
+                        {task.status}
+                      </Badge>
+                    </TableCell>
+
+                    <TableCell>{task.dueDate}</TableCell>
+
+                    <TableCell className="text-right">
+                      <Button asChild size="sm" variant="link">
+                        <Link to={`/tasks/${task.id}`}>View</Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </CardContent>

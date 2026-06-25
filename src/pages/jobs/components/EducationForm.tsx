@@ -1,4 +1,7 @@
-import type { JobEducationData } from "@/@types/jobs";
+import SearchSelect from "react-select";
+import CreatableSelect from "react-select/creatable";
+
+import type { JobEducationData, OptionType } from "@/@types/jobs";
 import type { Course, EducationLevel, Major } from "@/@types/universals";
 import {
   Field,
@@ -6,22 +9,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "@/components/ui/combobox";
 
 import { useAddEducation } from "@/hooks/jobs/useAddEducation";
 import { useCourses, useEducationLevels, useMajors } from "@/hooks/universals";
@@ -31,11 +18,11 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 interface EducationFormProps {
-  jobId: number;
-  onSuccess: () => void;
+  job: any;
+  onSuccess?: () => void;
 }
 
-const EducationForm = ({ jobId, onSuccess: nextStep }: EducationFormProps) => {
+const EducationForm = ({ job, onSuccess: closeModal }: EducationFormProps) => {
   const [courseSearch, setCourseSearch] = useState("");
   const [majorSearch, setMajorSearch] = useState("");
 
@@ -48,22 +35,38 @@ const EducationForm = ({ jobId, onSuccess: nextStep }: EducationFormProps) => {
 
   const { mutate: createJobEducation, isPending } = useAddEducation();
 
-  // Get Data
+  // Fetch education levels
   const { data: levels } = useEducationLevels();
-  const { data: coursesResponse } = useCourses(courseSearch);
-  const { data: majorsResponse } = useMajors(majorSearch);
+  const levelOptions: OptionType[] =
+    levels?.map((level: EducationLevel) => ({
+      value: level.id,
+      label: level.education_level,
+    })) ?? [];
 
-  const courses = coursesResponse?.data ?? [];
-  const majors = majorsResponse?.data ?? [];
+  // fetch courses
+  const { data: courses } = useCourses(courseSearch);
+  const courseOptions: OptionType[] =
+    courses?.map((course: Course) => ({
+      value: course.id,
+      label: course.course_name,
+    })) ?? [];
+
+  // fetch majors
+  const { data: majors } = useMajors(majorSearch);
+  const majorOptions: OptionType[] =
+    majors?.map((major: Major) => ({
+      value: major.id,
+      label: major.name,
+    })) ?? [];
 
   const onSubmit = (data: JobEducationData) => {
     createJobEducation(
-      { ...data, job_id: jobId },
+      { ...data, job_id: job?.id },
       {
         onSuccess: (res) => {
           toast.success(res?.message || "Education Added Succesfully");
-          nextStep();
           reset();
+          closeModal?.();
         },
       },
     );
@@ -83,24 +86,15 @@ const EducationForm = ({ jobId, onSuccess: nextStep }: EducationFormProps) => {
               required: "Education level is required",
             }}
             render={({ field }) => (
-              <Select
-                value={field.value?.toString()}
-                onValueChange={(value) => field.onChange(Number(value))}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select education level" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  <SelectGroup>
-                    {levels?.map((level: EducationLevel) => (
-                      <SelectItem key={level.id} value={level.id.toString()}>
-                        {level.education_level}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <SearchSelect
+                {...field}
+                isClearable
+                options={levelOptions}
+                value={levelOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value ?? null)}
+              />
             )}
           />
           {errors.education_level_id && (
@@ -110,7 +104,6 @@ const EducationForm = ({ jobId, onSuccess: nextStep }: EducationFormProps) => {
 
         <Field>
           <FieldLabel htmlFor="programme_id">Course/Programme</FieldLabel>
-
           <Controller
             name="programme_id"
             control={control}
@@ -118,37 +111,15 @@ const EducationForm = ({ jobId, onSuccess: nextStep }: EducationFormProps) => {
               required: "Course/Programme is required",
             }}
             render={({ field }) => (
-              <Combobox
-                items={courses ?? []}
-                value={
-                  courses?.find((course: Course) => course.id === field.value)
-                    ?.course_name ?? ""
-                }
-                onValueChange={(value) => {
-                  const selectedCourse = courses?.find(
-                    (course: Course) => course.course_name === value,
-                  );
-
-                  field.onChange(selectedCourse?.id);
-                }}
-              >
-                <ComboboxInput
-                  placeholder="Search course..."
-                  onChange={(e) => setCourseSearch(e.target.value)}
-                />
-
-                <ComboboxContent>
-                  <ComboboxEmpty>No course found.</ComboboxEmpty>
-
-                  <ComboboxList>
-                    {courses?.map((course: Course) => (
-                      <ComboboxItem key={course.id} value={course.course_name}>
-                        {course.course_name}
-                      </ComboboxItem>
-                    ))}
-                  </ComboboxList>
-                </ComboboxContent>
-              </Combobox>
+              <CreatableSelect
+                options={courseOptions}
+                value={courseOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value)}
+                onInputChange={setCourseSearch}
+                isClearable
+              />
             )}
           />
 
@@ -159,7 +130,6 @@ const EducationForm = ({ jobId, onSuccess: nextStep }: EducationFormProps) => {
 
         <Field>
           <FieldLabel htmlFor="major_id">Major / Specialized In</FieldLabel>
-
           <Controller
             name="major_id"
             control={control}
@@ -167,37 +137,15 @@ const EducationForm = ({ jobId, onSuccess: nextStep }: EducationFormProps) => {
               required: "Major is required",
             }}
             render={({ field }) => (
-              <Combobox
-                items={majors ?? []}
-                value={
-                  majors?.find((major: Major) => major.id === field.value)
-                    ?.name ?? ""
-                }
-                onValueChange={(value) => {
-                  const selectedMajor = majors?.find(
-                    (major: Major) => major.name === value,
-                  );
-
-                  field.onChange(selectedMajor?.id);
-                }}
-              >
-                <ComboboxInput
-                  placeholder="Search major..."
-                  onChange={(e) => setMajorSearch(e.target.value)}
-                />
-
-                <ComboboxContent>
-                  <ComboboxEmpty>No major found.</ComboboxEmpty>
-
-                  <ComboboxList>
-                    {majors?.map((major: Major) => (
-                      <ComboboxItem key={major.id} value={major.name}>
-                        {major.name}
-                      </ComboboxItem>
-                    ))}
-                  </ComboboxList>
-                </ComboboxContent>
-              </Combobox>
+              <CreatableSelect
+                options={majorOptions}
+                value={majorOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value)}
+                onInputChange={setMajorSearch}
+                isClearable
+              />
             )}
           />
 

@@ -11,3 +11,5 @@ export * from "./useAddLocation";
 export * from "./useAddMainDuties";
 export * from "./useAddMetaData";
 export * from "./useAddReporting";
+export * from "./usePublishJob";
+export * from "./useDeleteJob";

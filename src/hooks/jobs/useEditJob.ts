@@ -7,9 +7,13 @@ export const useEditJob = () => {
   return useMutation({
     mutationFn: updateJob,
 
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["jobs"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["job", variables.id],
       });
     },
   });

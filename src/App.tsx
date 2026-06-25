@@ -18,6 +18,9 @@ import AccountProfile from "./pages/account/AccountProfile";
 import CreateProfile from "./pages/account/components/CreateProfile";
 import AuthCallback from "./pages/auth/AuthCallback";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
+import SubscriptionPage from "./pages/subscriptions/SubscriptionPage";
+import CandidatePage from "./pages/candidates/CandidatePage";
+import SettingsPage from "./pages/settings/SettingsPage";
 
 const App = () => {
   return (
@@ -44,6 +47,8 @@ const App = () => {
               />
               <Route path="/jobs/create" element={<CreateJob />} />
 
+              <Route path="/candidates" element={<CandidatePage />} />
+
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/clients/:id" element={<ClientDetails />} />
 
@@ -51,8 +56,12 @@ const App = () => {
               <Route path="/tasks/:id" element={<TaskDetails />} />
 
               <Route path="/users" element={<UsersPage />} />
+
+              <Route path="/subscription" element={<SubscriptionPage />} />
+
               <Route path="/reports" element={<Dashboard />} />
-              <Route path="/settings" element={<Dashboard />} />
+
+              <Route path="/settings" element={<SettingsPage />} />
             </Route>
           </Route>
         </Routes>

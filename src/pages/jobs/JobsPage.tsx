@@ -1,6 +1,12 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
+import {
+  BriefcaseBusinessIcon,
+  CircleCheckBigIcon,
+  Clock3Icon,
+  Search,
+  SendIcon,
+} from "lucide-react";
 
 import {
   Table,
@@ -60,6 +66,10 @@ const JobsPage = () => {
     deadline: deadlineFilter,
   });
   const jobs = jobsData?.data ?? [];
+  const totalJobs = jobsData?.total;
+  const activeJobs = 0;
+  const expiredJobs = 0;
+  const publishedJobs = 0;
 
   const visiblePages = useMemo(() => {
     const totalPages = jobsData?.total_pages ?? 0;
@@ -89,40 +99,77 @@ const JobsPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:justify-between mb-4">
-        <h2 className="text-xl font-bold">All Jobs</h2>
+      <Card size="sm">
+        <CardContent>
+          <div>
+            <h2 className="text-2xl font-bold">Job Management</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Create, manage, and monitor job postings, track applications, and
+              oversee the hiring process across your organization.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Button onClick={handlePostJob}>Create Job</Button>
+      {/* stats */}
+
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card size="sm">
+          <CardContent className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm text-muted-foreground">All Jobs</h3>
+              <p className="mt-1 text-3xl font-bold">{totalJobs}</p>
+            </div>
+
+            <div className="rounded-lg bg-blue-100 p-3 text-blue-600">
+              <BriefcaseBusinessIcon size={16} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card size="sm">
+          <CardContent className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm text-muted-foreground">Active</h3>
+              <p className="mt-1 text-3xl font-bold">{activeJobs}</p>
+            </div>
+
+            <div className="rounded-lg bg-green-100 p-3 text-green-600">
+              <CircleCheckBigIcon size={16} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card size="sm">
+          <CardContent className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm text-muted-foreground">Expired</h3>
+              <p className="mt-1 text-3xl font-bold">{expiredJobs}</p>
+            </div>
+
+            <div className="rounded-lg bg-red-100 p-3 text-red-600">
+              <Clock3Icon size={16} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card size="sm">
+          <CardContent className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm text-muted-foreground">Published</h3>
+              <p className="mt-1 text-3xl font-bold">{publishedJobs}</p>
+            </div>
+
+            <div className="rounded-lg bg-indigo-100 p-3 text-indigo-600">
+              <SendIcon size={16} />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
         <CardContent className="space-y-4">
-          <div className="flex flex-col gap-2 sm:flex-row mb-4">
-            {/* Data per page */}
-            <Field orientation="horizontal" className="w-fit sm:mr-8">
-              <FieldLabel htmlFor="select-rows-per-page">
-                Rows per page
-              </FieldLabel>
-              <Select
-                value={String(perPage)}
-                onValueChange={(value) => {
-                  setPerPage(Number(value));
-                  setPage(1); // Reset to first page
-                }}
-              >
-                <SelectTrigger className="w-20" id="select-rows-per-page">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent align="start">
-                  <SelectGroup>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="25">25</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </Field>
-
+          <div className="flex flex-col gap-2 sm:flex-row sm:justify-between mb-4">
             {/* Search */}
             <InputGroup className="max-w-md">
               <InputGroupInput
@@ -181,6 +228,9 @@ const JobsPage = () => {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* create job */}
+            <Button onClick={handlePostJob}>Create Job</Button>
           </div>
 
           <Table>
@@ -243,34 +293,62 @@ const JobsPage = () => {
             </TableBody>
           </Table>
 
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => page > 1 && setPage(page - 1)}
-                />
-              </PaginationItem>
+          <div className="flex items-center">
+            {/* Data per page */}
+            <Field orientation="horizontal" className="w-fit">
+              <FieldLabel htmlFor="select-rows-per-page">
+                Rows per page
+              </FieldLabel>
+              <Select
+                value={String(perPage)}
+                onValueChange={(value) => {
+                  setPerPage(Number(value));
+                  setPage(1); // Reset to first page
+                }}
+              >
+                <SelectTrigger className="w-20" id="select-rows-per-page">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent align="start">
+                  <SelectGroup>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
 
-              {visiblePages.map((pageNumber) => (
-                <PaginationItem key={pageNumber}>
-                  <PaginationLink
-                    isActive={page === pageNumber}
-                    onClick={() => setPage(pageNumber)}
-                  >
-                    {pageNumber}
-                  </PaginationLink>
+            {/* Pagination */}
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => page > 1 && setPage(page - 1)}
+                  />
                 </PaginationItem>
-              ))}
 
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() =>
-                    page < (jobsData?.total_pages ?? 1) && setPage(page + 1)
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+                {visiblePages.map((pageNumber) => (
+                  <PaginationItem key={pageNumber}>
+                    <PaginationLink
+                      isActive={page === pageNumber}
+                      onClick={() => setPage(pageNumber)}
+                    >
+                      {pageNumber}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() =>
+                      page < (jobsData?.total_pages ?? 1) && setPage(page + 1)
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </CardContent>
       </Card>
     </div>

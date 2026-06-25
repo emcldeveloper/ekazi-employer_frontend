@@ -1,30 +1,27 @@
-import type { JobMainDutiesData } from "@/@types/jobs";
-import { Button } from "@/components/ui/button";
-
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-
-import { Textarea } from "@/components/ui/textarea";
-import { useAddMainDuties } from "@/hooks/jobs";
-
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
+import RichTextEditor from "@/components/RichTextEditor";
+
+import { useAddMainDuties } from "@/hooks/jobs";
+import type { JobMainDutiesData } from "@/@types/jobs";
+
 interface MainDutiesFormProps {
-  jobId: number;
-  onSuccess: () => void;
+  job: any;
+  onSuccess?: () => void;
 }
 
 const MainDutiesForm = ({
-  jobId,
-  onSuccess: nextStep,
+  job,
+  onSuccess: closeModal,
 }: MainDutiesFormProps) => {
+  const mainDuties = job?.job_duties?.main_duties;
+
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -32,14 +29,23 @@ const MainDutiesForm = ({
 
   const { mutate: createMainDuties, isPending } = useAddMainDuties();
 
+  // Pre fill data for editing
+  useEffect(() => {
+    if (mainDuties) {
+      reset({
+        main_duties: mainDuties || "",
+      });
+    }
+  }, [mainDuties, reset]);
+
   const onSubmit = (data: JobMainDutiesData) => {
     createMainDuties(
-      { ...data, job_id: jobId },
+      { ...data, job_id: job?.id },
       {
         onSuccess: (res) => {
-          nextStep();
           toast.success(res?.message || "Main Duties Added Succesfully");
           reset();
+          closeModal?.();
         },
       },
     );
@@ -47,25 +53,23 @@ const MainDutiesForm = ({
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="font-heading text-base leading-normal font-semibold">
-          Main Duties
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          Please add the main duties for the job.
-        </p>
-      </div>
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup>
           <Field>
-            <FieldLabel>Main Duties</FieldLabel>
-            <Textarea
-              placeholder="Enter other requirements..."
-              {...register("main_duties", {
-                required: "Other requirements are required",
-              })}
+            <Controller
+              name="main_duties"
+              control={control}
+              rules={{
+                required: "Main duties are required",
+              }}
+              render={({ field }) => (
+                <RichTextEditor
+                  value={field.value || ""}
+                  onChange={field.onChange}
+                />
+              )}
             />
+
             {errors.main_duties && (
               <FieldError>{errors.main_duties.message}</FieldError>
             )}

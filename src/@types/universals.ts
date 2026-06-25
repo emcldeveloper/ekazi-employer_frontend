@@ -13,6 +13,11 @@ export type JobType = {
   type_name: string;
 };
 
+export type PositionType = {
+  id: number;
+  position_name: string;
+};
+
 export type PositionLevel = {
   id: number;
   position_name: string;
@@ -33,6 +38,7 @@ export type Region = {
   id: number;
   country_id: number;
   region_name: string;
+  country?: Country;
 };
 
 export type EducationLevel = {
@@ -84,5 +90,3 @@ export type Proficiency = {
   id: number;
   proficiency_name: string;
 };
-
-

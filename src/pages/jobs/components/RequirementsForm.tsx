@@ -1,13 +1,14 @@
-import type { AllRequirementsData, JobRequirementData } from "@/@types/jobs";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { JobRequirementData, OptionType } from "@/@types/jobs";
+import SearchSelect from "react-select";
+import CreatableSelect from "react-select/creatable";
 
 import type {
   Culture,
   Gender,
   Knowledge,
   Personality,
-  Proficiency,
-  Software,
-  Tool,
 } from "@/@types/universals";
 import { Button } from "@/components/ui/button";
 
@@ -18,16 +19,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useAddOtherRequirement } from "@/hooks/jobs/useAddOtherRequirement";
 
 import { useAddRequirement } from "@/hooks/jobs/useAddRequirement";
 import {
@@ -35,104 +26,165 @@ import {
   useGenders,
   useKnowledges,
   usePersonalities,
-  useProficiencies,
-  useSoftwares,
-  useTools,
 } from "@/hooks/universals";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
 interface RequirementsFormProps {
-  jobId: number;
-  onSuccess: () => void;
+  job: any;
+  onSuccess?: () => void;
 }
 
 const RequirementsForm = ({
-  jobId,
-  onSuccess: nextStep,
+  job,
+  onSuccess: closeModal,
 }: RequirementsFormProps) => {
+  const [personalitySearch, setPersonalitySearch] = useState("");
+  const [skillSearch, setSkillSearch] = useState("");
+  // const [softwareSearch, setSoftwareSearch] = useState("");
+  // const [toolsSearch, setToolsSearch] = useState("");
+  // const [prociencySearch, setProficiencySearch] = useState("");
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
     reset,
-  } = useForm<AllRequirementsData>();
+  } = useForm<JobRequirementData>({
+    defaultValues: {
+      gender_id: null,
+      culture: [],
+      personality: [],
+      knowledge: [],
+      software: [],
+      proficiency_id: [],
+      tool: [],
+    },
+  });
 
-  const { mutate: createJobRequirement } = useAddRequirement();
-  const { mutate: createOtherRequirement, isPending } =
-    useAddOtherRequirement();
+  const { mutate: createJobRequirement, isPending } = useAddRequirement();
 
-  // Get Data
+  // fetch genders
   const { data: genders } = useGenders();
-  const { data: cultures } = useCultures();
-  const { data: personalities } = usePersonalities();
-  const { data: knowledges } = useKnowledges();
-  const { data: softwares } = useSoftwares();
-  const { data: tools } = useTools();
-  const { data: proficiencies } = useProficiencies();
+  const genderOptions: OptionType[] =
+    genders?.map((gender: Gender) => ({
+      value: gender.id,
+      label: gender.gender_name,
+    })) ?? [];
 
-  const onSubmit = (data: AllRequirementsData) => {
-    const payload: JobRequirementData = {
-      years_experience: data.years_experience,
-      applicant_min_age: data.applicant_min_age,
-      applicant_max_age: data.applicant_max_age,
-      gender_id: data.gender_id,
-      position_experiences: data.position_experiences,
-      culture: data.culture,
-      knowledge: data.knowledge,
-      personality: data.personality,
-      software: data.software,
-      proficiency_id: data.proficiency_id,
-      tool: data.tool,
+  // fetch cultures
+  const { data: cultures } = useCultures();
+  const cultureOptions: string[] =
+    cultures?.map((culture: Culture) => ({
+      value: culture.id,
+      label: culture.culture_name,
+    })) ?? [];
+
+  // fetch personalities
+  const { data: personalities } = usePersonalities(personalitySearch);
+  const personalityOptions: string[] =
+    personalities?.map((personality: Personality) => ({
+      value: personality.id,
+      label: personality.personality_name,
+    })) ?? [];
+
+  // fetch skills
+  const { data: knowledges } = useKnowledges(skillSearch);
+  const skillOptions: string[] =
+    knowledges?.map((skill: Knowledge) => ({
+      value: skill.id,
+      label: skill.knowledge_name,
+    })) ?? [];
+
+  // fetch softwares
+  // const { data: softwares } = useSoftwares(softwareSearch);
+  // const softwareOptions: string[] =
+  //   softwares?.map((software: Software) => ({
+  //     value: software.id,
+  //     label: software.software_name,
+  //   })) ?? [];
+
+  // fetch tools
+  // const { data: tools } = useTools(toolsSearch);
+  // const toolOptions: string[] =
+  //   tools?.map((tool: Tool) => ({
+  //     value: tool.id,
+  //     label: tool.tool_name,
+  //   })) ?? [];
+
+  // fetch proficiencies
+  // const { data: proficiencies } = useProficiencies(prociencySearch);
+  // const proficiencyOptions: number[] =
+  //   proficiencies?.map((proficiency: Proficiency) => ({
+  //     value: proficiency.id,
+  //     label: proficiency.proficiency_name,
+  //   })) ?? [];
+
+  // Pre fill data for editing
+  useEffect(() => {
+    reset({
+      years_experience: job?.years_experience || "",
+      applicant_min_age: job?.applicant_min_age || "",
+      applicant_max_age: job?.applicant_max_age || "",
+      gender_id: job?.gender_id || "",
+      culture:
+        job?.job_culture?.map((item: any) => ({
+          value: item.culture?.id,
+          label: item.culture?.culture_name,
+        })) ?? [],
+      personality:
+        job?.job_personality?.map((item: any) => ({
+          value: item.personality?.id,
+          label: item.personality?.personality_name,
+        })) ?? [],
+      knowledge:
+        job?.job_knowledge?.map((item: any) => ({
+          value: item.knowledge?.id,
+          label: item.knowledge?.knowledge_name,
+        })) ?? [],
+    });
+  }, [job, reset]);
+
+  // Handlers
+  const onSubmit = (data: JobRequirementData) => {
+    const payload = {
+      ...data,
+      culture: data.culture?.map((option) => option.value) ?? [],
+      knowledge: data.knowledge?.map((option) => option.value) ?? [],
+      personality: data.personality?.map((option) => option.value) ?? [],
+      // software: data.software?.map((option) => option.value) ?? [],
+      // proficiency_id: data.proficiency_id?.map((option) => option.value) ?? [],
+      // tool: data.tool?.map((option) => option.value) ?? [],
     };
 
     createJobRequirement(
       {
-        jobId,
+        jobId: job?.id,
         payload,
       },
       {
         onSuccess: (res) => {
           toast.success(res?.message || "Requirements Added Succesfully");
           reset();
-        },
-      },
-    );
-
-    createOtherRequirement(
-      { job_id: jobId, other_requirement: data.other_requirement },
-      {
-        onSuccess: () => {
-          nextStep();
-          reset();
+          closeModal?.();
         },
       },
     );
   };
 
-  //   job_id: number;
-
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="font-heading text-base leading-normal font-semibold">
-          Candidate Qualifications
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          Please add the candidate qualifications for the job.
-        </p>
-      </div>
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field>
-            <FieldLabel>Experience</FieldLabel>
+            <FieldLabel>Experience years</FieldLabel>
             <Input
+              min={1}
               type="number"
               {...register("years_experience", {
                 valueAsNumber: true,
                 required: "Experience is required",
+                min: 1,
               })}
             />
             {errors.years_experience && (
@@ -141,7 +193,7 @@ const RequirementsForm = ({
           </Field>
 
           <Field>
-            <FieldLabel>Age Group</FieldLabel>
+            <FieldLabel>Age Group (min - max)</FieldLabel>
             <div className="flex items-center gap-2">
               <Input
                 type="number"
@@ -172,24 +224,15 @@ const RequirementsForm = ({
                 required: "Gender is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select geneder" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {genders?.map((item: Gender) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.gender_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <SearchSelect
+                  {...field}
+                  isClearable
+                  options={genderOptions}
+                  value={genderOptions.find(
+                    (option: OptionType) => option.value === field.value,
+                  )}
+                  onChange={(option) => field.onChange(option?.value ?? null)}
+                />
               )}
             />
             {errors.gender_id && (
@@ -206,24 +249,14 @@ const RequirementsForm = ({
                 required: "Culture is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select culture" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {cultures?.map((items: Culture) => (
-                        <SelectItem key={items.id} value={items.id.toString()}>
-                          {items.culture_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <SearchSelect
+                  {...field}
+                  isClearable
+                  isMulti
+                  options={cultureOptions}
+                  value={field.value}
+                  onChange={(selected) => field.onChange(selected ?? [])}
+                />
               )}
             />
             {errors.culture && (
@@ -240,24 +273,15 @@ const RequirementsForm = ({
                 required: "Personality is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select personality" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {personalities?.map((item: Personality) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.personality_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <CreatableSelect
+                  {...field}
+                  options={personalityOptions}
+                  value={field.value}
+                  onChange={(selected) => field.onChange(selected ?? [])}
+                  onInputChange={setPersonalitySearch}
+                  isClearable
+                  isMulti
+                />
               )}
             />
             {errors.personality && (
@@ -266,7 +290,7 @@ const RequirementsForm = ({
           </Field>
 
           <Field>
-            <FieldLabel>Knowledge</FieldLabel>
+            <FieldLabel>Skills</FieldLabel>
             <Controller
               name="knowledge"
               control={control}
@@ -274,24 +298,15 @@ const RequirementsForm = ({
                 required: "Knowledge is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select knowledge" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {knowledges?.map((item: Knowledge) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.knowledge_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <CreatableSelect
+                  {...field}
+                  options={skillOptions}
+                  value={field.value}
+                  onChange={(selected) => field.onChange(selected ?? [])}
+                  onInputChange={setSkillSearch}
+                  isClearable
+                  isMulti
+                />
               )}
             />
             {errors.knowledge && (
@@ -299,7 +314,7 @@ const RequirementsForm = ({
             )}
           </Field>
 
-          <Field>
+          {/* <Field>
             <FieldLabel>Software</FieldLabel>
             <Controller
               name="software"
@@ -308,32 +323,23 @@ const RequirementsForm = ({
                 required: "Software is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select software" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {softwares?.map((item: Software) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.software_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <CreatableSelect
+                  {...field}
+                  options={softwareOptions}
+                  value={field.value}
+                  onChange={(selected) => field.onChange(selected ?? [])}
+                  onInputChange={setSoftwareSearch}
+                  isClearable
+                  isMulti
+                />
               )}
             />
             {errors.software && (
               <FieldError>{errors.software.message}</FieldError>
             )}
-          </Field>
+          </Field> */}
 
-          <Field>
+          {/* <Field>
             <FieldLabel>Proficiency</FieldLabel>
             <Controller
               name="proficiency_id"
@@ -342,32 +348,23 @@ const RequirementsForm = ({
                 required: "Proficiency is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select proficiency" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {proficiencies?.map((item: Proficiency) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.proficiency_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <CreatableSelect
+                  {...field}
+                  options={proficiencyOptions}
+                  value={field.value}
+                  onChange={(selected) => field.onChange(selected ?? [])}
+                  onInputChange={setProficiencySearch}
+                  isClearable
+                  isMulti
+                />
               )}
             />
             {errors.proficiency_id && (
               <FieldError>{errors.proficiency_id.message}</FieldError>
             )}
-          </Field>
+          </Field> */}
 
-          <Field>
+          {/* <Field>
             <FieldLabel>Tools</FieldLabel>
             <Controller
               name="tool"
@@ -376,41 +373,18 @@ const RequirementsForm = ({
                 required: "Tool is required",
               }}
               render={({ field }) => (
-                <Select
-                  value={field.value?.toString()}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select tool" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectGroup>
-                      {tools?.map((item: Tool) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.tool_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <CreatableSelect
+                  {...field}
+                  options={toolOptions}
+                  value={field.value}
+                  onChange={(selected) => field.onChange(selected ?? [])}
+                  onInputChange={setToolsSearch}
+                  isMulti
+                />
               )}
             />
             {errors.tool && <FieldError>{errors.tool.message}</FieldError>}
-          </Field>
-        </FieldGroup>
-
-        {/* other requirements */}
-        <FieldGroup className="mt-5">
-          <Field>
-            <FieldLabel>Other Requirements</FieldLabel>
-            <Textarea
-              placeholder="Enter other requirements..."
-              {...register("other_requirement", {
-                required: "Other requirements are required",
-              })}
-            />
-          </Field>
+          </Field> */}
         </FieldGroup>
 
         <Button type="submit" disabled={isPending} className="mt-4">
