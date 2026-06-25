@@ -50,7 +50,7 @@ const navItems = [
     icon: Briefcase,
   },
   {
-    title: "Candidates",
+    title: "Job Seeker",
     url: "/candidates",
     icon: UserSearchIcon,
   },
@@ -126,7 +126,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <Link to="/dashboard">
                 <img
-                  src={profile?.logo || "/images/logo.png"}
+                  src={profile?.logo || "/images/default-img.jpeg"}
                   alt="Logo"
                   className="w-24"
                 />

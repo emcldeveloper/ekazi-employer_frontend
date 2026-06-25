@@ -39,8 +39,14 @@ export default function AppLayout() {
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 font-sen bg-muted">
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 font-sen bg-blue-50">
           <Outlet />
+        </div>
+
+        <div className="mb-4 flex items-center justify-center w-full text-xs text-muted-foreground">
+          <p>
+            © {new Date().getFullYear()} Powered by ekazi. All rights reserved.
+          </p>
         </div>
       </SidebarInset>
     </SidebarProvider>

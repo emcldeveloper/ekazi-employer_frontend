@@ -1,17 +1,18 @@
-import { Upload } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Building2Icon,
+  ContactIcon,
+  HexagonIcon,
+  LayoutList,
+  MapPin,
+  Upload,
+} from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
+import SearchSelect from "react-select";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "@/components/ui/combobox";
 import {
   Select,
   SelectContent,
@@ -28,7 +29,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import type { CreateProfileData } from "@/@types/profile";
 import { useNavigate } from "react-router-dom";
 import {
@@ -47,11 +53,13 @@ import { useEffect, useState } from "react";
 
 import { useCreateProfile, useProfile } from "@/hooks/profile";
 import { toast } from "sonner";
+import type { OptionType } from "@/@types/jobs";
+import RichTextEditor from "@/components/RichTextEditor";
 
 const CreateProfile = () => {
   const navigate = useNavigate();
 
-  const [industrySearch, setIndustrySearch] = useState<string | null>(null);
+  const [industrySearch, setIndustrySearch] = useState("");
 
   const {
     register,
@@ -69,19 +77,41 @@ const CreateProfile = () => {
   // data fetch
   const { data: companyProfile } = useProfile();
   const profile = companyProfile?.data;
+  console.log(profile);
 
-  const { data: industries } = useIndustries();
+  const { data: industries } = useIndustries(industrySearch);
+  const industryOptions =
+    industries?.map((industry: Industry) => ({
+      value: industry.id,
+      label: industry.industry_name,
+    })) ?? [];
+
   const { data: companySizes } = useCompanySizes();
+  const sizeOptions =
+    companySizes?.map((size: CompanySize) => ({
+      value: size.id,
+      label: size.name,
+    })) ?? [];
+
   const { data: countries } = useCountries();
+  const countryOptions =
+    countries?.map((country: Country) => ({
+      value: country.id,
+      label: country.name,
+    })) ?? [];
+
   const { data: regions } = useRegions();
 
   const selectedCountry = watch("country");
   const selectedRegion = watch("region");
 
   const filteredRegions =
-    regions?.filter(
-      (region: Region) => region.country_id === selectedCountry,
-    ) || [];
+    regions
+      ?.filter((region: Region) => region.country_id === selectedCountry)
+      .map((region: Region) => ({
+        value: region.id,
+        label: region.region_name,
+      })) ?? [];
 
   useEffect(() => {
     if (selectedCountry) {
@@ -97,6 +127,7 @@ const CreateProfile = () => {
       name: profile.name,
       tin: profile.tin,
       business: profile.business,
+      founded_year: profile.founded_year.split(" ")[0],
 
       industry_id: profile.industry?.id,
       company_size_id: profile.company_size?.id,
@@ -113,16 +144,7 @@ const CreateProfile = () => {
       fax: profile.fax,
       extra_communication: profile.extra_communication,
     });
-
-    // For displaying selected industry name in Combobox
-    const selectedIndustry = industries?.find(
-      (industry: Industry) => industry.id === profile.industry.id,
-    );
-
-    if (selectedIndustry) {
-      setIndustrySearch(selectedIndustry.industry_name);
-    }
-  }, [profile, industries, reset]);
+  }, [profile, reset]);
 
   const onSubmit = (data: CreateProfileData) => {
     const formData = new FormData();
@@ -158,32 +180,35 @@ const CreateProfile = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mt-4 space-y-4">
       {/* Header */}
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h2 className="text-xl font-bold">Company Profile</h2>
-
-          <p className="text-sm text-muted-foreground">
+      <Card>
+        <CardContent>
+          <h2 className="text-2xl font-bold">Company Profile</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
             Complete and manage your company information.
           </p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Logo + Basic */}
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-4 lg:grid-cols-3">
           <Card>
-            <CardHeader>
-              <CardTitle>Company Logo</CardTitle>
-              <CardDescription>Upload your company logo.</CardDescription>
+            <CardHeader className="flex items-center gap-2">
+              <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                <HexagonIcon size={16} />
+              </div>
+              <div>
+                <CardTitle>Company Logo</CardTitle>
+                <CardDescription>Upload your company logo.</CardDescription>
+              </div>
             </CardHeader>
 
             <CardContent>
               <div className="flex flex-col items-center gap-4">
                 <div className="flex p-2 h-32 w-32 items-center justify-center rounded-2xl border bg-muted">
-                  {/* <Building2 className="h-12 w-12 text-muted-foreground" /> */}
                   <img
                     src={profile?.logo || "/images/default-img.jpeg"}
                     alt="Company Logo"
@@ -221,11 +246,16 @@ const CreateProfile = () => {
           </Card>
 
           <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Company Information</CardTitle>
-              <CardDescription>
-                Basic information about your company.
-              </CardDescription>
+            <CardHeader className="flex items-center gap-2">
+              <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                <Building2Icon size={16} />
+              </div>
+              <div>
+                <CardTitle>Company Information</CardTitle>
+                <CardDescription>
+                  Basic information about your company.
+                </CardDescription>
+              </div>
             </CardHeader>
 
             <CardContent className="space-y-4">
@@ -238,15 +268,23 @@ const CreateProfile = () => {
                     })}
                   />
                   {errors.name && (
-                    <p className="text-xs text-red-500">
-                      {errors.name.message}
-                    </p>
+                    <FieldError>{errors.name.message}</FieldError>
                   )}
                 </Field>
 
                 <Field>
-                  <FieldLabel>Industry</FieldLabel>
+                  <FieldLabel>Founded Year</FieldLabel>
+                  <Input
+                    type="date"
+                    placeholder="2022"
+                    {...register("founded_year", {
+                      required: "Founded year is required",
+                    })}
+                  />
+                </Field>
 
+                <Field>
+                  <FieldLabel htmlFor="industry_id">Industry</FieldLabel>
                   <Controller
                     name="industry_id"
                     control={control}
@@ -254,46 +292,26 @@ const CreateProfile = () => {
                       required: "Industry is required",
                     }}
                     render={({ field }) => (
-                      <Combobox
-                        items={industries}
-                        value={industrySearch}
-                        onValueChange={(value) => {
-                          setIndustrySearch(value);
-
-                          const selectedIndustry = industries.find(
-                            (industry: Industry) =>
-                              industry.industry_name === value,
-                          );
-
-                          if (selectedIndustry) {
-                            field.onChange(selectedIndustry.id);
-                          }
+                      <SearchSelect
+                        menuPortalTarget={document.body}
+                        styles={{
+                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                         }}
-                      >
-                        <ComboboxInput placeholder="Select an industry" />
-
-                        <ComboboxContent>
-                          <ComboboxEmpty>No industry found.</ComboboxEmpty>
-
-                          <ComboboxList>
-                            {industries?.map((industry: Industry) => (
-                              <ComboboxItem
-                                key={industry.id}
-                                value={industry.industry_name}
-                              >
-                                {industry.industry_name}
-                              </ComboboxItem>
-                            ))}
-                          </ComboboxList>
-                        </ComboboxContent>
-                      </Combobox>
+                        {...field}
+                        isClearable
+                        options={industryOptions}
+                        value={industryOptions.find(
+                          (option: OptionType) => option.value === field.value,
+                        )}
+                        onChange={(option) =>
+                          field.onChange(option?.value ?? null)
+                        }
+                        onInputChange={setIndustrySearch}
+                      />
                     )}
                   />
-
                   {errors.industry_id && (
-                    <p className="text-xs text-red-500">
-                      {errors.industry_id.message}
-                    </p>
+                    <FieldError>{errors.industry_id.message}</FieldError>
                   )}
                 </Field>
 
@@ -306,44 +324,26 @@ const CreateProfile = () => {
                       required: "Company size is required",
                     }}
                     render={({ field }) => (
-                      <Select
-                        value={field.value?.toString() ?? ""}
-                        onValueChange={(value) => field.onChange(Number(value))}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select company size" />
-                        </SelectTrigger>
-
-                        <SelectContent>
-                          <SelectGroup>
-                            {companySizes?.map((size: CompanySize) => (
-                              <SelectItem
-                                key={size.id}
-                                value={size.id.toString()}
-                              >
-                                {size.name}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                      <SearchSelect
+                        menuPortalTarget={document.body}
+                        styles={{
+                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                        }}
+                        {...field}
+                        isClearable
+                        options={sizeOptions}
+                        value={sizeOptions.find(
+                          (option: OptionType) => option.value === field.value,
+                        )}
+                        onChange={(option) =>
+                          field.onChange(option?.value ?? null)
+                        }
+                      />
                     )}
                   />
                   {errors.company_size_id && (
-                    <p className="text-xs text-red-500">
-                      {errors.company_size_id.message}
-                    </p>
+                    <FieldError>{errors.company_size_id.message}</FieldError>
                   )}
-                </Field>
-                <Field>
-                  <FieldLabel>Founded Year</FieldLabel>
-                  <Input
-                    type="date"
-                    placeholder="2022"
-                    {...register("founded_year", {
-                      required: "Founded year is required",
-                    })}
-                  />
                 </Field>
               </FieldGroup>
             </CardContent>
@@ -352,30 +352,60 @@ const CreateProfile = () => {
 
         {/* About Company */}
         <Card>
-          <CardHeader>
-            <CardTitle>About Company</CardTitle>
-            <CardDescription>
-              Describe your company, mission, vision, culture and values...
-            </CardDescription>
+          <CardHeader className="flex items-center gap-2">
+            <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+              <LayoutList size={16} />
+            </div>
+            <div>
+              <CardTitle>About Company</CardTitle>
+              <CardDescription>
+                Describe your company, mission, vision, culture and values...
+              </CardDescription>
+            </div>
           </CardHeader>
 
           <CardContent>
-            <Textarea
+            <Field>
+              <Controller
+                name="about_company"
+                control={control}
+                rules={{
+                  required: "Company description is required",
+                }}
+                render={({ field }) => (
+                  <RichTextEditor
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+
+              {errors.about_company && (
+                <FieldError>{errors.about_company.message}</FieldError>
+              )}
+            </Field>
+
+            {/* <Textarea
               rows={8}
               {...register("about_company", {
                 required: "Company description is required",
               })}
-            />
+            /> */}
           </CardContent>
         </Card>
 
         {/* Address */}
         <Card>
-          <CardHeader>
-            <CardTitle>Location</CardTitle>
-            <CardDescription>
-              Provide your company location details
-            </CardDescription>
+          <CardHeader className="flex items-center gap-2">
+            <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+              <MapPin size={16} />
+            </div>
+            <div>
+              <CardTitle>Location</CardTitle>
+              <CardDescription>
+                Provide your company location details
+              </CardDescription>
+            </div>
           </CardHeader>
 
           <CardContent>
@@ -389,27 +419,21 @@ const CreateProfile = () => {
                     required: "Country is required",
                   }}
                   render={({ field }) => (
-                    <Select
-                      value={field.value?.toString() ?? ""}
-                      onValueChange={(value) => field.onChange(Number(value))}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select country" />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <SelectGroup>
-                          {countries?.map((country: Country) => (
-                            <SelectItem
-                              key={country.id}
-                              value={country.id.toString()}
-                            >
-                              {country.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    <SearchSelect
+                      menuPortalTarget={document.body}
+                      styles={{
+                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                      }}
+                      {...field}
+                      isClearable
+                      options={countryOptions}
+                      value={countryOptions.find(
+                        (option: OptionType) => option.value === field.value,
+                      )}
+                      onChange={(option) =>
+                        field.onChange(option?.value ?? null)
+                      }
+                    />
                   )}
                 />
                 {errors.country && (
@@ -428,28 +452,21 @@ const CreateProfile = () => {
                     required: "Region is required",
                   }}
                   render={({ field }) => (
-                    <Select
-                      disabled={!selectedCountry}
-                      value={field.value?.toString() ?? ""}
-                      onValueChange={(value) => field.onChange(Number(value))}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select region" />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <SelectGroup>
-                          {filteredRegions?.map((region: Region) => (
-                            <SelectItem
-                              key={region.id}
-                              value={region.id.toString()}
-                            >
-                              {region.region_name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    <SearchSelect
+                      menuPortalTarget={document.body}
+                      styles={{
+                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                      }}
+                      {...field}
+                      isClearable
+                      options={filteredRegions}
+                      value={filteredRegions.find(
+                        (option: OptionType) => option.value === field.value,
+                      )}
+                      onChange={(option) =>
+                        field.onChange(option?.value ?? null)
+                      }
+                    />
                   )}
                 />
                 {errors.region && (
@@ -485,12 +502,16 @@ const CreateProfile = () => {
 
         {/* Business Verification */}
         <Card>
-          <CardHeader>
-            <CardTitle>Business Verification</CardTitle>
-
-            <CardDescription>
-              Add business information of your company for verification.
-            </CardDescription>
+          <CardHeader className="flex items-center gap-2">
+            <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+              <BriefcaseBusiness size={16} />
+            </div>
+            <div>
+              <CardTitle>Business Verification</CardTitle>
+              <CardDescription>
+                Add business information of your company for verification.
+              </CardDescription>
+            </div>
           </CardHeader>
 
           <CardContent>
@@ -513,11 +534,16 @@ const CreateProfile = () => {
 
         {/* Contact Information */}
         <Card>
-          <CardHeader>
-            <CardTitle>Contact Information</CardTitle>
-            <CardDescription>
-              Provide contact details for your company.
-            </CardDescription>
+          <CardHeader className="flex items-center gap-2">
+            <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+              <ContactIcon size={16} />
+            </div>
+            <div>
+              <CardTitle>Contact Information</CardTitle>
+              <CardDescription>
+                Provide contact details for your company.
+              </CardDescription>
+            </div>
           </CardHeader>
 
           <CardContent>

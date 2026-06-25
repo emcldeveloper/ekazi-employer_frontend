@@ -4,8 +4,10 @@ import {
   Globe,
   Mail,
   MapPin,
-  Pencil,
+  MapPinPenIcon,
+  PencilLineIcon,
   Phone,
+  Sparkle,
   Users,
 } from "lucide-react";
 
@@ -15,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useProfile } from "@/hooks/profile";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "@/utils/helpers";
+import { Badge } from "@/components/ui/badge";
 
 const AccountProfile = () => {
   const navigate = useNavigate();
@@ -31,74 +34,69 @@ const AccountProfile = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="mt-4 space-y-4">
       {/* Header */}
-
-      <div className="pt-12">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="w-40">
-            <img src={profile?.logo} alt={profile?.name} />
-          </div>
-
-          <div>
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-3xl font-bold">{profile?.name}</h1>
-
-              {/* <Badge>
-                <BadgeCheck className="mr-1 h-3 w-3" />
-                Verified
-              </Badge> */}
+      <Card>
+        <CardContent className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:gap-10">
+            <div className="w-30 bg-amber-200">
+              <img src={profile?.logo} alt={profile?.name} />
             </div>
 
-            {/* <p className="mt-2 text-muted-foreground">{company.tagline}</p> */}
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold">{profile?.name}</h1>
 
-            <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4" />
-                {profile?.industry?.name}
-              </div>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary">
+                  <Users size={16} />
+                  {profile?.company_size?.name}
+                </Badge>
 
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                {profile?.company_size?.name}
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                Founded {formatDate(profile?.founded_year)}
+                <Badge variant="secondary">
+                  <Calendar size={16} />
+                  Founded {formatDate(profile?.founded_year)}
+                </Badge>
               </div>
             </div>
           </div>
 
           <Button onClick={handleEditProfile}>
-            <Pencil className="mr-2 h-4 w-4" />
+            <PencilLineIcon size={16} />
             Update Profile
           </Button>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Main Content */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="space-y-4 lg:col-span-2">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex items-center gap-2">
+              <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                <Building2 size={16} />
+              </div>
               <CardTitle>Business Information</CardTitle>
             </CardHeader>
 
-            <CardContent>
-              <p className="leading-7 text-muted-foreground">
-                <span className="text-gray-900">Business Name:</span>{" "}
-                {profile?.business}
-              </p>
-              <p className="leading-7 text-muted-foreground">
-                {" "}
-                <span className="text-gray-900">TIN:</span> {profile?.tin}
-              </p>
+            <CardContent className="grid grid-cols-[140px_1fr] gap-y-3">
+              <span className="font-medium text-gray-900">Business Name:</span>
+              <span className="text-muted-foreground">{profile?.business}</span>
+
+              <span className="font-medium text-gray-900">TIN:</span>
+              <span className="text-muted-foreground">{profile?.tin}</span>
+
+              <span className="font-medium text-gray-900">Industry:</span>
+              <span className="text-muted-foreground">
+                {profile?.industry?.name}
+              </span>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="flex items-center gap-2">
+              <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                <Sparkle size={16} />
+              </div>
               <CardTitle>About Company</CardTitle>
             </CardHeader>
 
@@ -110,7 +108,10 @@ const AccountProfile = () => {
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="flex items-center gap-2">
+              <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                <MapPinPenIcon size={16} />
+              </div>
               <CardTitle>Location Notes</CardTitle>
             </CardHeader>
 
@@ -128,7 +129,7 @@ const AccountProfile = () => {
           </Card>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Contact */}
 
           <Card>
@@ -138,40 +139,60 @@ const AccountProfile = () => {
 
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <a
-                  href={`mailto:${profile?.email}`}
-                  className="text-primary hover:underline"
-                >
-                  {profile?.email}
-                </a>
+                <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                  <Mail size={16} />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Email</p>
+                  <a
+                    href={`mailto:${profile?.email}`}
+                    className="text-primary hover:underline"
+                  >
+                    {profile?.email}
+                  </a>
+                </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <a
-                  href={`tel:${profile?.phone}`}
-                  className="text-primary hover:underline"
-                >
-                  {profile?.phone}
-                </a>
+                <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                  <Phone size={16} />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Phone</p>
+                  <a
+                    href={`tel:${profile?.phone}`}
+                    className="text-primary hover:underline"
+                  >
+                    {profile?.phone}
+                  </a>
+                </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <Globe className="h-4 w-4 text-muted-foreground" />
-                <a
-                  href={profile?.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  {profile?.website}
-                </a>
+                <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                  <Globe size={16} />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Website</p>
+                  <a
+                    href={profile?.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    {profile?.website}
+                  </a>
+                </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span>{`${profile?.sub_location}, ${profile?.region?.name} ${profile?.country?.name}`}</span>
+                <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                  <MapPin size={16} />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Address</p>
+                  <span>{`${profile?.sub_location}, ${profile?.region?.name} ${profile?.country?.name}`}</span>
+                </div>
               </div>
             </CardContent>
           </Card>

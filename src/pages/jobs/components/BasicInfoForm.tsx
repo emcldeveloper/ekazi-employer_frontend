@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import type { Job, JobCreateForm, OptionType } from "@/@types/jobs";
+import type { JobCreateForm, OptionType } from "@/@types/jobs";
 import type {
   Country,
   Industry,

@@ -18,8 +18,8 @@ const Dashboard = () => {
   const totalEmployed = statistics?.pipeline?.[6]?.total || 0;
 
   return (
-    <>
-      <div className="grid auto-rows-min gap-4 mb-4 md:grid-cols-4">
+    <div className="mt-4 space-y-4">
+      <div className="grid auto-rows-min gap-4 md:grid-cols-4">
         <StatsCard
           title="Jobs"
           value={formatNumber(allJobs)}
@@ -49,13 +49,13 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min">
+      <div className="min-h-screen md:min-h-min">
         <div className="grid auto-rows-min gap-4 md:grid-cols-2">
           <JobStagesChart data={statistics} />
           <JobsPostedChart data={statistics} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

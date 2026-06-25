@@ -5,7 +5,7 @@ import Billing from "./components/Billing";
 
 const SubscriptionPage = () => {
   return (
-    <div className="space-y-6">
+    <div className="mt-4 space-y-4">
       <Card size="sm">
         <CardContent>
           <div>

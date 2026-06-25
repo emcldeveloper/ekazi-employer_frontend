@@ -59,7 +59,6 @@ const CreateUser = () => {
           isPending={isPending}
           submitLabel="Create User"
         />
-        ;
       </DialogContent>
     </Dialog>
   );

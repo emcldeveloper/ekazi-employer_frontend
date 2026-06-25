@@ -10,13 +10,13 @@ import {
 
 const CandidatePage = () => {
   return (
-    <div className="space-y-6">
+    <div className="mt-4 space-y-4">
       <Card size="sm">
         <CardContent>
           <div>
-            <h2 className="text-2xl font-bold">Candidates</h2>
+            <h2 className="text-2xl font-bold">Job Seekers</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Browse and review candidate profiles, shortlist top talent for
+              Browse and review job seeker profiles, shortlist top talent for
               your job openings.
             </p>
           </div>

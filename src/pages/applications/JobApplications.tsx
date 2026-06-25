@@ -56,7 +56,7 @@ const JobApplications = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* left side */}
         <div className="md:col-span-2 space-y-4">
           <Card>
