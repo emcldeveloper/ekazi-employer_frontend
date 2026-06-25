@@ -119,7 +119,7 @@ const CreateProfile = () => {
       name: profile.name,
       tin: profile.tin,
       business: profile.business,
-      founded_year: profile.founded_year.split(" ")[0],
+      founded_year: profile.founded_year?.split(" ")[0],
 
       industry_id: profile.industry?.id,
       company_size_id: profile.company_size?.id,
