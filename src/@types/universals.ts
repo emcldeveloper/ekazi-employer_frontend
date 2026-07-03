@@ -8,6 +8,11 @@ export type CompanySize = {
   name: string;
 };
 
+export type CompanyType = {
+  id: number;
+  type_name: string;
+};
+
 export type JobType = {
   id: number;
   type_name: string;

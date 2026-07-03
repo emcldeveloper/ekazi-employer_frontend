@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useUser } from "@/hooks/auth";
+import { useLogout, useUser } from "@/hooks/auth";
 
 import {
   ChevronsUpDownIcon,
@@ -28,12 +28,20 @@ import {
 export function NavUser() {
   const { isMobile } = useSidebar();
 
+  // user data
   const { data: userAccount } = useUser();
   const user = userAccount?.data;
 
+  // logout
+  const { mutate: logoutUser, isPending } = useLogout();
+
   const handleLogout = () => {
-    localStorage.clear();
-    window.location.href = "/";
+    logoutUser(undefined, {
+      onSuccess: () => {
+        localStorage.clear();
+        window.location.href = "http://localhost:3001/";
+      },
+    });
   };
 
   return (
@@ -69,8 +77,8 @@ export function NavUser() {
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Admin</span>
-                  <span className="truncate text-xs">admin@gmail.com</span>
+                  <span className="truncate font-medium">{user?.username}</span>
+                  <span className="truncate text-xs">{user?.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

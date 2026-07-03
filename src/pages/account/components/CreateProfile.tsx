@@ -52,6 +52,7 @@ const CreateProfile = () => {
   const navigate = useNavigate();
 
   const [industrySearch, setIndustrySearch] = useState("");
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const {
     register,
@@ -94,6 +95,7 @@ const CreateProfile = () => {
 
   const { data: regions } = useRegions();
 
+  const attachment = watch("attachment");
   const selectedCountry = watch("country");
   const selectedRegion = watch("region");
 
@@ -105,12 +107,21 @@ const CreateProfile = () => {
         label: region.region_name,
       })) ?? [];
 
+  // preview picture
   useEffect(() => {
-    if (selectedCountry) {
-      setValue("region", undefined);
-      setValue("sub_location", "");
+    if (attachment?.[0]) {
+      const url = URL.createObjectURL(attachment[0]);
+      setLogoPreview(url);
+
+      return () => URL.revokeObjectURL(url);
     }
-  }, [selectedCountry]);
+  }, [attachment]);
+
+  useEffect(() => {
+    if (!profile) {
+      setValue("region", undefined);
+    }
+  }, [selectedCountry, setValue, profile]);
 
   useEffect(() => {
     if (!profile) return;
@@ -202,7 +213,9 @@ const CreateProfile = () => {
               <div className="flex flex-col items-center gap-4">
                 <div className="flex p-2 h-32 w-32 items-center justify-center rounded-2xl border bg-muted">
                   <img
-                    src={profile?.logo || "/images/default-img.jpeg"}
+                    src={
+                      logoPreview || profile?.logo || "/images/default-img.jpeg"
+                    }
                     alt="Company Logo"
                     className="w-full object-cover"
                   />
@@ -480,13 +493,27 @@ const CreateProfile = () => {
             <FieldGroup>
               <Field>
                 <FieldLabel>Location Notes</FieldLabel>
-                <Textarea
+                <Controller
+                  name="location_notes"
+                  control={control}
+                  rules={{
+                    required: "Location notes are required",
+                  }}
+                  render={({ field }) => (
+                    <RichTextEditor
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+
+                {/* <Textarea
                   rows={8}
                   placeholder="Describe your company location and directions..."
                   {...register("location_notes", {
                     required: "Location notes are required",
                   })}
-                />
+                /> */}
               </Field>
             </FieldGroup>
           </CardContent>

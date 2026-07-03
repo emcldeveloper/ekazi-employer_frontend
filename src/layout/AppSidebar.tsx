@@ -28,12 +28,24 @@ import {
   SquareUser,
   WalletCardsIcon,
   UserSearchIcon,
+  FolderOpenIcon,
+  type LucideIcon,
 } from "lucide-react";
 import { isRouteActive } from "@/utils/helpers";
 import { NavUser } from "@/components/nav-user";
 import { useProfile } from "@/hooks/profile";
 
-const navItems = [
+type NavItem = {
+  title: string;
+  url: string;
+  icon: LucideIcon;
+  items?: {
+    title: string;
+    url: string;
+  }[];
+};
+
+const navItems: NavItem[] = [
   {
     title: "Dashboard",
     url: "/dashboard",
@@ -74,23 +86,16 @@ const navItems = [
     url: "/subscription",
     icon: WalletCardsIcon,
   },
-  // {
-  //   title: "Reports",
-  //   url: "/reports",
-  //   icon: ChartColumn,
-  // },
+  {
+    title: "Forms",
+    url: "/forms",
+    icon: FolderOpenIcon,
+  },
 
   {
     title: "Settings",
     url: "/settings",
     icon: Settings2Icon,
-    items: [
-      {
-        title: "Settings",
-        url: "/settings",
-        icon: Settings2Icon,
-      },
-    ],
   },
 ];
 

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Toaster } from "sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { Toaster } from "sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
 
 import AppLayout from "./layout/AppLayout";
@@ -21,52 +22,85 @@ import ProtectedRoutes from "./routes/ProtectedRoutes";
 import SubscriptionPage from "./pages/subscriptions/SubscriptionPage";
 import CandidatePage from "./pages/candidates/CandidatePage";
 import SettingsPage from "./pages/settings/SettingsPage";
+import FormsPage from "./pages/form_builder/FormsPage";
+import CreateFormPage from "./pages/form_builder/CreateFormPage";
+import PreviewFormPage from "./pages/form_builder/PreviewFormPage";
+import { ThemeProvider } from "./components/theme-provider";
+import LandingPage from "./pages/landing/LandingPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+import SigninPage from "./pages/auth/SigninPage";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
+import ResetPassword from "./pages/auth/ResetPassword";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+    },
+  },
+});
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <TooltipProvider>
-        <Toaster position="top-center" richColors />
-        <Routes>
-          <Route path="/auth/callback" element={<AuthCallback />} />
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster position="top-center" richColors />
 
-          <Route element={<ProtectedRoutes />}>
-            <Route element={<AppLayout />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<SigninPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
-              <Route path="/profile" element={<AccountProfile />} />
-              <Route path="/profile/create" element={<CreateProfile />} />
-              <Route path="/profile/edit" element={<CreateProfile />} />
+              <Route element={<ProtectedRoutes />}>
+                <Route element={<AppLayout />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
 
-              <Route path="/jobs" element={<JobsPage />} />
-              <Route path="/jobs/:id" element={<JobDetails />} />
-              <Route
-                path="/jobs/:id/applications"
-                element={<JobApplications />}
-              />
-              <Route path="/jobs/create" element={<CreateJob />} />
+                  <Route path="/profile" element={<AccountProfile />} />
+                  <Route path="/profile/create" element={<CreateProfile />} />
+                  <Route path="/profile/edit" element={<CreateProfile />} />
 
-              <Route path="/candidates" element={<CandidatePage />} />
+                  <Route path="/jobs" element={<JobsPage />} />
+                  <Route path="/jobs/:id" element={<JobDetails />} />
+                  <Route
+                    path="/jobs/:id/applications"
+                    element={<JobApplications />}
+                  />
+                  <Route path="/jobs/create" element={<CreateJob />} />
 
-              <Route path="/clients" element={<ClientsPage />} />
-              <Route path="/clients/:id" element={<ClientDetails />} />
+                  <Route path="/candidates" element={<CandidatePage />} />
 
-              <Route path="/tasks" element={<TasksPage />} />
-              <Route path="/tasks/:id" element={<TaskDetails />} />
+                  <Route path="/clients" element={<ClientsPage />} />
+                  <Route path="/clients/:id" element={<ClientDetails />} />
 
-              <Route path="/users" element={<UsersPage />} />
+                  <Route path="/tasks" element={<TasksPage />} />
+                  <Route path="/tasks/:id" element={<TaskDetails />} />
 
-              <Route path="/subscription" element={<SubscriptionPage />} />
+                  <Route path="/users" element={<UsersPage />} />
 
-              <Route path="/reports" element={<Dashboard />} />
+                  <Route path="/subscription" element={<SubscriptionPage />} />
 
-              <Route path="/settings" element={<SettingsPage />} />
-            </Route>
-          </Route>
-        </Routes>
-      </TooltipProvider>
-    </BrowserRouter>
+                  <Route path="/reports" element={<Dashboard />} />
+
+                  <Route path="/settings" element={<SettingsPage />} />
+
+                  <Route path="/forms" element={<FormsPage />} />
+                  <Route path="/forms/create" element={<CreateFormPage />} />
+                  <Route
+                    path="/forms/:id/preview"
+                    element={<PreviewFormPage />}
+                  />
+                </Route>
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };
 

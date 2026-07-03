@@ -1,9 +1,9 @@
+import { companySizes } from "@/services/universal.service";
 import { useQuery } from "@tanstack/react-query";
-import { getCompanySize } from "@/services/universal.service";
 
 export const useCompanySizes = () => {
   return useQuery({
+    queryFn: companySizes,
     queryKey: ["company-sizes"],
-    queryFn: getCompanySize,
   });
 };

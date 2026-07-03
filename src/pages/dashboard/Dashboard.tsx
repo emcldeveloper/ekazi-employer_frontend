@@ -11,10 +11,11 @@ const Dashboard = () => {
 
   const { data: statisticsData } = useStatistics();
   const statistics = statisticsData?.data;
+  console.log(statistics);
 
-  const allJobs = statistics?.total_jobs;
-  const allApplications = statistics?.total_applications;
-  const totalViews = statistics?.total_views;
+  const allJobs = statistics?.totalJobs;
+  const allApplications = statistics?.totalApplications;
+  const totalViews = statistics?.totalJobViews;
   const totalEmployed = statistics?.pipeline?.[6]?.total || 0;
 
   return (

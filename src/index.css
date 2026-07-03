@@ -129,6 +129,9 @@
 }
 
 @theme inline {
+  --color-Blue: #1756a5;
+  --color-Orange: #d36415;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

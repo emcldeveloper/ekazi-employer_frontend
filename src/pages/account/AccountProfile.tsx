@@ -101,9 +101,15 @@ const AccountProfile = () => {
             </CardHeader>
 
             <CardContent>
-              <p className="leading-7 text-muted-foreground">
-                {profile?.description}
-              </p>
+              <div
+                className="prose prose-sm max-w-none
+                 prose-headings:font-semibold
+                 prose-ul:list-disc
+                 prose-ul:pl-6 leading-7 text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: profile?.description?.text,
+                }}
+              />
             </CardContent>
           </Card>
 
@@ -175,12 +181,12 @@ const AccountProfile = () => {
                 <div>
                   <p className="text-xs text-muted-foreground">Website</p>
                   <a
-                    href={profile?.website}
+                    href={profile?.address?.website}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary hover:underline"
                   >
-                    {profile?.website}
+                    {profile?.address?.website}
                   </a>
                 </div>
               </div>
@@ -191,7 +197,7 @@ const AccountProfile = () => {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Address</p>
-                  <span>{`${profile?.sub_location}, ${profile?.region?.name} ${profile?.country?.name}`}</span>
+                  <span>{`${profile?.address?.sub_location}, ${profile?.address?.region_name} ${profile?.country?.name}`}</span>
                 </div>
               </div>
             </CardContent>

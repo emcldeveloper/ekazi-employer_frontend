@@ -1,22 +1,27 @@
 import api from "@/lib/axios";
 
-export const getCompanySize = async () => {
-  const res = await api.get("/universal/company-size");
+export const companySizes = async () => {
+  const res = await api.get("/company-sizes");
+  return res.data?.data;
+};
+
+export const companyTypes = async () => {
+  const res = await api.get("/company-type");
   return res.data?.data;
 };
 
 export const getCountries = async () => {
-  const res = await api.get("/universal/country");
+  const res = await api.get("/countries");
   return res.data?.country;
 };
 
 export const getRegions = async () => {
-  const res = await api.get("/universal/regions");
+  const res = await api.get("/regions");
   return res.data?.region;
 };
 
 export const getIndustry = async (search = "", page = 1, limit = 50) => {
-  const res = await api.get("/universal/industry", {
+  const res = await api.get("/industries", {
     params: {
       search,
       page,

@@ -15,8 +15,8 @@ import {
 export const description = "A pie chart with a label";
 
 export default function JobsPostedChart({ data }: { data: any }) {
-  const activeJobs = data?.active_jobs;
-  const expiredJobs = data?.expired_jobs;
+  const activeJobs = data?.activeJobs;
+  const expiredJobs = data?.expiredJobs;
 
   const chartData = [
     {

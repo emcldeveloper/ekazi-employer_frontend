@@ -1,4 +1,5 @@
 export * from "./useCompanySizes";
+export * from "./useCompanyTypes";
 export * from "./useCountries";
 export * from "./useIndustries";
 export * from "./useRegions";

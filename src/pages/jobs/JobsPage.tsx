@@ -54,7 +54,6 @@ const JobsPage = () => {
   const [perPage, setPerPage] = useState(25);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [deadlineFilter, setDeadlineFilter] = useState("");
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -63,13 +62,13 @@ const JobsPage = () => {
     limit: perPage,
     search: debouncedSearch,
     status: statusFilter,
-    deadline: deadlineFilter,
   });
+
   const jobs = jobsData?.data ?? [];
   const totalJobs = jobsData?.total;
-  const activeJobs = 0;
-  const expiredJobs = 0;
-  const publishedJobs = 0;
+  const activeJobs = jobsData?.stats?.active_jobs;
+  const expiredJobs = jobsData?.stats?.expired_jobs;
+  const publishedJobs = jobsData?.stats?.published_jobs;
 
   const visiblePages = useMemo(() => {
     const totalPages = jobsData?.total_pages ?? 0;
@@ -99,17 +98,13 @@ const JobsPage = () => {
 
   return (
     <div className="mt-4 space-y-4">
-      <Card size="sm">
-        <CardContent>
-          <div>
-            <h2 className="text-2xl font-bold">Job Management</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Create, manage, and monitor job postings, track applications, and
-              oversee the hiring process across your organization.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="w-1/2">
+        <h2 className="text-2xl font-bold">Job Management</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Create, manage, and monitor job postings, track applications, and
+          oversee the hiring process across your organization.
+        </p>
+      </div>
 
       {/* stats */}
 
@@ -200,14 +195,15 @@ const JobsPage = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Status</SelectLabel>
-                    <SelectItem value="All">All status</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                    <SelectItem value="unpublished">Unpublished</SelectItem>
+                    <SelectItem value="all">All Jobs</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="expired">Expired</SelectItem>
+                    <SelectItem value="today">Expires Today</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
 
-              <Select
+              {/* <Select
                 value={deadlineFilter}
                 onValueChange={(value) => {
                   setDeadlineFilter(value);
@@ -226,7 +222,7 @@ const JobsPage = () => {
                     <SelectItem value="expire_today">Expires Today</SelectItem>
                   </SelectGroup>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
 
             {/* create job */}
@@ -267,11 +263,11 @@ const JobsPage = () => {
               ) : (
                 jobs.map((job: any) => (
                   <TableRow key={job.id}>
-                    <TableCell>{job.job_position.position_name}</TableCell>
-                    <TableCell>{formatDate(job.created_at)}</TableCell>
-                    <TableCell>{formatDate(job.created_at)}</TableCell>
+                    <TableCell>{job.position?.position_name}</TableCell>
+                    <TableCell>{formatDate(job?.created_at)}</TableCell>
+                    <TableCell>{formatDate(job?.dead_line)}</TableCell>
                     <TableCell>
-                      {Number(job.published) === 1 ? (
+                      {Number(job?.published) === 1 ? (
                         <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
                           Published
                         </Badge>

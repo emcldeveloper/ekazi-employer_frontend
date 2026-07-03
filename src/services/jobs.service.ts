@@ -30,7 +30,7 @@ export const updateJob = async ({
 
 // Data
 export const getJobs = async (params: JobFilters = {}) => {
-  const res = await api.get("/employer-jobs", {
+  const res = await api.get("/employer-jobs/my-jobs", {
     params,
   });
 
