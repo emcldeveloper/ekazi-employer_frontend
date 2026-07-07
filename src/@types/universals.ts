@@ -1,6 +1,6 @@
 export type Industry = {
   id: number;
-  industry_name: string;
+  name: string;
 };
 
 export type CompanySize = {
@@ -42,7 +42,7 @@ export type Country = {
 export type Region = {
   id: number;
   country_id: number;
-  region_name: string;
+  name: string;
   country?: Country;
 };
 

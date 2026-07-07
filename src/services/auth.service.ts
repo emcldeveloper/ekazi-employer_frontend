@@ -3,12 +3,24 @@ import type {
   ForgotPayload,
   LoginPayload,
   RegisterPayload,
+  ResendPayload,
   ResetPayload,
+  VerifyPayload,
 } from "@/@types/auth";
 import api from "@/lib/axios";
 
 export const register = async (payload: RegisterPayload) => {
   const res = await api.post("/auth/register", payload);
+  return res.data;
+};
+
+export const verify = async (payload: VerifyPayload) => {
+  const res = await api.post("/auth/verify-email", payload);
+  return res.data;
+};
+
+export const resend = async (payload: ResendPayload) => {
+  const res = await api.post("/auth/resend-verification", payload);
   return res.data;
 };
 

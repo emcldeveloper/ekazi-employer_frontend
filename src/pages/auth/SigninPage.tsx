@@ -1,4 +1,4 @@
-import { ChevronLeftIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -15,9 +15,12 @@ import { Button } from "@/components/ui/button";
 import type { LoginPayload } from "@/@types/auth";
 import { useLogin } from "@/hooks/auth";
 import AuthLayout from "./AuthLayout";
+import { useState } from "react";
 
 const SigninPage = () => {
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -55,31 +58,22 @@ const SigninPage = () => {
 
   return (
     <AuthLayout>
-      <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
-        <div className="w-full max-w-lg mx-auto sm:pt-10">
-          <Link
-            to="/"
-            className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-          >
-            <ChevronLeftIcon size={20} />
-            Back
-          </Link>
-        </div>
-
-        <div className="flex flex-col justify-center flex-1 w-full max-w-lg mx-auto">
-          <div className="space-y-4">
-            <h1 className=" font-semibold text-Blue text-3xl">Login</h1>
+      <div className="flex flex-col flex-1 w-full">
+        <div className="flex flex-col flex-1 w-full max-w-lg mx-auto">
+          <div className="space-y-5">
+            <h1 className=" font-semibold text-Blue text-center text-2xl">
+              Log in to ekazi
+            </h1>
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <FieldGroup>
                 <Field>
-                  <FieldLabel className="text-muted-foreground">
-                    Email
-                  </FieldLabel>
+                  <FieldLabel>Email</FieldLabel>
                   <Input
                     type="email"
-                    placeholder="example@gmail.com"
+                    placeholder="example@email.com"
                     {...register("username", { required: "Email is required" })}
+                    className="border-Blue"
                   />
                   {errors.username && (
                     <p className="text-xs text-red-500">
@@ -90,23 +84,37 @@ const SigninPage = () => {
 
                 <Field>
                   <div className="flex items-center justify-between">
-                    <FieldLabel className="text-muted-foreground">
-                      Password
-                    </FieldLabel>
+                    <FieldLabel>Password</FieldLabel>
                     <Link to={"/forgot-password"}>
                       <span className="text-xs text-Blue font-semibold">
                         forgot your password?
                       </span>
                     </Link>
                   </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="******"
-                    {...register("password", {
-                      required: "Password is required",
-                    })}
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="8 or more characters"
+                      {...register("password", {
+                        required: "Password is required",
+                        minLength: {
+                          value: 8,
+                          message: "Password must be at least 8 characters",
+                        },
+                      })}
+                      className="border-Blue"
+                    />
+                    <span
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                    >
+                      {showPassword ? (
+                        <EyeIcon size={16} />
+                      ) : (
+                        <EyeOffIcon size={16} />
+                      )}
+                    </span>
+                  </div>
                   {errors.password && (
                     <FieldError>{errors.password.message}</FieldError>
                   )}

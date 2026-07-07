@@ -42,7 +42,7 @@ const cards = [
 
 export default function PowerfulFeatures() {
   return (
-    <section className="bg-Blue py-24 text-white">
+    <section id="features" className="bg-Blue py-24 text-white">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
           <h2 className="text-4xl font-bold">

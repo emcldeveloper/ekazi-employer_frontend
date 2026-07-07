@@ -35,8 +35,8 @@ export type CreateProfileData = {
   founded_year?: Date;
   company_size_id?: number;
 
-  country?: number | null;
-  region?: number;
+  country_id?: number;
+  region_id?: number;
   sub_location?: string;
   location_notes?: string;
 

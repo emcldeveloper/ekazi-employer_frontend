@@ -1,12 +1,14 @@
 import {
   Building2,
   Calendar,
+  ContactIcon,
   Globe,
   Mail,
   MapPin,
   MapPinPenIcon,
   PencilLineIcon,
   Phone,
+  PrinterIcon,
   Sparkle,
   Users,
 } from "lucide-react";
@@ -23,7 +25,6 @@ const AccountProfile = () => {
   const navigate = useNavigate();
   const { data: companyProfile, isLoading } = useProfile();
   const profile = companyProfile?.data;
-  console.log("Profile Data:", profile);
 
   const handleEditProfile = () => {
     navigate("/profile/edit");
@@ -128,7 +129,28 @@ const AccountProfile = () => {
                  prose-ul:list-disc
                  prose-ul:pl-6 leading-7 text-muted-foreground"
                 dangerouslySetInnerHTML={{
-                  __html: profile?.location_notes,
+                  __html: profile?.address?.location_notes,
+                }}
+              />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex items-center gap-2">
+              <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                <ContactIcon size={16} />
+              </div>
+              <CardTitle>Extra Communication</CardTitle>
+            </CardHeader>
+
+            <CardContent>
+              <div
+                className="prose prose-sm max-w-none
+                 prose-headings:font-semibold
+                 prose-ul:list-disc
+                 prose-ul:pl-6 leading-7 text-muted-foreground"
+                dangerouslySetInnerHTML={{
+                  __html: profile?.address?.extra_communication,
                 }}
               />
             </CardContent>
@@ -173,6 +195,23 @@ const AccountProfile = () => {
                   </a>
                 </div>
               </div>
+
+              {profile.fax && (
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
+                    <PrinterIcon size={16} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Fax</p>
+                    <a
+                      href={`fax:${profile?.fax}`}
+                      className="text-primary hover:underline"
+                    >
+                      {profile?.fax}
+                    </a>
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center gap-3">
                 <div className="bg-blue-100 text-blue-500 rounded-lg p-2">

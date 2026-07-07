@@ -6,25 +6,21 @@ import Billing from "./components/Billing";
 const SubscriptionPage = () => {
   return (
     <div className="mt-4 space-y-4">
-      <Card size="sm">
-        <CardContent>
-          <div>
-            <h2 className="text-2xl font-bold">Subscription</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Manage your subscription plan, upgrade features, view billing
-              details, and track payment history.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <div>
+        <h2 className="text-2xl font-bold">Subscription</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Manage your subscription plan, upgrade features, view billing details,
+          and track payment history.
+        </p>
+      </div>
 
       {/* Tabs */}
       <Card size="sm">
         <CardContent>
-          <Tabs defaultValue="plans">
+          <Tabs defaultValue="billing">
             <TabsList variant="line">
-              <TabsTrigger value="plans">Upgrade plan</TabsTrigger>
               <TabsTrigger value="billing">Billing</TabsTrigger>
+              <TabsTrigger value="plans">Upgrade plan</TabsTrigger>
             </TabsList>
             <TabsContent value="plans">
               <SubscriptionPlan />

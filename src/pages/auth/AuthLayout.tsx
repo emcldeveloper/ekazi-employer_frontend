@@ -1,35 +1,35 @@
-import GridShape from "@/components/grid-shape";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon } from "lucide-react";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="relative p-6 bg-white z-1 dark:bg-gray-900 sm:p-0">
-      <div className="relative flex flex-col justify-center w-full h-screen lg:flex-row dark:bg-gray-900 sm:p-0">
-        {children}
-        <div className="items-center hidden w-full h-full lg:w-1/2 bg-Blue dark:bg-white/5 lg:grid">
-          <div className="relative flex items-center justify-center z-1">
-            {/* <!-- ===== Common Grid Shape Start ===== --> */}
-            <GridShape />
-            <div className="flex flex-col items-center max-w-xs">
-              <Link to="/" className="block mb-4">
-                <img
-                  width={231}
-                  height={48}
-                  src="/images/ekazi-white.png"
-                  alt="Logo"
-                />
-              </Link>
-              <p className="text-center text-gray-400 dark:text-white/60">
-                Welcome to ekazi recruitment portal.
-              </p>
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
+          <Link to="/">
+            <div className="w-20">
+              <img src="/images/logo.png" alt="logo" />
             </div>
+          </Link>
+
+          <div>
+            <Button variant="outline" onClick={() => navigate("/")}>
+              <ArrowLeftIcon /> Back
+            </Button>
           </div>
         </div>
+      </header>
+
+      <div className="relative top-30 flex flex-col justify-center w-full h-fit lg:flex-row dark:bg-gray-900 sm:p-0">
+        {children}
       </div>
     </div>
   );

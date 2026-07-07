@@ -12,12 +12,22 @@ export const companyTypes = async () => {
 
 export const getCountries = async () => {
   const res = await api.get("/countries");
-  return res.data?.country;
+  return res.data?.data;
 };
 
-export const getRegions = async () => {
-  const res = await api.get("/regions");
-  return res.data?.region;
+export const getRegions = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
+  const res = await api.get("/regions", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data?.data;
 };
 
 export const getIndustry = async (search = "", page = 1, limit = 50) => {
@@ -32,7 +42,7 @@ export const getIndustry = async (search = "", page = 1, limit = 50) => {
 };
 
 export const getPositions = async (search = "", page = 1, limit = 100) => {
-  const res = await api.get("/universal/position", {
+  const res = await api.get("/positions", {
     params: {
       search,
       page,
@@ -48,8 +58,8 @@ export const getPositionLevel = async () => {
 };
 
 export const getGenders = async () => {
-  const res = await api.get("/universal/gender");
-  return res.data.gender;
+  const res = await api.get("/genders");
+  return res.data?.data;
 };
 
 export const getJobTypes = async () => {
@@ -64,8 +74,8 @@ export const getSalaryRange = async () => {
 
 // universal education apis
 export const getEducationLevels = async () => {
-  const res = await api.get("/universal/education_level");
-  return res.data.education_category;
+  const res = await api.get("/education-levels");
+  return res.data?.data;
 };
 
 export const getCourses = async (
@@ -73,7 +83,7 @@ export const getCourses = async (
   page: number,
   limit: number,
 ) => {
-  const res = await api.get("/universal/course", {
+  const res = await api.get("/courses", {
     params: {
       search,
       page,
@@ -85,7 +95,7 @@ export const getCourses = async (
 };
 
 export const getMajors = async (search = "", page = 1, limit = 50) => {
-  const res = await api.get("/universal/major", {
+  const res = await api.get("/majors", {
     params: {
       search,
       page,
@@ -98,28 +108,28 @@ export const getMajors = async (search = "", page = 1, limit = 50) => {
 
 // universal language apis
 export const getLanguage = async () => {
-  const res = await api.get("/applicant/language");
-  return res.data.language;
+  const res = await api.get("/languages");
+  return res.data?.data;
 };
 
 export const getReadLanguage = async () => {
-  const res = await api.get("/applicant/language_read");
-  return res.data.language_read;
+  const res = await api.get("/language-reads");
+  return res.data?.data;
 };
 
 export const getWriteLanguage = async () => {
   const res = await api.get("/applicant/language_write");
-  return res.data.language_write;
+  return res.data?.data;
 };
 
 export const getSpeakLanguage = async () => {
-  const res = await api.get("/applicant/language_speak");
-  return res.data.language_speak;
+  const res = await api.get("/language-speaks");
+  return res.data?.data;
 };
 
 export const getUnderstandLanguage = async () => {
   const res = await api.get("/applicant/language_understand");
-  return res.data.understand_ability;
+  return res.data?.data;
 };
 
 //
@@ -128,7 +138,7 @@ export const getCultures = async (
   page: number,
   limit: number,
 ) => {
-  const res = await api.get("/applicant/culture", {
+  const res = await api.get("/cultures", {
     params: {
       search,
       page,
@@ -139,7 +149,7 @@ export const getCultures = async (
 };
 
 export const getTools = async (search: string, page: number, limit: number) => {
-  const res = await api.get("/applicant/tool", {
+  const res = await api.get("/tools", {
     params: {
       search,
       page,
@@ -154,7 +164,7 @@ export const getSoftwares = async (
   page: number,
   limit: number,
 ) => {
-  const res = await api.get("/applicant/software", {
+  const res = await api.get("/softwares", {
     params: {
       search,
       page,
@@ -184,7 +194,7 @@ export const getProficiencies = async (
   page: number,
   limit: number,
 ) => {
-  const res = await api.get("/universal/getproficiency", {
+  const res = await api.get("/proficiencies", {
     params: {
       search,
       page,
@@ -199,7 +209,7 @@ export const getPersonalities = async (
   page: number,
   limit: number,
 ) => {
-  const res = await api.get("/applicant/personality", {
+  const res = await api.get("/personalities", {
     params: {
       search,
       page,

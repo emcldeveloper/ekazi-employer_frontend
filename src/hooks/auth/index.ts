@@ -1,4 +1,7 @@
 export * from "./useRegister";
+export * from "./useVerification";
+export * from "./useResend";
+export * from "./useRegister";
 export * from "./useLogin";
 export * from "./useLogout";
 export * from "./useUser";

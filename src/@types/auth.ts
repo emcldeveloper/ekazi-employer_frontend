@@ -21,6 +21,14 @@ export type RegisterForm = {
   account_type: string;
 };
 
+export type VerifyPayload = {
+  token: string;
+};
+
+export type ResendPayload = {
+  email: string;
+};
+
 export type ForgotPayload = {
   email: string;
 };

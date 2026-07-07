@@ -24,7 +24,10 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-24">
+    <section
+      id="features"
+      className="animate__animated animate__fadeInUp py-24"
+    >
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="mt-6 text-4xl font-bold text-gray-900">

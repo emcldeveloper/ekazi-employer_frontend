@@ -33,13 +33,13 @@ export function NavUser() {
   const user = userAccount?.data;
 
   // logout
-  const { mutate: logoutUser, isPending } = useLogout();
+  const { mutate: logoutUser } = useLogout();
 
   const handleLogout = () => {
     logoutUser(undefined, {
       onSuccess: () => {
         localStorage.clear();
-        window.location.href = "http://localhost:3001/";
+        window.location.href = "https://recruitment.ekazi.co.tz/";
       },
     });
   };

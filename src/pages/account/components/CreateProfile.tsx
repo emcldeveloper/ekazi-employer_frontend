@@ -12,7 +12,6 @@ import SearchSelect from "react-select";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 import {
   Card,
@@ -70,13 +69,12 @@ const CreateProfile = () => {
   // data fetch
   const { data: companyProfile } = useProfile();
   const profile = companyProfile?.data;
-  console.log(profile);
 
   const { data: industries } = useIndustries(industrySearch);
   const industryOptions =
     industries?.map((industry: Industry) => ({
       value: industry.id,
-      label: industry.industry_name,
+      label: industry.name,
     })) ?? [];
 
   const { data: companySizes } = useCompanySizes();
@@ -96,15 +94,15 @@ const CreateProfile = () => {
   const { data: regions } = useRegions();
 
   const attachment = watch("attachment");
-  const selectedCountry = watch("country");
-  const selectedRegion = watch("region");
+  const selectedCountry = watch("country_id");
+  const selectedRegion = watch("region_id");
 
   const filteredRegions =
     regions
-      ?.filter((region: Region) => region.country_id === selectedCountry)
+      ?.filter((region: Region) => region.country?.id === selectedCountry)
       .map((region: Region) => ({
         value: region.id,
-        label: region.region_name,
+        label: region.name,
       })) ?? [];
 
   // preview picture
@@ -119,7 +117,7 @@ const CreateProfile = () => {
 
   useEffect(() => {
     if (!profile) {
-      setValue("region", undefined);
+      setValue("region_id", undefined);
     }
   }, [selectedCountry, setValue, profile]);
 
@@ -130,38 +128,41 @@ const CreateProfile = () => {
       name: profile.name,
       tin: profile.tin,
       business: profile.business,
-      founded_year: profile.founded_year?.split(" ")[0],
+      founded_year: profile.founded_year
+        ? profile.founded_year.split("T")[0]
+        : "",
 
       industry_id: profile.industry?.id,
       company_size_id: profile.company_size?.id,
 
-      country: profile.country?.id,
-      region: profile.region?.id,
+      country_id: profile.country?.id,
+      region_id: profile.address?.region_id,
 
-      sub_location: profile.sub_location,
-      location_notes: profile.location_notes,
+      sub_location: profile.address?.sub_location,
+      location_notes: profile.address?.location_notes,
+      website: profile.address?.website,
+      extra_communication: profile.address?.extra_communication,
 
-      about_company: profile.description,
+      about_company: profile.description?.text,
 
-      website: profile.website,
       fax: profile.fax,
-      extra_communication: profile.extra_communication,
     });
   }, [profile, reset]);
 
   const onSubmit = (data: CreateProfileData) => {
     const formData = new FormData();
 
-    formData.append("name", data.name);
+    formData.append("client_name", data.name);
     formData.append("tin", data.tin || "");
     formData.append("business", data.business || "");
     formData.append("industry_id", String(data.industry_id));
     formData.append("founded_year", String(data.founded_year || ""));
     formData.append("company_size_id", String(data.company_size_id));
-    formData.append("region", String(data.region));
+    formData.append("country_id", String(data.country_id));
+    formData.append("region_id", String(data.region_id));
     formData.append("sub_location", data.sub_location || "");
     formData.append("location_notes", data.location_notes || "");
-    formData.append("about_company", data.about_company || "");
+    formData.append("description", data.about_company || "");
     formData.append("website", data.website || "");
     formData.append("fax", data.fax || "");
     formData.append("extra_communication", data.extra_communication || "");
@@ -169,6 +170,8 @@ const CreateProfile = () => {
     if (data.attachment?.[0]) {
       formData.append("attachment", data.attachment[0]);
     }
+
+    console.log([...formData.entries()]);
 
     createProfile(formData, {
       onSuccess: (res) => {
@@ -186,14 +189,12 @@ const CreateProfile = () => {
     <div className="mt-4 space-y-4">
       {/* Header */}
 
-      <Card>
-        <CardContent>
-          <h2 className="text-2xl font-bold">Company Profile</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Complete and manage your company information.
-          </p>
-        </CardContent>
-      </Card>
+      <div>
+        <h2 className="text-2xl font-bold">Company Profile</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Complete and manage your company information.
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Logo + Basic */}
@@ -389,13 +390,6 @@ const CreateProfile = () => {
                 <FieldError>{errors.about_company.message}</FieldError>
               )}
             </Field>
-
-            {/* <Textarea
-              rows={8}
-              {...register("about_company", {
-                required: "Company description is required",
-              })}
-            /> */}
           </CardContent>
         </Card>
 
@@ -418,7 +412,7 @@ const CreateProfile = () => {
               <Field>
                 <FieldLabel>Country</FieldLabel>
                 <Controller
-                  name="country"
+                  name="country_id"
                   control={control}
                   rules={{
                     required: "Country is required",
@@ -441,9 +435,9 @@ const CreateProfile = () => {
                     />
                   )}
                 />
-                {errors.country && (
+                {errors.country_id && (
                   <p className="text-xs text-red-500">
-                    {errors.country.message}
+                    {errors.country_id.message}
                   </p>
                 )}
               </Field>
@@ -451,7 +445,7 @@ const CreateProfile = () => {
               <Field>
                 <FieldLabel>Region</FieldLabel>
                 <Controller
-                  name="region"
+                  name="region_id"
                   control={control}
                   rules={{
                     required: "Region is required",
@@ -474,9 +468,9 @@ const CreateProfile = () => {
                     />
                   )}
                 />
-                {errors.region && (
+                {errors.region_id && (
                   <p className="text-xs text-red-500">
-                    {errors.region.message}
+                    {errors.region_id.message}
                   </p>
                 )}
               </Field>
@@ -506,14 +500,6 @@ const CreateProfile = () => {
                     />
                   )}
                 />
-
-                {/* <Textarea
-                  rows={8}
-                  placeholder="Describe your company location and directions..."
-                  {...register("location_notes", {
-                    required: "Location notes are required",
-                  })}
-                /> */}
               </Field>
             </FieldGroup>
           </CardContent>

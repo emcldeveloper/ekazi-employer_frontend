@@ -14,12 +14,12 @@ const Account = () => {
         <FieldGroup>
           <Field className="flex-row">
             <FieldLabel>Username</FieldLabel>
-            <Input defaultValue={user.username} disabled />
+            <Input defaultValue={user?.username} disabled />
           </Field>
 
           <Field className="flex-row">
             <FieldLabel>Email address</FieldLabel>
-            <Input type="email" defaultValue={user.email} disabled />
+            <Input type="email" defaultValue={user?.email} disabled />
           </Field>
         </FieldGroup>
       </form>

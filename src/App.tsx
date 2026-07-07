@@ -31,6 +31,7 @@ import RegisterPage from "./pages/auth/RegisterPage";
 import SigninPage from "./pages/auth/SigninPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPassword from "./pages/auth/ResetPassword";
+import VerifyPage from "./pages/auth/VerifyPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,8 +52,10 @@ const App = () => {
             <Routes>
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<SigninPage />} />
+
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/verification" element={<VerifyPage />} />
+              <Route path="/login" element={<SigninPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPassword />} />
 
@@ -65,12 +68,12 @@ const App = () => {
                   <Route path="/profile/edit" element={<CreateProfile />} />
 
                   <Route path="/jobs" element={<JobsPage />} />
+                  <Route path="/jobs/create" element={<CreateJob />} />
                   <Route path="/jobs/:id" element={<JobDetails />} />
                   <Route
                     path="/jobs/:id/applications"
                     element={<JobApplications />}
                   />
-                  <Route path="/jobs/create" element={<CreateJob />} />
 
                   <Route path="/candidates" element={<CandidatePage />} />
 
@@ -82,18 +85,18 @@ const App = () => {
 
                   <Route path="/users" element={<UsersPage />} />
 
-                  <Route path="/subscription" element={<SubscriptionPage />} />
-
-                  <Route path="/reports" element={<Dashboard />} />
-
-                  <Route path="/settings" element={<SettingsPage />} />
-
                   <Route path="/forms" element={<FormsPage />} />
                   <Route path="/forms/create" element={<CreateFormPage />} />
                   <Route
                     path="/forms/:id/preview"
                     element={<PreviewFormPage />}
                   />
+
+                  <Route path="/subscription" element={<SubscriptionPage />} />
+
+                  <Route path="/reports" element={<Dashboard />} />
+
+                  <Route path="/settings" element={<SettingsPage />} />
                 </Route>
               </Route>
             </Routes>

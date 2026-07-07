@@ -40,16 +40,12 @@ const UsersPage = () => {
 
   return (
     <div className="mt-4 space-y-4">
-      <Card size="sm">
-        <CardContent>
-          <div>
-            <h2 className="text-2xl font-bold">Manage Users</h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              View, manage, and monitor user accounts across your platform.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <div>
+        <h2 className="text-2xl font-bold">Manage Users</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          View, manage, and monitor user accounts across your platform.
+        </p>
+      </div>
 
       {/* stats */}
       <div className="grid gap-4 md:grid-cols-4">

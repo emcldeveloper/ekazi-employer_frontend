@@ -7,7 +7,7 @@ export const getProfile = async () => {
 };
 
 export const createProfile = async (data: FormData) => {
-  const res = await api.post("/employer/company-profile", data, {
+  const res = await api.put("/employer/company-profile", data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

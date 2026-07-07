@@ -3,15 +3,15 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const links = ["Features", "Solutions", "Pricing", "About", "FAQ"];
+const links = ["Features", "Pricing", "FAQ"];
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-
   const navigate = useNavigate();
 
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl ">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
         <div className="w-20">
           <img src="/images/logo.png" alt="logo" />
@@ -21,8 +21,8 @@ export default function Navbar() {
           {links.map((item) => (
             <a
               key={item}
-              href="#"
-              className="text-sm font-medium text-gray-600 transition hover:text-green-600"
+              href={`#${item.toLowerCase()}`}
+              className="text-sm font-medium text-gray-600 transition hover:text-blue-600"
             >
               {item}
             </a>
@@ -31,16 +31,16 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-4 md:flex">
           <Button
-            variant="link"
+            variant="ghost"
             onClick={() => navigate("/login")}
-            className="text-muted-foreground hover:text-Orange"
+            className="text-muted-foreground hover:text-Blue"
           >
             Login
           </Button>
 
           <Button
             onClick={() => navigate("/register")}
-            className=" bg-Orange hover:bg-orange-500"
+            className=" bg-Blue hover:bg-blue-600"
           >
             Get Started
           </Button>
@@ -58,7 +58,15 @@ export default function Navbar() {
               <a key={item}>{item}</a>
             ))}
 
-            <Button onClick={() => navigate("/register")} className="bg-Orange">
+            <Button
+              variant="outline"
+              onClick={() => navigate("/login")}
+              className="text-muted-foreground hover:text-Blue"
+            >
+              Login
+            </Button>
+
+            <Button onClick={() => navigate("/register")} className="bg-Blue">
               Get Started
             </Button>
           </div>

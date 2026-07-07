@@ -27,7 +27,6 @@ import {
   LayoutList,
   SquareUser,
   WalletCardsIcon,
-  UserSearchIcon,
   FolderOpenIcon,
   type LucideIcon,
 } from "lucide-react";
@@ -61,11 +60,11 @@ const navItems: NavItem[] = [
     url: "/jobs",
     icon: Briefcase,
   },
-  {
-    title: "Job Seeker",
-    url: "/candidates",
-    icon: UserSearchIcon,
-  },
+  // {
+  //   title: "Job Seeker",
+  //   url: "/candidates",
+  //   icon: UserSearchIcon,
+  // },
   // {
   //   title: "Clients",
   //   url: "/clients",
@@ -124,17 +123,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar collapsible="icon" variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link to="/dashboard">
-                <img
-                  src={profile?.logo || "/images/default-img.jpeg"}
-                  alt="Logo"
-                  className="w-24"
-                />
+                <div className="flex size-8 items-center justify-center overflow-hidden rounded-lg bg-sidebar-primary">
+                  <img
+                    src={profile?.logo || "/images/default-img.jpeg"}
+                    alt={profile?.name || "Company Logo"}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{profile?.name}</span>
+                </div>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

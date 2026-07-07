@@ -29,17 +29,13 @@ const TasksPage = () => {
 
   return (
     <div className="mt-4 space-y-4">
-      <Card size="sm">
-        <CardContent>
-          <div>
-            <h2 className="text-2xl font-bold">Task Management</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Track task progress, monitor workloads, and manage task completion
-              across your team.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <div>
+        <h2 className="text-2xl font-bold">Task Management</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Track task progress, monitor workloads, and manage task completion
+          across your team.
+        </p>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-4">
         <Card size="sm">

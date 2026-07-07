@@ -98,7 +98,7 @@ const JobsPage = () => {
 
   return (
     <div className="mt-4 space-y-4">
-      <div className="w-1/2">
+      <div className="sm:w-2/3">
         <h2 className="text-2xl font-bold">Job Management</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Create, manage, and monitor job postings, track applications, and
@@ -277,7 +277,9 @@ const JobsPage = () => {
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell>{job.applied_count}</TableCell>
+                    <TableCell className="text-center">
+                      {job.total_applicants}
+                    </TableCell>
                     <TableCell className="text-right">
                       <Button variant="link" onClick={() => handleView(job.id)}>
                         View

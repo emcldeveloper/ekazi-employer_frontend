@@ -1,7 +1,8 @@
 import { useState } from "react";
 import AuthLayout from "./AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeftIcon, EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+
 import {
   Field,
   FieldError,
@@ -58,15 +59,18 @@ const RegisterPage = () => {
     };
 
     registerEmployer(payload, {
-      onSuccess: () => {
-        toast.success("Registered successfully");
-        navigate("/login");
+      onSuccess: (res) => {
+        toast.success(res?.message || "Registration was succesful");
+        navigate("/verification", {
+          state: {
+            email: data.email,
+          },
+        });
         reset();
       },
 
       onError: (err: any) => {
         const message = err.response?.data?.message;
-
         toast.error(message || "Registration Failed");
       },
     });
@@ -74,40 +78,29 @@ const RegisterPage = () => {
 
   return (
     <AuthLayout>
-      <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
-        <div className="w-full max-w-lg mx-auto sm:pt-10">
-          <Link
-            to="/"
-            className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-          >
-            <ChevronLeftIcon size={20} />
-            Back
-          </Link>
-        </div>
-
+      <div className="flex flex-col flex-1 w-full mb-10">
         <div className="flex flex-col justify-center flex-1 w-full max-w-lg mx-auto sm:mb-10">
-          <div className="space-y-4">
-            <h1 className=" font-semibold text-Blue text-3xl">Register</h1>
+          <div className="space-y-5">
+            <h1 className=" font-semibold text-Blue text-2xl text-center">
+              Register to ekazi
+            </h1>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Field>
-                <FieldLabel className="text-muted-foreground">
-                  Company Name *
-                </FieldLabel>
+                <FieldLabel>Company Name *</FieldLabel>
                 <Input
                   type="text"
                   {...register("name", {
                     required: "Company name is required",
                   })}
+                  className="border-Blue"
                 />
                 {errors.name && <FieldError>{errors.name.message}</FieldError>}
               </Field>
 
               <FieldGroup className="grid md:grid-cols-2 gap-4">
                 <Field>
-                  <FieldLabel className="text-muted-foreground">
-                    Company Type *
-                  </FieldLabel>
+                  <FieldLabel>Company Type *</FieldLabel>
                   <Controller
                     name="type"
                     control={control}
@@ -117,7 +110,7 @@ const RegisterPage = () => {
                         value={String(field.value) || ""}
                         onValueChange={field.onChange}
                       >
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-fullv border-Blue">
                           <SelectValue placeholder="Type" />
                         </SelectTrigger>
 
@@ -139,15 +132,13 @@ const RegisterPage = () => {
                 </Field>
 
                 <Field>
-                  <FieldLabel className="text-muted-foreground">
-                    Phone Number *
-                  </FieldLabel>
+                  <FieldLabel>Phone Number *</FieldLabel>
                   <Input
                     type="tel"
-                    placeholder="+255..."
                     {...register("phone", {
                       required: "Phone number is required",
                     })}
+                    className="border-Blue"
                   />
                   {errors.phone && (
                     <FieldError>{errors.phone.message}</FieldError>
@@ -156,14 +147,13 @@ const RegisterPage = () => {
               </FieldGroup>
 
               <Field>
-                <FieldLabel className="text-muted-foreground">
-                  Email *
-                </FieldLabel>
+                <FieldLabel>Email *</FieldLabel>
                 <Input
                   type="email"
                   {...register("email", {
                     required: "Email is required",
                   })}
+                  className="border-Blue"
                 />
                 {errors.email && (
                   <FieldError>{errors.email.message}</FieldError>
@@ -172,19 +162,18 @@ const RegisterPage = () => {
 
               <FieldGroup className="grid md:grid-cols-2 gap-4">
                 <Field>
-                  <FieldLabel className="text-muted-foreground">
-                    Password *
-                  </FieldLabel>
+                  <FieldLabel>Password *</FieldLabel>
                   <div className="relative">
                     <Input
                       type={showPassword ? "text" : "password"}
                       {...register("password", {
                         required: "Password is required",
                         minLength: {
-                          value: 6,
-                          message: "Password must be at least 6 characters",
+                          value: 8,
+                          message: "Password must be at least 8 characters",
                         },
                       })}
+                      className="border-Blue"
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -204,9 +193,7 @@ const RegisterPage = () => {
 
                 {/* Confirm Password */}
                 <Field>
-                  <FieldLabel className="text-muted-foreground">
-                    Confirm Password *
-                  </FieldLabel>
+                  <FieldLabel>Confirm Password *</FieldLabel>
                   <div className="relative">
                     <Input
                       type={showConfirmPassword ? "text" : "password"}
@@ -216,6 +203,7 @@ const RegisterPage = () => {
                         validate: (value) =>
                           value === password || "Passwords do not match",
                       })}
+                      className="border-Blue"
                     />
                     <span
                       onClick={() =>

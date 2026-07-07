@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeftIcon } from "lucide-react";
 
 import {
   Field,
@@ -31,31 +30,25 @@ const ForgotPasswordPage = () => {
 
   const onSubmit = (data: ForgotPayload) => {
     resetPassword(data, {
-      onSuccess: () => {
-        reset();
-        toast.success("Link sent succesfully");
+      onSuccess: (res) => {
+        toast.success(res?.message || "Link sent succesfully");
         navigate("/login");
+        reset();
+      },
+      onError: (err: any) => {
+        const message = err?.response?.data?.message;
+        toast.error(message || "Failed to send link");
       },
     });
   };
 
   return (
     <AuthLayout>
-      <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
-        <div className="w-full max-w-lg mx-auto sm:pt-10">
-          <Link
-            to="/login"
-            className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-          >
-            <ChevronLeftIcon size={20} />
-            Back
-          </Link>
-        </div>
-
+      <div className="flex flex-col flex-1 w-full">
         <div className="flex flex-col justify-center flex-1 w-full max-w-lg mx-auto">
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div>
-              <h1 className="mb-2 font-semibold text-Blue text-3xl">
+              <h1 className="mb-3 font-semibold text-Blue text-center text-2xl">
                 Forgot Password?
               </h1>
               <p className="text-sm text-muted-foreground">
@@ -67,12 +60,12 @@ const ForgotPasswordPage = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <FieldLabel>Email</FieldLabel>
                   <Input
-                    id="email"
                     type="email"
-                    placeholder="example@gmail.com"
+                    placeholder="example@email.com"
                     {...register("email", { required: "Email is required" })}
+                    className="border-Blue"
                   />
                   {errors.email && (
                     <FieldError>{errors.email.message}</FieldError>
@@ -82,7 +75,7 @@ const ForgotPasswordPage = () => {
                   <Button
                     type="submit"
                     disabled={isPending}
-                    className="bg-Blue hover:bg-blue-800"
+                    className="bg-Blue hover:bg-blue-600"
                   >
                     {isPending ? "Sending..." : "Send Reset Link"}
                   </Button>
