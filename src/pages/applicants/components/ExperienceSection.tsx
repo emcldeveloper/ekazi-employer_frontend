@@ -80,7 +80,7 @@ const ExperienceSection = ({ applicant }: { applicant: Applicant }) => {
           <div className="space-y-6">
             {groupedExperience.map((group) => {
               const employer = group.employer;
-              const region = group.region?.region_name;
+              const region = group.region?.name;
               const country = group.region?.country?.name;
 
               const duration = calculateDuration(group.positions);
@@ -107,9 +107,9 @@ const ExperienceSection = ({ applicant }: { applicant: Applicant }) => {
                             {position.position?.position_name}
                           </p>
 
-                          {position.industry?.industry_name && (
+                          {position.industry?.name && (
                             <p className="text-sm">
-                              {position.industry.industry_name} Industry
+                              {position.industry.name} Industry
                             </p>
                           )}
 

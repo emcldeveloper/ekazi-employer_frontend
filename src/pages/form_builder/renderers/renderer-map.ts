@@ -17,3 +17,5 @@ export const QUESTION_RENDERERS = {
   CHECKBOX: CheckboxRenderer,
   RADIO: RadioRenderer,
 } as const;
+
+export type QuestionType = keyof typeof QUESTION_RENDERERS;

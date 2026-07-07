@@ -10,7 +10,7 @@ export function RadioRenderer({
 }: QuestionRendererProps) {
   return (
     <RadioGroup>
-      {question.options.map((option) => (
+      {question?.options?.map((option) => (
         <div key={option.id} className="flex items-center space-x-3">
           <RadioGroupItem disabled={readonly} value={option.id} />
 

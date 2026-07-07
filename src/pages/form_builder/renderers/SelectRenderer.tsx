@@ -19,7 +19,7 @@ export function SelectRenderer({
       </SelectTrigger>
 
       <SelectContent>
-        {question.options.map((option) => (
+        {question?.options?.map((option) => (
           <SelectItem key={option.id} value={option.id}>
             {option.value}
           </SelectItem>

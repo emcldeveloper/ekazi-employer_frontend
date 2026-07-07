@@ -10,7 +10,7 @@ export function CheckboxRenderer({
 }: QuestionRendererProps) {
   return (
     <div className="space-y-3">
-      {question.options.map((option) => (
+      {question?.options?.map((option) => (
         <div key={option.id} className="flex items-center space-x-3">
           <Checkbox disabled={readonly} />
 

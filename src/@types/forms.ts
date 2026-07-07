@@ -1,3 +1,5 @@
+import type { QuestionType } from "@/pages/form_builder/renderers/renderer-map";
+
 export type FormStatus = "DRAFT" | "PUBLISHED";
 
 export interface QuestionOption {
@@ -11,7 +13,7 @@ export interface Question {
   title: string;
   description?: string;
   placeholder?: string;
-  type: string;
+  type: QuestionType;
   required: boolean;
   order: number;
   options?: QuestionOption[];

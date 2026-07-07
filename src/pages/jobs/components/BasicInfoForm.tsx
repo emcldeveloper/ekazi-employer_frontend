@@ -96,7 +96,7 @@ const BasicInfoForm = ({
   const industryOptions =
     industries?.map((industry: Industry) => ({
       value: industry.id,
-      label: industry.industry_name,
+      label: industry.name,
     })) ?? [];
 
   // fetch salary ranges
@@ -152,7 +152,7 @@ const BasicInfoForm = ({
       ?.filter((region: Region) => region.country_id === selectedCountry)
       .map((region: Region) => ({
         value: region.id,
-        label: region.region_name,
+        label: region.name,
       })) ?? [];
 
   const onSubmit = async (data: JobCreateForm) => {

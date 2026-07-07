@@ -1,5 +1,3 @@
-import { Card } from "@/components/ui/card";
-
 import { Label } from "@/components/ui/label";
 
 import type { Question } from "@/@types/forms";
