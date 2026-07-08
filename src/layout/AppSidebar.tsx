@@ -33,6 +33,7 @@ import {
 import { isRouteActive } from "@/utils/helpers";
 import { NavUser } from "@/components/nav-user";
 import { useProfile } from "@/hooks/profile";
+import { BASE_URL } from "@/config/config";
 
 type NavItem = {
   title: string;
@@ -129,11 +130,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link to="/dashboard">
-                <div className="flex size-8 items-center justify-center overflow-hidden rounded-lg bg-sidebar-primary">
+                <div className="flex size-12 items-center justify-center overflow-hidden rounded-lg ">
                   <img
-                    src={profile?.logo || "/images/default-img.jpeg"}
+                    src={
+                      profile?.logo
+                        ? `${BASE_URL}/${profile.logo}`
+                        : "/images/default-img.jpeg"
+                    }
                     alt={profile?.name || "Company Logo"}
-                    className="h-full w-full object-cover"
+                    className="w-full"
                   />
                 </div>
 

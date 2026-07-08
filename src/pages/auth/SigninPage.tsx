@@ -94,12 +94,12 @@ const SigninPage = () => {
                   <div className="relative">
                     <Input
                       type={showPassword ? "text" : "password"}
-                      placeholder="8 or more characters"
+                      placeholder="6 or more characters"
                       {...register("password", {
                         required: "Password is required",
                         minLength: {
-                          value: 8,
-                          message: "Password must be at least 8 characters",
+                          value: 6,
+                          message: "Password must be at least 6 characters",
                         },
                       })}
                       className="border-Blue"

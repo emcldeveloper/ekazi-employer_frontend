@@ -38,7 +38,7 @@ export default function AppLayout() {
               <BreadcrumbList>
                 <BreadcrumbItem>
                   <BreadcrumbLink>
-                    <Link to="/">Dashboard</Link>
+                    <Link to="/dashboard">App</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
 

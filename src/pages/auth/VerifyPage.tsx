@@ -73,18 +73,24 @@ const VerifyPage = () => {
       { token: otp },
       {
         onSuccess: (res) => {
-          reset();
-          setOtp("");
+          localStorage.setItem("token", res.token);
+          localStorage.setItem("user_id", res.data?.id);
+          localStorage.setItem("role_id", res.data?.role_id);
+          localStorage.setItem("verified", res.data?.verified);
 
-          // Save token if returned (adjust based on your API)
-          if (res?.token) {
-            localStorage.setItem("token", res.token);
+          const role = res.data?.role_id;
+
+          // 9 as Recruiter, 5 as Employer
+          if (role === 9 || role === 5) {
+            navigate("/dashboard", { replace: true });
           }
 
           toast.success(res?.message || "Account verified successfully");
 
           // Redirect to dashboard
           navigate("/app/dashboard");
+          reset();
+          setOtp("");
         },
         onError: (err: any) => {
           const message = err?.response?.data?.error || "Verification failed";
@@ -97,18 +103,8 @@ const VerifyPage = () => {
   return (
     <AuthLayout>
       <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
-        <div className="w-full max-w-lg mx-auto sm:pt-10">
-          <Link
-            to="/register"
-            className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-          >
-            <ChevronLeftIcon size={20} />
-            Back
-          </Link>
-        </div>
-
         <div className="flex flex-col justify-center flex-1 w-full max-w-lg mx-auto">
-          <div className="space-y-4">
+          <div className="space-y-5">
             <h1 className=" font-semibold text-Blue text-2xl">
               Verification Code
             </h1>
@@ -157,7 +153,7 @@ const VerifyPage = () => {
                   Resend Code
                 </Button>
               ) : (
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="text-sm ml-2 text-gray-500">
                   Resend in{" "}
                   <span className="font-semibold text-Blue">{countdown}s</span>
                 </p>

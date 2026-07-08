@@ -3,7 +3,7 @@ import { UserPlus, Building2, BriefcaseBusiness, Users } from "lucide-react";
 const steps = [
   {
     icon: UserPlus,
-    title: "Create Employer Account",
+    title: "Create Account",
     text: "Sign up in less than two minutes.",
   },
   {

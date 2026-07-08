@@ -46,8 +46,8 @@ const ResetPassword = () => {
     };
 
     mutate(payload, {
-      onSuccess: (response) => {
-        toast.success(response?.message || "Password reset successful");
+      onSuccess: (res) => {
+        toast.success(res?.message || "Password reset successful");
 
         reset();
 
@@ -75,13 +75,13 @@ const ResetPassword = () => {
                   <FieldLabel>New Password</FieldLabel>
                   <div className="relative">
                     <Input
-                      placeholder="8 or more characters"
+                      placeholder="6 or more characters"
                       type={showPassword ? "text" : "password"}
                       {...register("password", {
                         required: "Password is required",
                         minLength: {
-                          value: 8,
-                          message: "Password must be at least 8 characters",
+                          value: 6,
+                          message: "Password must be at least 6 characters",
                         },
                       })}
                       className="border-Blue"

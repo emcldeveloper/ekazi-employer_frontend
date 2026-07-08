@@ -20,6 +20,7 @@ import { useProfile } from "@/hooks/profile";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "@/utils/helpers";
 import { Badge } from "@/components/ui/badge";
+import { BASE_URL } from "@/config/config";
 
 const AccountProfile = () => {
   const navigate = useNavigate();
@@ -41,7 +42,15 @@ const AccountProfile = () => {
         <CardContent className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-10">
             <div className="w-30">
-              <img src={profile?.logo} alt={profile?.name} />
+              <img
+                src={
+                  profile?.logo
+                    ? `${BASE_URL}/${profile.logo}`
+                    : "/images/default-img.jpeg"
+                }
+                alt={profile?.name || "Company Logo"}
+                className="w-full"
+              />
             </div>
 
             <div className="space-y-2">

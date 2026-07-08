@@ -1,10 +1,11 @@
 import { FaFacebookF, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-const product = ["Features", "Pricing", "Dashboard", "Analytics"];
+const product = ["features", "pricing"];
 
-const company = ["About", "Blog", "Careers", "Contact"];
+const company = ["about", "contact"];
 
-const support = ["Help Center", "Privacy", "Terms", "FAQ"];
+const support = ["privacy", "terms"];
 
 export default function Footer() {
   return (
@@ -15,9 +16,9 @@ export default function Footer() {
             <img src="/images/ekazi-white.png" alt="logo" />
           </div>
 
-          <p className="mt-5">
-            Modern recruitment software for employers, recruiters and hiring
-            teams.
+          <p className="mt-5 text-sm">
+            An Online Recruitment Management Platform Designed for Employers,
+            Recruiters, Job Seekers and Freelancers.
           </p>
 
           <div className="mt-6 flex gap-4">
@@ -30,9 +31,13 @@ export default function Footer() {
         <div>
           <h3 className="font-bold">Product</h3>
 
-          <div className="mt-5 space-y-3">
+          <div className="mt-5 space-y-3 text-sm">
             {product.map((item) => (
-              <p key={item}>{item}</p>
+              <div>
+                <Link to={`/#${item}`} key={item} className="capitalize">
+                  {item}
+                </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -40,9 +45,13 @@ export default function Footer() {
         <div>
           <h3 className="font-bold">Company</h3>
 
-          <div className="mt-5 space-y-3">
+          <div className="mt-5 space-y-3 text-sm">
             {company.map((item) => (
-              <p key={item}>{item}</p>
+              <div>
+                <Link to={`/${item}`} key={item} className="capitalize">
+                  {item}
+                </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -50,16 +59,20 @@ export default function Footer() {
         <div>
           <h3 className="font-bold">Support</h3>
 
-          <div className="mt-5 space-y-3">
+          <div className="mt-5 space-y-3 text-sm">
             {support.map((item) => (
-              <p key={item}>{item}</p>
+              <div>
+                <Link to={`/${item}`} key={item} className="capitalize">
+                  {item}
+                </Link>
+              </div>
             ))}
           </div>
         </div>
       </div>
 
       <div className="border-t border-white py-6 text-center text-sm">
-        © {new Date().getFullYear()} eKazi. All rights reserved.
+        © {new Date().getFullYear()} ekazi. All rights reserved.
       </div>
     </footer>
   );

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { Toaster } from "sonner";
@@ -32,6 +32,9 @@ import SigninPage from "./pages/auth/SigninPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPassword from "./pages/auth/ResetPassword";
 import VerifyPage from "./pages/auth/VerifyPage";
+import ContactPage from "./pages/landing/ContactPage";
+import ScrollToTop from "./components/scroll-top";
+import AboutPage from "./pages/landing/AboutPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,9 +52,14 @@ const App = () => {
           <Toaster position="top-center" richColors />
 
           <BrowserRouter>
+            <ScrollToTop />
+
             <Routes>
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/" element={<LandingPage />} />
+              <Route path="/home" element={<Navigate to="/" replace />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
 
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/verification" element={<VerifyPage />} />

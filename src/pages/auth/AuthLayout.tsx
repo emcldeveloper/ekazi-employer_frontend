@@ -10,6 +10,14 @@ export default function AuthLayout({
 }) {
   const navigate = useNavigate();
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
     <div className="relative p-6 bg-white z-1 dark:bg-gray-900 sm:p-0">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl">
@@ -21,7 +29,7 @@ export default function AuthLayout({
           </Link>
 
           <div>
-            <Button variant="outline" onClick={() => navigate("/")}>
+            <Button variant="outline" onClick={handleBack}>
               <ArrowLeftIcon /> Back
             </Button>
           </div>
