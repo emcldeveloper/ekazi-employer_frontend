@@ -1,16 +1,15 @@
-import type { Job } from "@/@types/job";
 import type {
+  JobCreateForm,
   JobEducationForm,
   JobLanguageForm,
   JobMainDutiesForm,
   JobMetaForm,
+  JobOtherRequirementForm,
   JobRequirementPayload,
 } from "@/@types/job-forms";
 import type {
-  JobCreateForm,
   JobFilters,
   JobLocationData,
-  JobOtherRequirementData,
   JobReportingData,
 } from "@/@types/jobs";
 import api from "@/lib/axios";
@@ -40,7 +39,7 @@ export const getJobs = async (params: JobFilters = {}) => {
   return res.data;
 };
 
-export const getJob = async (id: Job) => {
+export const getJob = async (id: number) => {
   const res = await api.get(`/employer/jobs/${id}`);
   return res.data?.data;
 };
@@ -90,7 +89,6 @@ export const editJobEducation = async ({
 
 export const deleteJobEducation = async ({
   id,
-  job_id,
 }: {
   id: number;
   job_id: number;
@@ -120,12 +118,12 @@ export const editJobLanguage = async ({
 
 export const deleteJobLanguage = async ({
   id,
-  job_id,
 }: {
   id: number;
   job_id: number;
 }) => {
   const res = await api.delete(`/employer/job-languages/${id}`);
+
   return res.data;
 };
 
@@ -147,7 +145,7 @@ export const addRequirements = async ({
 Other Requirements APIs
 */
 export const addOtherRequirements = async (
-  payload: JobOtherRequirementData,
+  payload: JobOtherRequirementForm,
 ) => {
   const res = await api.post("/employer/job-other-requirements", payload);
   return res.data;
@@ -158,7 +156,7 @@ export const editOtherRequirements = async ({
   payload,
 }: {
   id: number;
-  payload: JobOtherRequirementData;
+  payload: JobOtherRequirementForm;
 }) => {
   const res = await api.put(`/employer/job-other-requirements/${id}`, payload);
   return res.data;

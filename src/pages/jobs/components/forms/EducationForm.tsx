@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import type { OptionType } from "@/@types/jobs";
-import type { CourseData, EducationLevel, Major } from "@/@types/universals";
+import type { Course, EducationLevel, Major } from "@/@types/universals";
 import {
   Field,
   FieldError,
@@ -52,13 +52,13 @@ const EducationForm = ({
   const levelOptions: OptionType[] =
     levels?.map((level: EducationLevel) => ({
       value: level.id,
-      label: level.education_level,
+      label: level.name,
     })) ?? [];
 
   // fetch courses
   const { data: courses } = useCourses(courseSearch);
   const courseOptions: OptionType[] =
-    courses?.map((course: CourseData) => ({
+    courses?.map((course: Course) => ({
       value: course.id,
       label: course.name,
     })) ?? [];
