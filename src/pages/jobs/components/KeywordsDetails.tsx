@@ -8,22 +8,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PencilLineIcon, ShieldCheckIcon } from "lucide-react";
-import MetaForm from "./MetaForm";
+import MetaForm from "./forms/MetaForm";
 import { useState } from "react";
+import type { Job } from "@/@types/job";
 
 interface KeywordsDetailsProps {
-  job: any;
+  job: Job;
 }
 
 const KeywordsDetails = ({ job }: KeywordsDetailsProps) => {
   const [open, setOpen] = useState(false);
 
-  const metaData = job?.job_meta_keywords?.meta_keyword?.name
+  const metaData = job?.meta_keywords?.[0]?.keyword?.name
     ?.replace(/<[^>]*>/g, "")
     .trim();
 
   return (
-    <div>
+    <div className="space-y-4">
       <div className="flex justify-between gap-4">
         <div className="flex items-center gap-2">
           <div className="bg-blue-100 text-primary p-2 rounded-md">
@@ -39,12 +40,12 @@ const KeywordsDetails = ({ job }: KeywordsDetailsProps) => {
               {metaData ? "Edit" : "Add"}
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl">
+          <DialogContent className="sm:max-w-2xl overflow-visible">
             <DialogHeader>
               <DialogTitle>Meta Keywords (SEO)</DialogTitle>
               <DialogDescription>Edit job meta keywords.</DialogDescription>
             </DialogHeader>
-            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+            <div className="-mx-4 max-h-[70vh] px-4">
               {/* <MetaForm /> */}
               <MetaForm job={job} onSuccess={() => setOpen(false)} />
             </div>
@@ -53,7 +54,7 @@ const KeywordsDetails = ({ job }: KeywordsDetailsProps) => {
       </div>
 
       <p className="leading-7 text-muted-foreground">
-        {job?.job_meta_keywords?.meta_keyword?.name}
+        {job?.meta_keywords?.[0]?.keyword?.name}
       </p>
     </div>
   );

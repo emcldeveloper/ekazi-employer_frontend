@@ -52,9 +52,9 @@ export const getPositions = async (search = "", page = 1, limit = 100) => {
   return res.data;
 };
 
-export const getPositionLevel = async () => {
-  const res = await api.get("/universal/position_level");
-  return res.data.position_level;
+export const positionLevels = async () => {
+  const res = await api.get("/position-levels");
+  return res.data?.data;
 };
 
 export const getGenders = async () => {
@@ -63,13 +63,19 @@ export const getGenders = async () => {
 };
 
 export const getJobTypes = async () => {
-  const res = await api.get("/universal/job-type");
-  return res.data.type;
+  const res = await api.get("/job-types");
+  return res.data?.data;
 };
 
-export const getSalaryRange = async () => {
-  const res = await api.get("/applicant/salary_range");
-  return res.data.salary_range;
+export const getSalaryRange = async (search = "", page = 1, limit = 50) => {
+  const res = await api.get("/salary-ranges", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data?.data;
 };
 
 // universal education apis
@@ -118,7 +124,7 @@ export const getReadLanguage = async () => {
 };
 
 export const getWriteLanguage = async () => {
-  const res = await api.get("/applicant/language_write");
+  const res = await api.get("/language-writes");
   return res.data?.data;
 };
 
@@ -128,7 +134,7 @@ export const getSpeakLanguage = async () => {
 };
 
 export const getUnderstandLanguage = async () => {
-  const res = await api.get("/applicant/language_understand");
+  const res = await api.get("/language-understands");
   return res.data?.data;
 };
 
@@ -179,7 +185,7 @@ export const getKnowledges = async (
   page: number,
   limit: number,
 ) => {
-  const res = await api.get("/applicant/knowledge", {
+  const res = await api.get("/knowledge", {
     params: {
       search,
       page,
@@ -217,4 +223,20 @@ export const getPersonalities = async (
     },
   });
   return res.data?.data;
+};
+
+export const metaKeywords = async (
+  search: string = "",
+  page: number = 1,
+  limit: number = 50,
+) => {
+  const res = await api.get("/meta-keywords", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+
+  return res.data.data;
 };

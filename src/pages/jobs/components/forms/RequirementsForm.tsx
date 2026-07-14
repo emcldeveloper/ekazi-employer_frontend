@@ -1,16 +1,8 @@
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { JobRequirementData, OptionType } from "@/@types/jobs";
 import SearchSelect from "react-select";
 import CreatableSelect from "react-select/creatable";
-
-import type {
-  Culture,
-  Gender,
-  Knowledge,
-  Personality,
-} from "@/@types/universals";
-import { Button } from "@/components/ui/button";
 
 import {
   Field,
@@ -19,6 +11,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 import { useAddRequirement } from "@/hooks/jobs/useAddRequirement";
 import {
@@ -26,11 +19,36 @@ import {
   useGenders,
   useKnowledges,
   usePersonalities,
+  useProficiencies,
+  useSoftwares,
+  useTools,
 } from "@/hooks/universals";
-import { useEffect, useState } from "react";
+import type {
+  CultureItem,
+  Job,
+  KnowledgeItem,
+  PersonalityItem,
+  ProficiencyItem,
+  SoftwareItem,
+  ToolItem,
+} from "@/@types/job";
+import type { OptionType } from "@/@types/jobs";
+import type {
+  Culture,
+  Gender,
+  Knowledge,
+  Personality,
+  Proficiency,
+  Software,
+  Tool,
+} from "@/@types/universals";
+import type {
+  JobRequirementForm,
+  JobRequirementPayload,
+} from "@/@types/job-forms";
 
 interface RequirementsFormProps {
-  job: any;
+  job: Job;
   onSuccess?: () => void;
 }
 
@@ -38,11 +56,13 @@ const RequirementsForm = ({
   job,
   onSuccess: closeModal,
 }: RequirementsFormProps) => {
+  const jobId = job?.id;
+
   const [personalitySearch, setPersonalitySearch] = useState("");
   const [skillSearch, setSkillSearch] = useState("");
-  // const [softwareSearch, setSoftwareSearch] = useState("");
-  // const [toolsSearch, setToolsSearch] = useState("");
-  // const [prociencySearch, setProficiencySearch] = useState("");
+  const [softwareSearch, setSoftwareSearch] = useState("");
+  const [toolsSearch, setToolsSearch] = useState("");
+  const [prociencySearch, setProficiencySearch] = useState("");
 
   const {
     register,
@@ -50,17 +70,7 @@ const RequirementsForm = ({
     control,
     formState: { errors },
     reset,
-  } = useForm<JobRequirementData>({
-    defaultValues: {
-      gender_id: null,
-      culture: [],
-      personality: [],
-      knowledge: [],
-      software: [],
-      proficiency_id: [],
-      tool: [],
-    },
-  });
+  } = useForm<JobRequirementForm>();
 
   const { mutate: createJobRequirement, isPending } = useAddRequirement();
 
@@ -69,12 +79,12 @@ const RequirementsForm = ({
   const genderOptions: OptionType[] =
     genders?.map((gender: Gender) => ({
       value: gender.id,
-      label: gender.gender_name,
+      label: gender.name,
     })) ?? [];
 
   // fetch cultures
   const { data: cultures } = useCultures();
-  const cultureOptions: string[] =
+  const cultureOptions: OptionType[] =
     cultures?.map((culture: Culture) => ({
       value: culture.id,
       label: culture.culture_name,
@@ -82,87 +92,103 @@ const RequirementsForm = ({
 
   // fetch personalities
   const { data: personalities } = usePersonalities(personalitySearch);
-  const personalityOptions: string[] =
-    personalities?.map((personality: Personality) => ({
-      value: personality.id,
-      label: personality.personality_name,
+  const personalityOptions: OptionType[] =
+    personalities?.map((personality_ids: Personality) => ({
+      value: personality_ids.id,
+      label: personality_ids.name,
     })) ?? [];
 
   // fetch skills
   const { data: knowledges } = useKnowledges(skillSearch);
-  const skillOptions: string[] =
+  const skillOptions: OptionType[] =
     knowledges?.map((skill: Knowledge) => ({
       value: skill.id,
-      label: skill.knowledge_name,
+      label: skill.name,
     })) ?? [];
 
   // fetch softwares
-  // const { data: softwares } = useSoftwares(softwareSearch);
-  // const softwareOptions: string[] =
-  //   softwares?.map((software: Software) => ({
-  //     value: software.id,
-  //     label: software.software_name,
-  //   })) ?? [];
+  const { data: softwares } = useSoftwares(softwareSearch);
+  const softwareOptions: OptionType[] =
+    softwares?.map((software: Software) => ({
+      value: software.id,
+      label: software.software_name,
+    })) ?? [];
 
   // fetch tools
-  // const { data: tools } = useTools(toolsSearch);
-  // const toolOptions: string[] =
-  //   tools?.map((tool: Tool) => ({
-  //     value: tool.id,
-  //     label: tool.tool_name,
-  //   })) ?? [];
+  const { data: tools } = useTools(toolsSearch);
+  const toolOptions: OptionType[] =
+    tools?.map((tool: Tool) => ({
+      value: tool.id,
+      label: tool.tool_name,
+    })) ?? [];
 
   // fetch proficiencies
-  // const { data: proficiencies } = useProficiencies(prociencySearch);
-  // const proficiencyOptions: number[] =
-  //   proficiencies?.map((proficiency: Proficiency) => ({
-  //     value: proficiency.id,
-  //     label: proficiency.proficiency_name,
-  //   })) ?? [];
+  const { data: proficiencies } = useProficiencies(prociencySearch);
+  const proficiencyOptions: OptionType[] =
+    proficiencies?.map((proficiency: Proficiency) => ({
+      value: proficiency.id,
+      label: proficiency.name,
+    })) ?? [];
 
   // Pre fill data for editing
   useEffect(() => {
     reset({
-      years_experience: job?.years_experience || "",
-      applicant_min_age: job?.applicant_min_age || "",
-      applicant_max_age: job?.applicant_max_age || "",
-      gender_id: job?.gender_id || "",
-      culture:
-        job?.job_culture?.map((item: any) => ({
+      years_experience: job?.years_experience,
+      applicant_min_age: job?.applicant_min_age,
+      applicant_max_age: job?.applicant_max_age,
+      gender_id: job?.gender?.id,
+      culture_ids:
+        job?.cultures?.map((item: CultureItem) => ({
           value: item.culture?.id,
-          label: item.culture?.culture_name,
+          label: item.culture?.name,
         })) ?? [],
-      personality:
-        job?.job_personality?.map((item: any) => ({
+      personality_ids:
+        job?.personalities?.map((item: PersonalityItem) => ({
           value: item.personality?.id,
-          label: item.personality?.personality_name,
+          label: item.personality?.name,
         })) ?? [],
-      knowledge:
-        job?.job_knowledge?.map((item: any) => ({
+      knowledge_ids:
+        job?.knowledge?.map((item: KnowledgeItem) => ({
           value: item.knowledge?.id,
-          label: item.knowledge?.knowledge_name,
+          label: item.knowledge?.name,
+        })) ?? [],
+      software_ids:
+        job?.softwares?.map((item: SoftwareItem) => ({
+          value: item.software?.id,
+          label: item.software?.name,
+        })) ?? [],
+      proficiency_ids:
+        job?.proficiencies?.map((item: ProficiencyItem) => ({
+          value: item.proficiency?.id,
+          label: item.proficiency?.name,
+        })) ?? [],
+      tool_ids:
+        job?.tools?.map((item: ToolItem) => ({
+          value: item.tool?.id,
+          label: item.tool?.name,
         })) ?? [],
     });
   }, [job, reset]);
 
   // Handlers
-  const onSubmit = (data: JobRequirementData) => {
-    const payload = {
-      ...data,
-      // @ts-expect-error TS cannot infer custom select option type here
-      culture: data.culture?.map((option) => option.value) ?? [],
-      // @ts-expect-error TS cannot infer custom select option type here
-      knowledge: data.knowledge?.map((option) => option.value) ?? [],
-      // @ts-expect-error TS cannot infer custom select option type here
-      personality: data.personality?.map((option) => option.value) ?? [],
-      // software: data.software?.map((option) => option.value) ?? [],
-      // proficiency_id: data.proficiency_id?.map((option) => option.value) ?? [],
-      // tool: data.tool?.map((option) => option.value) ?? [],
+  const onSubmit = (data: JobRequirementForm) => {
+    const payload: JobRequirementPayload = {
+      years_experience: data.years_experience,
+      applicant_min_age: data.applicant_min_age,
+      applicant_max_age: data.applicant_max_age,
+      gender_id: data.gender_id,
+
+      culture_ids: data.culture_ids?.map((o) => o.value) ?? [],
+      personality_ids: data.personality_ids?.map((o) => o.value) ?? [],
+      knowledge_ids: data.knowledge_ids?.map((o) => o.value) ?? [],
+      software_ids: data.software_ids?.map((o) => o.value) ?? [],
+      proficiency_ids: data.proficiency_ids?.map((o) => o.value) ?? [],
+      tool_ids: data.tool_ids?.map((o) => o.value) ?? [],
     };
 
     createJobRequirement(
       {
-        jobId: job?.id,
+        job_id: jobId,
         payload,
       },
       {
@@ -182,12 +208,9 @@ const RequirementsForm = ({
           <Field>
             <FieldLabel>Experience years</FieldLabel>
             <Input
-              min={1}
-              type="number"
+              type="text"
               {...register("years_experience", {
-                valueAsNumber: true,
                 required: "Experience is required",
-                min: 1,
               })}
             />
             {errors.years_experience && (
@@ -246,7 +269,7 @@ const RequirementsForm = ({
           <Field>
             <FieldLabel>Culture</FieldLabel>
             <Controller
-              name="culture"
+              name="culture_ids"
               control={control}
               rules={{
                 required: "Culture is required",
@@ -262,15 +285,15 @@ const RequirementsForm = ({
                 />
               )}
             />
-            {errors.culture && (
-              <FieldError>{errors.culture.message}</FieldError>
+            {errors.culture_ids && (
+              <FieldError>{errors.culture_ids.message}</FieldError>
             )}
           </Field>
 
           <Field>
             <FieldLabel>Personality</FieldLabel>
             <Controller
-              name="personality"
+              name="personality_ids"
               control={control}
               rules={{
                 required: "Personality is required",
@@ -287,15 +310,15 @@ const RequirementsForm = ({
                 />
               )}
             />
-            {errors.personality && (
-              <FieldError>{errors.personality.message}</FieldError>
+            {errors.personality_ids && (
+              <FieldError>{errors.personality_ids.message}</FieldError>
             )}
           </Field>
 
           <Field>
             <FieldLabel>Skills</FieldLabel>
             <Controller
-              name="knowledge"
+              name="knowledge_ids"
               control={control}
               rules={{
                 required: "Knowledge is required",
@@ -312,15 +335,15 @@ const RequirementsForm = ({
                 />
               )}
             />
-            {errors.knowledge && (
-              <FieldError>{errors.knowledge.message}</FieldError>
+            {errors.knowledge_ids && (
+              <FieldError>{errors.knowledge_ids.message}</FieldError>
             )}
           </Field>
 
-          {/* <Field>
+          <Field>
             <FieldLabel>Software</FieldLabel>
             <Controller
-              name="software"
+              name="software_ids"
               control={control}
               rules={{
                 required: "Software is required",
@@ -337,15 +360,15 @@ const RequirementsForm = ({
                 />
               )}
             />
-            {errors.software && (
-              <FieldError>{errors.software.message}</FieldError>
+            {errors.software_ids && (
+              <FieldError>{errors.software_ids.message}</FieldError>
             )}
-          </Field> */}
+          </Field>
 
-          {/* <Field>
+          <Field>
             <FieldLabel>Proficiency</FieldLabel>
             <Controller
-              name="proficiency_id"
+              name="proficiency_ids"
               control={control}
               rules={{
                 required: "Proficiency is required",
@@ -362,15 +385,15 @@ const RequirementsForm = ({
                 />
               )}
             />
-            {errors.proficiency_id && (
-              <FieldError>{errors.proficiency_id.message}</FieldError>
+            {errors.proficiency_ids && (
+              <FieldError>{errors.proficiency_ids.message}</FieldError>
             )}
-          </Field> */}
+          </Field>
 
-          {/* <Field>
+          <Field>
             <FieldLabel>Tools</FieldLabel>
             <Controller
-              name="tool"
+              name="tool_ids"
               control={control}
               rules={{
                 required: "Tool is required",
@@ -386,8 +409,10 @@ const RequirementsForm = ({
                 />
               )}
             />
-            {errors.tool && <FieldError>{errors.tool.message}</FieldError>}
-          </Field> */}
+            {errors.tool_ids && (
+              <FieldError>{errors.tool_ids.message}</FieldError>
+            )}
+          </Field>
         </FieldGroup>
 
         <Button type="submit" disabled={isPending} className="mt-4">

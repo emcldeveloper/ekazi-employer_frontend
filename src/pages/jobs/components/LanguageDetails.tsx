@@ -15,16 +15,45 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { LanguagesIcon, PencilLineIcon } from "lucide-react";
-import LanguageForm from "./LanguageForm";
+import {
+  LanguagesIcon,
+  PencilIcon,
+  PencilLineIcon,
+  Trash2Icon,
+} from "lucide-react";
+import LanguageForm from "./forms/LanguageForm";
 import { useState } from "react";
+import type { Job, LanguageRequirement } from "@/@types/job";
+import { toast } from "sonner";
+import { useDeleteLanguage } from "@/hooks/jobs";
 
 interface LanguageDetailsProps {
-  job: any;
+  job: Job;
 }
 
 const LanguageDetails = ({ job }: LanguageDetailsProps) => {
+  const jobId = job?.id;
+
   const [open, setOpen] = useState(false);
+  const [editingLanguage, setEditingLanguage] =
+    useState<LanguageRequirement | null>(null);
+
+  const { mutate: deleteEducation } = useDeleteLanguage();
+
+  const handleDelete = (educationId: number) => {
+    const payload = {
+      id: educationId,
+      job_id: jobId,
+    };
+    deleteEducation(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.message || "Job was deleted succesfully");
+      },
+      onError: () => {
+        toast.error("Failed to delete job education");
+      },
+    });
+  };
 
   return (
     <div>
@@ -50,8 +79,8 @@ const LanguageDetails = ({ job }: LanguageDetailsProps) => {
                 Add job languages information.
               </DialogDescription>
             </DialogHeader>
-            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              <LanguageForm job={job} onSuccess={() => setOpen(false)} />
+            <div className="-mx-4 max-h-[70vh] overflow-y-visible px-4">
+              <LanguageForm jobId={jobId} onSuccess={() => setOpen(false)} />
             </div>
           </DialogContent>
         </Dialog>
@@ -65,25 +94,32 @@ const LanguageDetails = ({ job }: LanguageDetailsProps) => {
             <TableHead>Write</TableHead>
             <TableHead>Understand</TableHead>
             <TableHead>Read</TableHead>
-            {/* <TableHead>Actions</TableHead> */}
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {job?.job_language?.length ? (
-            job.job_language.map((item: any) => (
+          {job?.languages?.length > 0 ? (
+            job?.languages.map((item: LanguageRequirement) => (
               <TableRow key={item?.id}>
-                <TableCell>{item?.language?.language_name}</TableCell>
-                <TableCell>{item?.language_speak?.speak_ability}</TableCell>
-                <TableCell>{item?.language_write?.write_ability}</TableCell>
-                <TableCell>
-                  {item?.language_understand?.understand_ability}
+                <TableCell>{item?.language?.name}</TableCell>
+                <TableCell>{item?.speak?.name}</TableCell>
+                <TableCell>{item?.write?.name}</TableCell>
+                <TableCell>{item?.understand?.name}</TableCell>
+                <TableCell>{item?.read?.name}</TableCell>
+                <TableCell className="flex items-center gap-2">
+                  <PencilIcon
+                    size={16}
+                    onClick={() => setEditingLanguage(item)}
+                    className="text-orange-500 cursor-pointer"
+                  />
+
+                  <Trash2Icon
+                    size={16}
+                    onClick={() => handleDelete(item.id)}
+                    className="text-red-500 cursor-pointer"
+                  />
                 </TableCell>
-                <TableCell>{item?.language_read?.read_ability}</TableCell>
-                {/* <TableCell className="flex items-center gap-2">
-                  <PencilIcon size={16} />
-                  <Trash2Icon size={16} />
-                </TableCell> */}
               </TableRow>
             ))
           ) : (
@@ -98,6 +134,30 @@ const LanguageDetails = ({ job }: LanguageDetailsProps) => {
           )}
         </TableBody>
       </Table>
+
+      {/* EDIT DIALOG */}
+      <Dialog
+        open={!!editingLanguage}
+        onOpenChange={(open) => {
+          if (!open) setEditingLanguage(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Education</DialogTitle>
+          </DialogHeader>
+
+          <div className="-mx-4 max-h-[70vh] overflow-y-visible px-4">
+            {editingLanguage && (
+              <LanguageForm
+                jobId={jobId}
+                language={editingLanguage}
+                onSuccess={() => setEditingLanguage(null)}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

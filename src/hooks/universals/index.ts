@@ -14,3 +14,4 @@ export * from "./useProficiencies";
 export * from "./useTools";
 export * from "./useSoftwares";
 export * from "./useGenders";
+export * from "./useMetaKeywords";

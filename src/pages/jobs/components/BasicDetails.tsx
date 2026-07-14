@@ -1,4 +1,11 @@
-import { EyeIcon, PencilLineIcon, SparklesIcon, UsersIcon } from "lucide-react";
+import {
+  CircleCheckBig,
+  CircleXIcon,
+  EyeIcon,
+  PencilLineIcon,
+  SparklesIcon,
+  UsersIcon,
+} from "lucide-react";
 
 import {
   Dialog,
@@ -11,12 +18,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils/helpers";
 import { Button } from "@/components/ui/button";
-import BasicInfoForm from "./BasicInfoForm";
+import BasicInfoForm from "./forms/BasicInfoForm";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import type { Job } from "@/@types/job";
 
 interface BasicDetailsProps {
-  job: any;
+  job: Job;
 }
 
 const BasicDetails = ({ job }: BasicDetailsProps) => {
@@ -29,28 +37,26 @@ const BasicDetails = ({ job }: BasicDetailsProps) => {
     <div className="space-y-8">
       <div>
         <div className="space-y-4">
-          <h1 className="text-2xl font-bold mb-4">
-            {job?.job_position?.position_name}
-          </h1>
+          <h1 className="text-2xl font-bold mb-4">{job?.position?.name}</h1>
 
           <div className="flex items-center gap-4 text-sm">
             <Badge className="bg-orange-100 text-orange-700 p-2">
               <EyeIcon size={16} />
-              <p>{job?.statistic?.job_views | 0} Views</p>
+              <p>{job?.statistics?.[0]?.job_views ?? 0} Views</p>
             </Badge>
 
             <Badge className="bg-blue-100 text-primary">
               <UsersIcon size={16} />
-              <p>{job?.applied_count} Applications</p>
+              <p>{job?.total_applicants} Applications</p>
             </Badge>
 
             {publishedStatus === 1 ? (
               <Badge className="bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-300">
-                Published
+                <CircleCheckBig /> Published
               </Badge>
             ) : (
               <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                Unpublished
+                <CircleXIcon /> Unpublished
               </Badge>
             )}
           </div>
@@ -71,13 +77,13 @@ const BasicDetails = ({ job }: BasicDetailsProps) => {
 
           <div className="grid grid-cols-[150px_1fr] gap-y-3">
             <p className="text-sm text-muted-foreground">Job Type:</p>
-            <p className="font-medium">{job?.job_type?.type_name}</p>
+            <p className="font-medium">{job?.job_type?.name}</p>
 
             <p className="text-sm text-muted-foreground">Job Category:</p>
-            <p className="font-medium">{job?.job_category?.industry_name}</p>
+            <p className="font-medium">{job?.category?.name}</p>
 
             <p className="text-sm text-muted-foreground">Job Industry:</p>
-            <p className="font-medium">{job?.industry?.industry_name}</p>
+            <p className="font-medium">{job?.industry?.name}</p>
 
             <p className="text-sm text-muted-foreground">
               Number of Positions:
@@ -85,11 +91,12 @@ const BasicDetails = ({ job }: BasicDetailsProps) => {
             <p className="font-medium">{job?.quantity}</p>
 
             <p className="text-sm text-muted-foreground">Position Level:</p>
-            <p className="font-medium">{job?.position_level?.position_name}</p>
+            <p className="font-medium">{job?.position_level?.name}</p>
 
             <p className="text-sm text-muted-foreground">Salary Range:</p>
             <p className="font-medium">
-              {job?.entry_salary} - {job?.exit_salary}
+              {Number(job?.salaries?.[0]?.from_salary?.low).toLocaleString()} -{" "}
+              {Number(job?.salaries?.[0]?.to_salary?.low).toLocaleString()}
             </p>
 
             <p className="text-sm text-muted-foreground">Deadline:</p>
@@ -104,17 +111,13 @@ const BasicDetails = ({ job }: BasicDetailsProps) => {
               Edit
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl">
+          <DialogContent className="sm:max-w-3xl">
             <DialogHeader>
-              <DialogTitle> Basic Information</DialogTitle>
+              <DialogTitle>Update Job</DialogTitle>
               <DialogDescription>Edit job basic information.</DialogDescription>
             </DialogHeader>
             <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              <BasicInfoForm
-                jobId={job?.id}
-                initialData={job}
-                onSuccess={() => setOpen(false)}
-              />
+              <BasicInfoForm job={job} onSuccess={() => setOpen(false)} />
             </div>
           </DialogContent>
         </Dialog>

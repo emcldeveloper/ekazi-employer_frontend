@@ -1,19 +1,22 @@
+import type { Job } from "@/@types/job";
+import type {
+  JobEducationForm,
+  JobLanguageForm,
+  JobMainDutiesForm,
+  JobMetaForm,
+  JobRequirementPayload,
+} from "@/@types/job-forms";
 import type {
   JobCreateForm,
-  JobEducationData,
   JobFilters,
-  JobLanguageData,
   JobLocationData,
-  JobMainDutiesData,
-  JobMetaData,
   JobOtherRequirementData,
   JobReportingData,
-  JobRequirementData,
 } from "@/@types/jobs";
 import api from "@/lib/axios";
 
 export const createJob = async (payload: JobCreateForm) => {
-  const res = await api.post("/employer-jobs", payload);
+  const res = await api.post("/employer/jobs", payload);
   return res.data;
 };
 
@@ -24,26 +27,29 @@ export const updateJob = async ({
   id: number;
   payload: JobCreateForm;
 }) => {
-  const res = await api.put(`/employer-jobs/${id}`, payload);
+  const res = await api.put(`/employer/jobs/${id}`, payload);
   return res.data;
 };
 
 // Data
 export const getJobs = async (params: JobFilters = {}) => {
-  const res = await api.get("/employer-jobs/jobs", {
+  const res = await api.get("/employer/jobs", {
     params,
   });
 
   return res.data;
 };
 
-export const getJob = async (id: any) => {
-  const res = await api.get(`/employer-jobs/show/${id}`);
-  return res.data;
+export const getJob = async (id: Job) => {
+  const res = await api.get(`/employer/jobs/${id}`);
+  return res.data?.data;
 };
 
+/**
+ * Job Applications APIs
+ * */
 export const getApplications = async (id: any) => {
-  const res = await api.get(`/employer-jobs/applicant/${id}`);
+  const res = await api.get(`/employer/applicant/${id}`);
   return res.data;
 };
 
@@ -55,44 +61,133 @@ export const getApplicationsByStage = async (
   return res.data;
 };
 
+/**
+ * Job MetaData APIs
+ * */
 export const getJobMeta = async () => {
   const res = await api.get("/employer-job-meta");
   return res.data;
 };
 
-//Sub forms on job creation
-export const addEducation = async (payload: JobEducationData) => {
-  const res = await api.post("/employer-job-education", payload);
+/**
+ * Job Education APIs
+ * */
+export const jobEducation = async (payload: JobEducationForm) => {
+  const res = await api.post("/employer/job-educations", payload);
   return res.data;
 };
 
-export const addLanguage = async (payload: JobLanguageData) => {
-  const res = await api.post("/employer-job-language", payload);
+export const editJobEducation = async ({
+  id,
+  payload,
+}: {
+  id: number;
+  payload: JobEducationForm;
+}) => {
+  const res = await api.put(`/employer/job-educations/${id}`, payload);
   return res.data;
 };
 
-export const addRequirements = async (
-  jobId: number,
-  payload: JobRequirementData,
-) => {
-  const res = await api.post(`/employer-job-requirements/${jobId}`, payload);
+export const deleteJobEducation = async ({
+  id,
+  job_id,
+}: {
+  id: number;
+  job_id: number;
+}) => {
+  const res = await api.delete(`/employer/job-educations/${id}`);
   return res.data;
 };
 
+/**
+ * Job Language APIs
+ * */
+export const jobLanguage = async (payload: JobLanguageForm) => {
+  const res = await api.post("/employer/job-languages", payload);
+  return res.data;
+};
+
+export const editJobLanguage = async ({
+  id,
+  payload,
+}: {
+  id: number;
+  payload: JobLanguageForm;
+}) => {
+  const res = await api.put(`/employer/job-languages/${id}`, payload);
+  return res.data;
+};
+
+export const deleteJobLanguage = async ({
+  id,
+  job_id,
+}: {
+  id: number;
+  job_id: number;
+}) => {
+  const res = await api.delete(`/employer/job-languages/${id}`);
+  return res.data;
+};
+
+/**
+ * Job Candidate Specifications APIs
+ * */
+export const addRequirements = async ({
+  job_id,
+  payload,
+}: {
+  job_id: number;
+  payload: JobRequirementPayload;
+}) => {
+  const res = await api.put(`/employer/complete-profile/${job_id}`, payload);
+  return res.data;
+};
+
+/** 
+Other Requirements APIs
+*/
 export const addOtherRequirements = async (
   payload: JobOtherRequirementData,
 ) => {
-  const res = await api.post("/employer-job-other-requirement", payload);
+  const res = await api.post("/employer/job-other-requirements", payload);
   return res.data;
 };
 
-export const addMainDuties = async (payload: JobMainDutiesData) => {
-  const res = await api.post("/employer-job-duty", payload);
+export const editOtherRequirements = async ({
+  id,
+  payload,
+}: {
+  id: number;
+  payload: JobOtherRequirementData;
+}) => {
+  const res = await api.put(`/employer/job-other-requirements/${id}`, payload);
   return res.data;
 };
 
+/** 
+Main Duties APIs
+*/
+export const addMainDuties = async (payload: JobMainDutiesForm) => {
+  const res = await api.post("/employer/job-requirements", payload);
+  return res.data;
+};
+
+export const editMainDuties = async ({
+  id,
+  payload,
+}: {
+  id: number;
+  payload: JobMainDutiesForm;
+}) => {
+  const res = await api.put(`/employer/job-requirements/${id}`, payload);
+  return res.data;
+};
+
+/** 
+Job Reporting APIs
+*/
 export const addReporting = async (payload: JobReportingData) => {
-  const res = await api.post("/employer-job-structure", payload);
+  const res = await api.post("/employer/job-report-tos", payload);
   return res.data;
 };
 
@@ -101,8 +196,8 @@ export const addLocation = async (payload: JobLocationData) => {
   return res.data;
 };
 
-export const addMetaData = async (payload: JobMetaData) => {
-  const res = await api.post("/employer-job-meta", payload);
+export const addMetaData = async (payload: JobMetaForm) => {
+  const res = await api.post("/employer/job-metas", payload);
   return res.data;
 };
 

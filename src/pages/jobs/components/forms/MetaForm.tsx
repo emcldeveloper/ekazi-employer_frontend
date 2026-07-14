@@ -6,31 +6,45 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
 
 import { useAddMetaData } from "@/hooks/jobs";
-import type { JobMetaKeywords } from "@/@types/jobs";
-import { useEffect } from "react";
+import type { OptionType } from "@/@types/jobs";
+import { useEffect, useState } from "react";
+import type { Job } from "@/@types/job";
+import { useMetaKeywords } from "@/hooks/universals";
+import type { JobMetaForm } from "@/@types/job-forms";
+import type { MetaKeywordData } from "@/@types/universals";
 
 interface MetaFormProps {
-  job: any;
+  job: Job;
   onSuccess?: () => void;
 }
 
 const MetaForm = ({ job, onSuccess: closeModal }: MetaFormProps) => {
-  const metaData = job?.job_meta_keywords?.meta_keyword?.name;
+  const keyword_id = job?.meta_keywords?.[0]?.keyword?.id;
 
-  const { control, reset, handleSubmit } = useForm<JobMetaKeywords>();
+  const [keywordSearch, setKeywordSearch] = useState("");
+
+  const { control, reset, handleSubmit } = useForm<JobMetaForm>();
 
   const { mutate: createMetaData, isPending } = useAddMetaData();
 
+  const { data: keywords } = useMetaKeywords(keywordSearch);
+
+  const keywordOptions: OptionType[] =
+    keywords?.map((item: MetaKeywordData) => ({
+      value: item.id,
+      label: item.name,
+    })) ?? [];
+
   // Pre fill data for editing
   useEffect(() => {
-    if (metaData) {
+    if (keyword_id) {
       reset({
-        seo_keyword: metaData || "",
+        meta_keyword_id: keyword_id,
       });
     }
-  }, [metaData, reset]);
+  }, [keyword_id, reset]);
 
-  const onSubmit = (data: JobMetaKeywords) => {
+  const onSubmit = (data: JobMetaForm) => {
     createMetaData(
       { ...data, job_id: job?.id },
       {
@@ -48,13 +62,22 @@ const MetaForm = ({ job, onSuccess: closeModal }: MetaFormProps) => {
       <FieldGroup>
         <Field>
           <Controller
-            name="seo_keyword"
+            name="meta_keyword_id"
             control={control}
             rules={{
               required: "SEO Keywords is required",
             }}
             render={({ field }) => (
-              <SearchSelect {...field} isClearable options={[]} />
+              <SearchSelect
+                {...field}
+                isClearable
+                options={keywordOptions}
+                value={keywordOptions.find(
+                  (option: OptionType) => option.value === field.value,
+                )}
+                onChange={(option) => field.onChange(option?.value ?? null)}
+                onInputChange={setKeywordSearch}
+              />
             )}
           />
         </Field>

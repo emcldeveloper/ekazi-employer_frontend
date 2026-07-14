@@ -13,7 +13,7 @@ export const useEditJob = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["job", variables.id],
+        queryKey: ["job-details", variables.id],
       });
     },
   });

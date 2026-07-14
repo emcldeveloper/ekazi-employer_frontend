@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useJob = (id: number) => {
   return useQuery({
-    queryKey: ["job-details", id],
     queryFn: () => getJob(id),
+    queryKey: ["job-details", id],
     enabled: !!id,
   });
 };

@@ -1,4 +1,3 @@
-import type { JobRequirementData } from "@/@types/jobs";
 import { addRequirements } from "@/services/jobs.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -6,13 +5,7 @@ export const useAddRequirement = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      jobId,
-      payload,
-    }: {
-      jobId: number;
-      payload: JobRequirementData;
-    }) => addRequirements(jobId, payload),
+    mutationFn: addRequirements,
 
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -20,7 +13,7 @@ export const useAddRequirement = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["job-details", variables.jobId],
+        queryKey: ["job-details", variables.job_id],
       });
     },
   });

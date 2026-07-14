@@ -1,28 +1,38 @@
+import { useEffect, useState } from "react";
 import SearchSelect from "react-select";
 import CreatableSelect from "react-select/creatable";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-import type { JobEducationData, OptionType } from "@/@types/jobs";
-import type { Course, EducationLevel, Major } from "@/@types/universals";
+import type { OptionType } from "@/@types/jobs";
+import type { CourseData, EducationLevel, Major } from "@/@types/universals";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-
-import { useAddEducation } from "@/hooks/jobs/useAddEducation";
-import { useCourses, useEducationLevels, useMajors } from "@/hooks/universals";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+
+import {
+  useAddEducation,
+  useEditEducation,
+} from "@/hooks/jobs/useAddEducation";
+import { useCourses, useEducationLevels, useMajors } from "@/hooks/universals";
+import type { JobEducationForm } from "@/@types/job-forms";
+import type { Education } from "@/@types/job";
 
 interface EducationFormProps {
-  job: any;
+  jobId: number;
+  education?: Education;
   onSuccess?: () => void;
 }
 
-const EducationForm = ({ job, onSuccess: closeModal }: EducationFormProps) => {
+const EducationForm = ({
+  jobId,
+  education,
+  onSuccess: closeModal,
+}: EducationFormProps) => {
   const [courseSearch, setCourseSearch] = useState("");
   const [majorSearch, setMajorSearch] = useState("");
 
@@ -31,9 +41,11 @@ const EducationForm = ({ job, onSuccess: closeModal }: EducationFormProps) => {
     control,
     formState: { errors },
     reset,
-  } = useForm<JobEducationData>();
+  } = useForm<JobEducationForm>();
 
-  const { mutate: createJobEducation, isPending } = useAddEducation();
+  const { mutate: createJobEducation, isPending: isCreating } =
+    useAddEducation();
+  const { mutate: editJobEducation, isPending: isEditing } = useEditEducation();
 
   // Fetch education levels
   const { data: levels } = useEducationLevels();
@@ -46,9 +58,9 @@ const EducationForm = ({ job, onSuccess: closeModal }: EducationFormProps) => {
   // fetch courses
   const { data: courses } = useCourses(courseSearch);
   const courseOptions: OptionType[] =
-    courses?.map((course: Course) => ({
+    courses?.map((course: CourseData) => ({
       value: course.id,
-      label: course.course_name,
+      label: course.name,
     })) ?? [];
 
   // fetch majors
@@ -59,20 +71,53 @@ const EducationForm = ({ job, onSuccess: closeModal }: EducationFormProps) => {
       label: major.name,
     })) ?? [];
 
-  const onSubmit = (data: JobEducationData) => {
-    createJobEducation(
-      { ...data, job_id: job?.id },
-      {
+  // Filling Update Values
+  useEffect(() => {
+    if (education) {
+      reset({
+        education_level_id: education?.education_level?.id,
+        programme_category_id: education?.course?.id,
+        major_id: education?.major?.id,
+      });
+    }
+  }, [education, reset]);
+
+  const onSubmit = (data: JobEducationForm) => {
+    const payload = {
+      ...data,
+      job_id: jobId,
+      course_id: data.programme_category_id,
+    };
+
+    if (education) {
+      editJobEducation(
+        {
+          id: education.id,
+          payload,
+        },
+        {
+          onSuccess: (res) => {
+            toast.success(res.message);
+            closeModal?.();
+          },
+          onError: () => {
+            toast.error("Failed to edit job education");
+          },
+        },
+      );
+    } else {
+      createJobEducation(payload, {
         onSuccess: (res) => {
-          toast.success(res?.message || "Education Added Succesfully");
+          toast.success(res.message);
           reset();
           closeModal?.();
         },
-      },
-    );
+        onError: () => {
+          toast.error("Failed to create job education");
+        },
+      });
+    }
   };
-
-  //   job_id: number;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,9 +148,11 @@ const EducationForm = ({ job, onSuccess: closeModal }: EducationFormProps) => {
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="programme_id">Course/Programme</FieldLabel>
+          <FieldLabel htmlFor="programme_category_id">
+            Course/Programme
+          </FieldLabel>
           <Controller
-            name="programme_id"
+            name="programme_category_id"
             control={control}
             rules={{
               required: "Course/Programme is required",
@@ -123,8 +170,8 @@ const EducationForm = ({ job, onSuccess: closeModal }: EducationFormProps) => {
             )}
           />
 
-          {errors.programme_id && (
-            <FieldError>{errors.programme_id.message}</FieldError>
+          {errors.programme_category_id && (
+            <FieldError>{errors.programme_category_id.message}</FieldError>
           )}
         </Field>
 
@@ -155,8 +202,8 @@ const EducationForm = ({ job, onSuccess: closeModal }: EducationFormProps) => {
         </Field>
       </FieldGroup>
 
-      <Button type="submit" disabled={isPending} className="mt-4">
-        {isPending ? "Saving..." : "Save"}
+      <Button type="submit" disabled={isCreating || isEditing} className="mt-4">
+        {isCreating || isEditing ? "Saving..." : "Save"}
       </Button>
     </form>
   );

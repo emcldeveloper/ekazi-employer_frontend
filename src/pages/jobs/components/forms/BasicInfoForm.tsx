@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import type { JobCreateForm, OptionType } from "@/@types/jobs";
+import type { OptionType } from "@/@types/jobs";
 import type {
   Country,
   Industry,
   JobType,
+  Position,
   PositionLevel,
-  PositionType,
   Region,
   SalaryRange,
 } from "@/@types/universals";
@@ -34,18 +34,16 @@ import {
 import { usePositionLevels } from "@/hooks/universals/usePositionLevels";
 import { usePositions } from "@/hooks/universals/usePositions";
 import { useNavigate } from "react-router-dom";
+import type { Job } from "@/@types/job";
+import type { JobCreateForm } from "@/@types/job-forms";
 
 interface BasicInfoFormProps {
-  jobId?: number;
-  initialData?: any;
+  job?: Job;
   onSuccess?: () => void;
 }
 
-const BasicInfoForm = ({
-  jobId,
-  initialData,
-  onSuccess: closeModal,
-}: BasicInfoFormProps) => {
+const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
+  const jobId = job?.id;
   const navigate = useNavigate();
 
   const [positionSearch, setPositionSearch] = useState("");
@@ -78,9 +76,9 @@ const BasicInfoForm = ({
   // fetch positions
   const { data: positions } = usePositions(positionSearch);
   const positionOptions: OptionType[] =
-    positions?.data?.map((position: PositionType) => ({
+    positions?.data?.map((position: Position) => ({
       value: position.id,
-      label: position.position_name,
+      label: position.name,
     })) ?? [];
 
   // fetch position levels
@@ -88,7 +86,7 @@ const BasicInfoForm = ({
   const positionLevelOptions =
     positionLevels?.map((level: PositionLevel) => ({
       value: level.id,
-      label: level.position_name,
+      label: level.name,
     })) ?? [];
 
   // fetch industries
@@ -120,36 +118,36 @@ const BasicInfoForm = ({
 
   // PRE FILL DATA FOR EDITING
   useEffect(() => {
-    if (initialData) {
+    if (job) {
       reset({
-        title: initialData?.position_id,
-        type_id: initialData?.type_id,
-        dead_line: initialData?.dead_line,
-        quantity: initialData?.quantity,
-        country_id: initialData?.country_id,
-        category_id: initialData?.category_id,
-        position_level_id: initialData?.position_level_id,
-        region: initialData?.job_addresses?.[0]?.region_id,
-        industry_id: initialData?.industry_id,
-        from_salary_id: initialData?.entry_salary,
-        to_salary_id: initialData?.exit_salary,
-        sub_location: initialData?.job_addresses?.[0]?.sub_location,
+        position_id: job?.position?.id,
+        type_id: job?.job_type?.id,
+        dead_line: job?.dead_line,
+        quantity: job?.quantity,
+        country_id: job?.country?.id,
+        category_id: job?.category?.id,
+        position_level_id: job?.position_level?.id,
+        region_id: job?.region?.id,
+        industry_id: job?.industry?.id,
+        from_salary: job?.salaries?.[0]?.from_salary?.id,
+        to_salary: job?.salaries?.[0]?.to_salary?.id,
+        sub_location: job?.addresses?.[0]?.sub_location,
       });
     }
-  }, [initialData, reset]);
+  }, [job, reset]);
 
   const selectedCountry = watch("country_id");
-  const selectedRegion = watch("region");
+  const selectedRegion = watch("region_id");
 
   useEffect(() => {
-    if (!initialData) {
-      setValue("region", null);
+    if (!job) {
+      setValue("region_id", null);
     }
-  }, [selectedCountry, setValue, initialData]);
+  }, [selectedCountry, setValue, job]);
 
   const filteredRegions =
     regions
-      ?.filter((region: Region) => region.country_id === selectedCountry)
+      ?.filter((region: Region) => region.country?.id === selectedCountry)
       .map((region: Region) => ({
         value: region.id,
         label: region.name,
@@ -189,7 +187,7 @@ const BasicInfoForm = ({
         <Field>
           <FieldLabel htmlFor="title">Job Title</FieldLabel>
           <Controller
-            name="title"
+            name="position_id"
             rules={{ required: "Title is required" }}
             control={control}
             render={({ field }) => (
@@ -204,8 +202,8 @@ const BasicInfoForm = ({
               />
             )}
           />
-          {errors.title && (
-            <FieldError className="">{errors.title.message}</FieldError>
+          {errors.position_id && (
+            <FieldError className="">{errors.position_id.message}</FieldError>
           )}
         </Field>
 
@@ -339,7 +337,7 @@ const BasicInfoForm = ({
         <Field>
           <FieldLabel htmlFor="from_salary_id">Minimum Salary</FieldLabel>
           <Controller
-            name="from_salary_id"
+            name="from_salary"
             control={control}
             rules={{
               required: "Minimum salary is required",
@@ -356,15 +354,15 @@ const BasicInfoForm = ({
               />
             )}
           />
-          {errors.from_salary_id && (
-            <FieldError>{errors.from_salary_id.message}</FieldError>
+          {errors.from_salary && (
+            <FieldError>{errors.from_salary.message}</FieldError>
           )}
         </Field>
 
         <Field>
           <FieldLabel htmlFor="to_salary_id">Maximum Salary</FieldLabel>
           <Controller
-            name="to_salary_id"
+            name="to_salary"
             control={control}
             rules={{
               required: "Maximum salary is required",
@@ -381,8 +379,8 @@ const BasicInfoForm = ({
               />
             )}
           />
-          {errors.to_salary_id && (
-            <FieldError>{errors.to_salary_id.message}</FieldError>
+          {errors.to_salary && (
+            <FieldError>{errors.to_salary.message}</FieldError>
           )}
         </Field>
 
@@ -415,7 +413,7 @@ const BasicInfoForm = ({
         <Field>
           <FieldLabel>Region</FieldLabel>
           <Controller
-            name="region"
+            name="region_id"
             control={control}
             rules={{
               required: "Region is required",
@@ -433,8 +431,8 @@ const BasicInfoForm = ({
               />
             )}
           />
-          {errors.region && (
-            <p className="text-xs text-red-500">{errors.region.message}</p>
+          {errors.region_id && (
+            <p className="text-xs text-red-500">{errors.region_id.message}</p>
           )}
         </Field>
 

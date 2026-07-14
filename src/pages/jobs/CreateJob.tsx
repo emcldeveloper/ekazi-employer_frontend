@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import BasicInfoForm from "./components/BasicInfoForm";
+import BasicInfoForm from "./components/forms/BasicInfoForm";
 
 const CreateJob = () => {
   return (

@@ -9,16 +9,17 @@ import {
 } from "@/components/ui/dialog";
 import { ListPlusIcon, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
-import OtherRequirementsForm from "./OtherRequirementsForm";
+import OtherRequirementsForm from "./forms/OtherRequirementsForm";
+import type { Job } from "@/@types/job";
 
 interface OtherRequirementsDetailsProps {
-  job: any;
+  job: Job;
 }
 
 const OtherRequirementsDetails = ({ job }: OtherRequirementsDetailsProps) => {
   const [open, setOpen] = useState(false);
 
-  const otherRequirement = job?.job_other_requirement?.other_requirement
+  const otherRequirement = job?.other_requirements?.[0]?.other_requirement
     ?.replace(/<[^>]*>/g, "")
     .trim();
 
@@ -62,13 +63,13 @@ const OtherRequirementsDetails = ({ job }: OtherRequirementsDetailsProps) => {
           className="prose prose-sm max-w-none
                prose-headings:font-semibold
                prose-ul:list-disc
-               prose-ul:pl-6"
+               prose-ul:pl-6 dark:text-white"
           dangerouslySetInnerHTML={{
-            __html: job?.job_other_requirement?.other_requirement,
+            __html: job?.other_requirements?.[0]?.other_requirement,
           }}
         />
       ) : (
-        <div className="py-4 text-center text-muted-foreground">
+        <div className="py-4 text-center text-muted-foreground dark:text-white">
           No data available
         </div>
       )}

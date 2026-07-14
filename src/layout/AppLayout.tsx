@@ -1,4 +1,3 @@
-import React from "react";
 import { Bell } from "lucide-react";
 
 import {
@@ -6,8 +5,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -16,14 +13,11 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function AppLayout() {
-  const location = useLocation();
-  const pathnames = location.pathname.split("/").filter(Boolean);
-
   return (
     <SidebarProvider className="font-sen">
       <AppSidebar />
@@ -37,36 +31,8 @@ export default function AppLayout() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink>
-                    <Link to="/dashboard">App</Link>
-                  </BreadcrumbLink>
+                  <BreadcrumbLink asChild>App</BreadcrumbLink>
                 </BreadcrumbItem>
-
-                {pathnames.map((segment, index) => {
-                  const href = "/" + pathnames.slice(0, index + 1).join("/");
-                  const isLast = index === pathnames.length - 1;
-
-                  // Make it look nice
-                  const label = segment
-                    .replace(/-/g, " ")
-                    .replace(/\b\w/g, (c) => c.toUpperCase());
-
-                  return (
-                    <React.Fragment key={href}>
-                      <BreadcrumbSeparator />
-
-                      <BreadcrumbItem>
-                        {isLast ? (
-                          <BreadcrumbPage>{label}</BreadcrumbPage>
-                        ) : (
-                          <BreadcrumbLink>
-                            <Link to={href}>{label}</Link>
-                          </BreadcrumbLink>
-                        )}
-                      </BreadcrumbItem>
-                    </React.Fragment>
-                  );
-                })}
               </BreadcrumbList>
             </Breadcrumb>
           </div>

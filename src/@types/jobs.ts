@@ -1,60 +1,24 @@
-export type JobCreateForm = {
-  title: string | number;
-  type_id: number;
-  quantity: number;
-  dead_line: Date;
+//  {
 
-  industry_id?: number | null;
-  category_id?: number | null;
-
-  country_id?: number | null;
-  region?: number | null;
-  sub_location?: string | null;
-
-  currency_id?: number | null;
-  position_level_id?: number | null;
-  contact_id?: number | null;
-
-  from_salary_id?: number | null;
-  to_salary_id?: number | null;
-};
+//   "category_id": 2,
+//   "country_id": 1,
+//   "type_id": 1,
+//   "": "Physics and Mathematics Teacher",
+//   "position_level_id": 2,
+//   "dead_line": "2026-07-30T23:59:59.000Z",
+//   "industry_id": 2,
+//   "region_id": 5,
+//   "gender_id": 2,
+//   "currency_id": 2,
+//   "quantity": 20,
+//   "sub_location": "Kigogo",
+//   "from_salary": 4,
+//   "to_salary": 4
+// }
 
 export type OptionType = {
   value: number;
   label: string;
-};
-
-export type JobEducationData = {
-  job_id: number;
-
-  education_level_id: number;
-  major_id: number;
-  programme_id: number;
-};
-
-export type JobLanguageData = {
-  job_id: number;
-
-  language_id: number;
-  write_id: number;
-  understand_id: number;
-  speak_id: number;
-  read_id: number;
-};
-
-export type JobRequirementData = {
-  years_experience?: number | null;
-  applicant_min_age?: number | null;
-  applicant_max_age?: number | null;
-  gender_id?: number | null;
-
-  position_experiences?: number[] | null;
-  culture?: string[] | null;
-  knowledge?: string[] | null;
-  personality?: string[] | null;
-  software?: string[] | null;
-  proficiency_id?: number[] | null;
-  tool?: string[] | null;
 };
 
 export type JobRequirementFormValues = {
@@ -69,22 +33,6 @@ export type JobRequirementFormValues = {
   software?: OptionType[] | null;
   proficiency_id?: OptionType[] | null;
   tool?: OptionType[] | null;
-};
-
-export type JobOtherRequirementData = {
-  job_id: number;
-
-  other_requirement: string;
-};
-
-export type JobMainDutiesData = {
-  job_id: number;
-  main_duties: string;
-};
-
-export type JobMetaKeywords = {
-  job_id: number;
-  seo_keyword: string;
 };
 
 export type JobReportingData = {

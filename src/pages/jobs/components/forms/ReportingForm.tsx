@@ -14,9 +14,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
+import type { Job } from "@/@types/job";
 
 interface ReportingFormProps {
-  job: any;
+  job: Job;
   onSuccess?: () => void;
 }
 
@@ -32,9 +33,9 @@ const ReportingForm = ({ job, onSuccess: closeModal }: ReportingFormProps) => {
 
   useEffect(() => {
     reset({
-      report_to: job?.job_report_to?.report_to || "",
-      supervises: job?.job_report_to?.supervises || "",
-      interacts_with: job?.job_report_to?.interacts_with || "",
+      report_to: job?.report_to?.[0]?.report_to || "",
+      supervises: job?.report_to?.[0]?.supervises || "",
+      interacts_with: job?.report_to?.[0]?.interacts_with || "",
     });
   }, [job, reset]);
 

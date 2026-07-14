@@ -19,8 +19,7 @@ const JobDetails = () => {
   const { id } = useParams();
   const jobId = Number(id);
 
-  const { data: jobData } = useJob(jobId);
-  const job = jobData?.data;
+  const { data: job } = useJob(jobId);
 
   // job published status, 1 === true or 0 === false
   const publishedStatus = Number(job?.published);

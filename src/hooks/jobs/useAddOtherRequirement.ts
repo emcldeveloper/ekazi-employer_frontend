@@ -1,4 +1,7 @@
-import { addOtherRequirements } from "@/services/jobs.service";
+import {
+  addOtherRequirements,
+  editOtherRequirements,
+} from "@/services/jobs.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useAddOtherRequirement = () => {
@@ -14,6 +17,24 @@ export const useAddOtherRequirement = () => {
 
       queryClient.invalidateQueries({
         queryKey: ["job-details", variables.job_id],
+      });
+    },
+  });
+};
+
+export const useEditOtherRequirement = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: editOtherRequirements,
+
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["jobs"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["job-details", variables.payload.job_id],
       });
     },
   });

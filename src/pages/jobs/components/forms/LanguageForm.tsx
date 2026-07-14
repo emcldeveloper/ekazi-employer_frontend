@@ -2,13 +2,7 @@ import { Controller, useForm } from "react-hook-form";
 import SearchSelect from "react-select";
 import { toast } from "sonner";
 
-import type {
-  Language,
-  Read,
-  Speak,
-  Understand,
-  Write,
-} from "@/@types/language";
+import type { Language } from "@/@types/language";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -17,7 +11,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 
-import { useAddLanguage } from "@/hooks/jobs/useAddLanguage";
+import { useAddLanguage, useEditLanguage } from "@/hooks/jobs";
 import {
   useLanguage,
   useLanguageRead,
@@ -25,22 +19,32 @@ import {
   useLanguageUnderstand,
   useLanguageWrite,
 } from "@/hooks/universals";
-import type { JobLanguageData, OptionType } from "@/@types/jobs";
+import type { OptionType } from "@/@types/jobs";
+import type { LanguageRequirement } from "@/@types/job";
+import type { JobLanguageForm } from "@/@types/job-forms";
+import { useEffect } from "react";
+import type { SkillLevel } from "@/@types/universals";
 
 interface LanguageFormProps {
-  job: any;
+  jobId: number;
+  language?: LanguageRequirement;
   onSuccess?: () => void;
 }
 
-const LanguageForm = ({ job, onSuccess: closeModal }: LanguageFormProps) => {
+const LanguageForm = ({
+  jobId,
+  language,
+  onSuccess: closeModal,
+}: LanguageFormProps) => {
   const {
     handleSubmit,
     control,
     formState: { errors },
     reset,
-  } = useForm<JobLanguageData>();
+  } = useForm<JobLanguageForm>();
 
-  const { mutate: createJobLanguage, isPending } = useAddLanguage();
+  const { mutate: createJobLanguage, isPending: isCreating } = useAddLanguage();
+  const { mutate: editJobLanguage, isPending: isEditing } = useEditLanguage();
 
   // Fetch Languages
   const { data: languages } = useLanguage();
@@ -53,46 +57,79 @@ const LanguageForm = ({ job, onSuccess: closeModal }: LanguageFormProps) => {
   // fetch read abilities
   const { data: reads } = useLanguageRead();
   const readOptions: OptionType[] =
-    reads?.map((read: Read) => ({
+    reads?.map((read: SkillLevel) => ({
       value: read.id,
-      label: read.read_ability,
+      label: read.name,
     })) ?? [];
 
   // fetch speak abilities
   const { data: speaks } = useLanguageSpeak();
   const speakOptions: OptionType[] =
-    speaks?.map((read: Speak) => ({
+    speaks?.map((read: SkillLevel) => ({
       value: read.id,
-      label: read.speak_ability,
+      label: read.name,
     })) ?? [];
 
   // fetch write abilities
   const { data: writes } = useLanguageWrite();
   const writeOptions: OptionType[] =
-    writes?.map((write: Write) => ({
+    writes?.map((write: SkillLevel) => ({
       value: write.id,
-      label: write.write_ability,
+      label: write.name,
     })) ?? [];
 
   // fetch understand abilities
   const { data: understands } = useLanguageUnderstand();
   const understandOptions: OptionType[] =
-    understands?.map((read: Understand) => ({
+    understands?.map((read: SkillLevel) => ({
       value: read.id,
-      label: read.understand_ability,
+      label: read.name,
     })) ?? [];
 
-  const onSubmit = (data: JobLanguageData) => {
-    createJobLanguage(
-      { ...data, job_id: job?.id },
-      {
+  // Filling Update Values
+  useEffect(() => {
+    if (language) {
+      reset({
+        language_id: language?.language?.id,
+        speak_id: language?.speak?.id,
+        write_id: language?.write?.id,
+        read_id: language?.read?.id,
+        understand_id: language?.understand?.id,
+      });
+    }
+  }, [language, reset]);
+
+  const onSubmit = (data: JobLanguageForm) => {
+    const payload = {
+      ...data,
+      job_id: jobId,
+    };
+
+    if (language) {
+      editJobLanguage(
+        {
+          id: language.id,
+          payload,
+        },
+        {
+          onSuccess: (res) => {
+            toast.success(res.message);
+            closeModal?.();
+          },
+          onError: () => {
+            toast.error("Failed to edit job language");
+          },
+        },
+      );
+    } else {
+      createJobLanguage(payload, {
         onSuccess: (res) => {
           toast.success(res?.message || "Language Added Succesfully");
           reset();
           closeModal?.();
         },
-      },
-    );
+      });
+    }
   };
 
   //   job_id: number;
@@ -227,8 +264,12 @@ const LanguageForm = ({ job, onSuccess: closeModal }: LanguageFormProps) => {
           </Field>
         </FieldGroup>
 
-        <Button type="submit" disabled={isPending} className="mt-4">
-          {isPending ? "Adding..." : "Add Language"}
+        <Button
+          type="submit"
+          disabled={isCreating || isEditing}
+          className="mt-4"
+        >
+          {isCreating || isEditing ? "Adding..." : "Add Language"}
         </Button>
       </form>
     </div>

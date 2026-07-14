@@ -9,11 +9,20 @@ import {
 } from "@/components/ui/dialog";
 import { BriefcaseBusinessIcon, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
-import RequirementsForm from "./RequirementsForm";
+import RequirementsForm from "./forms/RequirementsForm";
 import { Badge } from "@/components/ui/badge";
+import type {
+  CultureItem,
+  Job,
+  KnowledgeItem,
+  PersonalityItem,
+  ProficiencyItem,
+  SoftwareItem,
+  ToolItem,
+} from "@/@types/job";
 
 interface SpecificationDetailsProps {
-  job: any;
+  job: Job;
 }
 
 const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
@@ -30,46 +39,86 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
         </div>
 
         <div className="grid grid-cols-[140px_1fr] gap-y-3">
-          <p className="text-sm text-muted-foreground">Experience Years:</p>
+          <p className="text-sm text-muted-foreground dark:text-white">
+            Experience Years:
+          </p>
           <p className="font-medium">{job?.years_experience || "-"}</p>
 
-          <p className="text-sm text-muted-foreground">Age Group:</p>
+          <p className="text-sm text-muted-foreground dark:text-white">
+            Age Group:
+          </p>
           <p className="font-medium">
             {job?.applicant_min_age} - {job?.applicant_max_age}
           </p>
 
-          <p className="text-sm text-muted-foreground">Gender:</p>
-          <p className="font-medium">{job?.job_gender?.gender_name}</p>
+          <p className="text-sm text-muted-foreground dark:text-white">
+            Gender:
+          </p>
+          <p className="font-medium">{job?.gender?.name}</p>
 
-          <p className="text-sm text-muted-foreground">Culture:</p>
-          <div className="font-medium flex gap-1">
-            {job?.job_culture?.map((item: any) => (
-              <Badge key={item.id}>{item?.culture?.culture_name}</Badge>
-            )) || "-"}
+          <p className="text-sm text-muted-foreground dark:text-white">
+            Culture:
+          </p>
+          <div className="font-medium flex flex-wrap gap-1">
+            {job?.cultures.length > 0
+              ? job?.cultures?.map((item: CultureItem) => (
+                  <Badge key={item.id}>{item?.culture?.name}</Badge>
+                ))
+              : "N/A"}
           </div>
 
-          <p className="text-sm text-muted-foreground">Personalities:</p>
-          <div className="font-medium flex gap-1">
-            {job?.job_personality?.map((item: any) => (
-              <Badge key={item.id}>{item?.personality?.personality_name}</Badge>
-            )) || "-"}
+          <p className="text-sm text-muted-foreground dark:text-white">
+            Personalities:
+          </p>
+          <div className="font-medium flex flex-wrap gap-1">
+            {job?.personalities.length > 0
+              ? job?.personalities?.map((item: PersonalityItem) => (
+                  <Badge key={item.id}>{item?.personality?.name}</Badge>
+                ))
+              : "N/A"}
           </div>
 
-          <p className="text-sm text-muted-foreground">Skills:</p>
-          <div className="font-medium flex gap-1">
-            {job?.job_knowledge?.map((item: any) => (
-              <Badge key={item.id}>{item?.knowledge?.knowledge_name}</Badge>
-            )) || "-"}
+          <p className="text-sm text-muted-foreground dark:text-white">
+            Skills:
+          </p>
+          <div className="font-medium flex flex-wrap gap-1">
+            {job?.knowledge.length > 0
+              ? job?.knowledge?.map((item: KnowledgeItem) => (
+                  <Badge key={item.id}>{item?.knowledge?.name}</Badge>
+                ))
+              : "N/A"}
           </div>
 
-          {/* <p className="text-sm text-muted-foreground">Softwares:</p>
-          <p className="font-medium">-</p>
+          <p className="text-sm text-muted-foreground dark:text-white">
+            Softwares:
+          </p>
+          <p className="font-medium flex flex-wrap gap-1">
+            {job?.softwares.length > 0
+              ? job?.softwares?.map((item: SoftwareItem) => (
+                  <Badge key={item.id}>{item?.software?.name}</Badge>
+                ))
+              : "N/A"}
+          </p>
 
-          <p className="text-sm text-muted-foreground">Proficiencies:</p>
-          <p className="font-medium">-</p>
+          <p className="text-sm text-muted-foreground dark:text-white">
+            Proficiencies:
+          </p>
+          <p className="font-medium flex flex-wrap gap-1">
+            {job?.proficiencies.length > 0
+              ? job?.proficiencies?.map((item: ProficiencyItem) => (
+                  <Badge key={item.id}>{item?.proficiency?.name}</Badge>
+                ))
+              : "N/A"}
+          </p>
 
-          <p className="text-sm text-muted-foreground">Tools</p>
-          <p className="font-medium">-</p> */}
+          <p className="text-sm text-muted-foreground dark:text-white">Tools</p>
+          <p className="font-medium flex flex-wrap gap-1">
+            {job?.tools.length > 0
+              ? job?.tools?.map((item: ToolItem) => (
+                  <Badge key={item.id}>{item?.tool?.name}</Badge>
+                ))
+              : "N/A"}
+          </p>
         </div>
       </div>
 
@@ -80,7 +129,7 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
             Edit
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>Candidate Specification</DialogTitle>
             <DialogDescription>

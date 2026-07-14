@@ -15,16 +15,47 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { GraduationCapIcon, PencilLineIcon } from "lucide-react";
-import EducationForm from "./EducationForm";
+import {
+  GraduationCapIcon,
+  PencilIcon,
+  PencilLineIcon,
+  Trash2Icon,
+} from "lucide-react";
+import EducationForm from "./forms/EducationForm";
 import { useState } from "react";
+import type { Education, Job } from "@/@types/job";
+import { useDeleteEducation } from "@/hooks/jobs";
+import { toast } from "sonner";
 
 interface EducationDetailsProps {
-  job: any;
+  job: Job;
 }
 
 const EducationDetails = ({ job }: EducationDetailsProps) => {
+  const jobId = job?.id;
+
   const [open, setOpen] = useState(false);
+  const [editingEducation, setEditingEducation] = useState<Education | null>(
+    null,
+  );
+
+  // deleting job education
+  const { mutate: deleteEducation } = useDeleteEducation();
+
+  const handleDelete = (educationId: number) => {
+    const payload = {
+      id: educationId,
+      job_id: jobId,
+    };
+    deleteEducation(payload, {
+      onSuccess: (res) => {
+        toast.success(res?.message || "Job was deleted succesfully");
+      },
+      onError: () => {
+        toast.error("Failed to delete job education");
+      },
+    });
+  };
 
   return (
     <div>
@@ -47,11 +78,11 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
             <DialogHeader>
               <DialogTitle>Job Education</DialogTitle>
               <DialogDescription>
-                Edit job education information.
+                Add job education information.
               </DialogDescription>
             </DialogHeader>
-            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              <EducationForm job={job} onSuccess={() => setOpen(false)} />
+            <div className="-mx-4 max-h-[70vh] overflow-y-visible px-4">
+              <EducationForm jobId={jobId} onSuccess={() => setOpen(false)} />
             </div>
           </DialogContent>
         </Dialog>
@@ -63,21 +94,30 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
             <TableHead>Education Level</TableHead>
             <TableHead>Programme Name</TableHead>
             <TableHead>Specialized/Major</TableHead>
-            {/* <TableHead>Actions</TableHead> */}
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {job?.job_education?.length ? (
-            job.job_education.map((item: any) => (
+          {job?.education?.length > 0 ? (
+            job?.education.map((item: Education) => (
               <TableRow key={item?.id}>
-                <TableCell>{item?.education_level?.education_level}</TableCell>
-                <TableCell>{item?.course?.course_name}</TableCell>
+                <TableCell>{item?.education_level?.name}</TableCell>
+                <TableCell>{item?.course?.name}</TableCell>
                 <TableCell>{item?.major?.name}</TableCell>
-                {/* <TableCell className="flex items-center gap-2">
-                  <PencilIcon size={16} />
-                  <Trash2Icon size={16} />
-                </TableCell> */}
+                <TableCell className="flex items-center gap-2">
+                  <PencilIcon
+                    size={16}
+                    onClick={() => setEditingEducation(item)}
+                    className="text-orange-500 cursor-pointer"
+                  />
+
+                  <Trash2Icon
+                    size={16}
+                    onClick={() => handleDelete(item.id)}
+                    className="text-red-500 cursor-pointer"
+                  />
+                </TableCell>
               </TableRow>
             ))
           ) : (
@@ -92,6 +132,30 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
           )}
         </TableBody>
       </Table>
+
+      {/* EDIT DIALOG */}
+      <Dialog
+        open={!!editingEducation}
+        onOpenChange={(open) => {
+          if (!open) setEditingEducation(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Education</DialogTitle>
+          </DialogHeader>
+
+          <div className="-mx-4 max-h-[70vh] overflow-y-visible px-4">
+            {editingEducation && (
+              <EducationForm
+                jobId={jobId}
+                education={editingEducation}
+                onSuccess={() => setEditingEducation(null)}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

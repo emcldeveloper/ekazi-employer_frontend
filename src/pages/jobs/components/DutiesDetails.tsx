@@ -9,16 +9,17 @@ import {
 } from "@/components/ui/dialog";
 import { ListIcon, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
-import MainDutiesForm from "./MainDutiesForm";
+import MainDutiesForm from "./forms/MainDutiesForm";
+import type { Job } from "@/@types/job";
 
 interface DutiesDetailsProps {
-  job: any;
+  job: Job;
 }
 
 const DutiesDetails = ({ job }: DutiesDetailsProps) => {
   const [open, setOpen] = useState(false);
 
-  const mainDuties = job?.job_duties?.main_duties
+  const mainDuties = job?.requirements?.[0]?.main_duties
     ?.replace(/<[^>]*>/g, "")
     .trim();
 
@@ -58,9 +59,9 @@ const DutiesDetails = ({ job }: DutiesDetailsProps) => {
           className="prose prose-sm max-w-none
                  prose-headings:font-semibold
                  prose-ul:list-disc
-                 prose-ul:pl-6"
+                 prose-ul:pl-6 dark:text-white"
           dangerouslySetInnerHTML={{
-            __html: job?.job_duties?.main_duties,
+            __html: job?.requirements?.[0]?.main_duties,
           }}
         />
       ) : (

@@ -1,8 +1,3 @@
-export type Industry = {
-  id: number;
-  name: string;
-};
-
 export type CompanySize = {
   id: number;
   name: string;
@@ -13,85 +8,103 @@ export type CompanyType = {
   type_name: string;
 };
 
-export type JobType = {
+export interface Gender {
+  id: number;
+  name: string;
+}
+
+export interface Knowledge {
+  id: number;
+  name: string;
+}
+
+export interface Tool {
+  id: number;
+  tool_name: string;
+}
+
+export interface Software {
+  id: number;
+  software_name: string;
+}
+
+export interface Culture {
+  id: number;
+  culture_name: string;
+}
+
+export interface Personality {
+  id: number;
+  name: string;
+}
+
+export interface Industry {
+  id: number;
+  name: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+}
+
+export interface Position {
+  id: number;
+  name: string;
+}
+export interface PositionLevel {
+  id: number;
+  name: string;
+}
+export interface Country {
+  id: number;
+  name: string;
+}
+export interface Region {
+  id: number;
+  name: string;
+  country: Country;
+}
+export interface JobType {
   id: number;
   type_name: string;
-};
-
-export type PositionType = {
+}
+export interface Keyword {
   id: number;
-  position_name: string;
-};
-
-export type PositionLevel = {
+  name: string;
+}
+export interface EducationLevel {
   id: number;
-  position_name: string;
-};
-
-export type SalaryRange = {
+  name: string;
+}
+export interface Course {
+  id: number;
+  name: string;
+}
+export interface Major {
+  id: number;
+  name: string;
+}
+export interface Proficiency {
+  id: number;
+  name: string;
+}
+export interface SalaryRange {
   id: number;
   low: number;
   high: number;
-};
-
-export type Country = {
+}
+export interface Language {
   id: number;
   name: string;
-};
-
-export type Region = {
-  id: number;
-  country_id: number;
-  name: string;
-  country?: Country;
-};
-
-export type EducationLevel = {
-  id: number;
-  education_level: string;
-};
-
-export type Course = {
-  id: number;
-  course_name: string;
-};
-
-export type Major = {
+}
+export interface SkillLevel {
   id: number;
   name: string;
-};
+}
 
-export type Gender = {
+export interface MetaKeywordData {
   id: number;
-  gender_name: string;
-};
-
-export type Culture = {
-  id: number;
-  culture_name: string;
-};
-
-export type Personality = {
-  id: number;
-  personality_name: string;
-};
-
-export type Knowledge = {
-  id: number;
-  knowledge_name: string;
-};
-
-export type Tool = {
-  id: number;
-  tool_name: string;
-};
-
-export type Software = {
-  id: number;
-  software_name: string;
-};
-
-export type Proficiency = {
-  id: number;
-  proficiency_name: string;
-};
+  entity_type: string;
+  name: string;
+}
