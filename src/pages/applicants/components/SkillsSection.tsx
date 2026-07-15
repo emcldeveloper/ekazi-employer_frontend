@@ -1,7 +1,12 @@
+import type { Skill } from "@/@types/applicants";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const SkillsSection = ({ jobseeker }: { jobseeker: any }) => {
+interface SkillsSectionProps {
+  knowledges: Skill[];
+}
+
+const SkillsSection = ({ knowledges }: SkillsSectionProps) => {
   return (
     <Card>
       <CardHeader>
@@ -9,14 +14,13 @@ const SkillsSection = ({ jobseeker }: { jobseeker: any }) => {
       </CardHeader>
 
       <CardContent className="flex flex-wrap gap-2">
-        {jobseeker?.knowledge.map((item: any) => (
+        {knowledges.map((item: Skill) => (
           <Badge
-            key={item}
+            key={item.id}
             variant="secondary"
             className="max-w-50 truncate block"
-            title={item?.knowledge?.knowledge_name}
           >
-            {item?.knowledge?.knowledge_name}
+            {item.name}
           </Badge>
         ))}
       </CardContent>

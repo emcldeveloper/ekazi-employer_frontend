@@ -1,8 +1,12 @@
+import type { Skill } from "@/@types/applicants";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const PersonalitySection = ({ applicant }: { applicant: any }) => {
-  const personalities = applicant?.applicant_personality ?? [];
+interface PersonalitySectionProps {
+  personalities: Skill[];
+}
+
+const PersonalitySection = ({ personalities }: PersonalitySectionProps) => {
   return (
     <Card>
       <CardHeader>
@@ -10,13 +14,13 @@ const PersonalitySection = ({ applicant }: { applicant: any }) => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
-          {personalities.map((item: any) => (
+          {personalities.map((item: Skill) => (
             <Badge
-              key={item.id || item.personality_id}
+              key={item.id}
               variant="secondary"
               className="text-sm px-3 py-1 rounded-md hover:bg-muted transition"
             >
-              {item.personality?.personality_name ?? "-"}
+              {item.name}
             </Badge>
           ))}
         </div>

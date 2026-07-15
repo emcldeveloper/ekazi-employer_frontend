@@ -28,10 +28,10 @@ import {
 import { formatDate } from "@/utils/helpers";
 import ApplicantDetails from "../applicants/ApplicantDetails";
 import ApplicationStages from "./components/ApplicationStages";
-import { useApplications, useJob } from "@/hooks/jobs";
+import { useApplicationsByStage, useJob } from "@/hooks/jobs";
 import type { Application } from "@/@types/applications";
 
-const JobApplications = () => {
+const JobApplicationsStages = () => {
   const { id, stage } = useParams();
   const jobId = Number(id);
   const jobStage = String(stage);
@@ -46,7 +46,10 @@ const JobApplications = () => {
   const title = job?.position?.name;
 
   // List of applications
-  const { data: applicationsData, isLoading } = useApplications(jobId);
+  const { data: applicationsData, isLoading } = useApplicationsByStage({
+    id: jobId,
+    stage: jobStage,
+  });
   const applications = applicationsData?.data ?? [];
 
   // stats
@@ -158,4 +161,4 @@ const JobApplications = () => {
   );
 };
 
-export default JobApplications;
+export default JobApplicationsStages;

@@ -45,6 +45,7 @@ import SkillsSection from "./components/SkillsSection";
 import { formatDate } from "@/utils/helpers";
 import type { Application } from "@/@types/applications";
 import { toast } from "sonner";
+import { BASE_URL } from "@/config/config";
 
 type ApplicantDetailsProps = {
   application: Application | null;
@@ -57,32 +58,32 @@ export default function ApplicantDetails({
   open,
   onOpenChange,
 }: ApplicantDetailsProps) {
-  const applicantId = application?.applicant_id ?? null;
+  const applicantId = application?.applicant_id;
   const applicationTitle = application?.job?.job_position?.position_name;
   const applicationLetter = application?.letter;
   const applicationDate = formatDate(application?.updated_at);
   // const applicationStage = application?.stage?.stage_name;
 
-  const { data: applicantData, isLoading } = useApplicant(applicantId);
-  const jobseeker = applicantData?.data;
+  const { data: applicant, isLoading } = useApplicant(applicantId ?? 0);
 
   // sections
-  const objectives = jobseeker?.objective;
-  const educations = jobseeker?.education ?? [];
-  const referees = jobseeker?.referees ?? [];
-  const experiences = jobseeker?.experience ?? [];
-  const trainings = jobseeker?.training ?? [];
-  const languages = jobseeker?.language ?? [];
-  const cultures = jobseeker?.culture ?? [];
-  const tools = jobseeker?.tools ?? [];
-  const personalities = jobseeker?.applicant_personality ?? [];
-  const knowledges = jobseeker?.knowledge ?? [];
-  const softwares = jobseeker?.software ?? [];
-  const proficiencies = jobseeker?.proficiency ?? [];
-  const careers = jobseeker?.careers ?? [];
+  const profile = applicant?.applicant_profile;
+  const objectives = applicant?.objective;
+  const educations = applicant?.education ?? [];
+  const referees = applicant?.referees ?? [];
+  const experiences = applicant?.experience ?? [];
+  const trainings = applicant?.training ?? [];
+  const languages = applicant?.language ?? [];
+  const cultures = applicant?.culture ?? [];
+  const personalities = applicant?.applicant_personality ?? [];
+  const proficiencies = applicant?.proficiency ?? [];
 
-  const profile = jobseeker?.applicant_profile?.[0];
-  const location = jobseeker?.address?.[0];
+  // skills (tools, knowledge, softwares)
+  const knowledges = applicant?.skills?.knowledge ?? [];
+  const softwares = applicant?.skills?.software ?? [];
+  const tools = applicant?.skills?.tools ?? [];
+
+  const location = applicant?.address?.[0];
 
   // Handlers
   const handleShortlist = () => {
@@ -113,7 +114,7 @@ export default function ApplicantDetails({
                             <AvatarImage
                               src={
                                 profile?.picture
-                                  ? `${import.meta.env.VITE_BASE_URL}/${profile.picture}`
+                                  ? `${BASE_URL}/${profile.picture}`
                                   : "/images/default-img.jpeg"
                               }
                               alt={profile?.first_name || "Profile"}
@@ -136,7 +137,7 @@ export default function ApplicantDetails({
                               )} */}
                             </div>
                             <p className="text-muted-foreground">
-                              {jobseeker?.current_position}
+                              {applicant?.current_position}
                             </p>
                             <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center">
                               <div className="flex items-center gap-1">
@@ -146,12 +147,12 @@ export default function ApplicantDetails({
 
                               <div className="flex items-center gap-1">
                                 <Phone className="h-4 w-4" />
-                                {jobseeker?.phone?.phone_number}
+                                {applicant?.phone?.[0]?.phone_number}
                               </div>
 
                               <div className="flex items-center gap-1">
                                 <MapPin className="h-4 w-4" />
-                                {location?.region_name}, {location?.name}
+                                {location?.sub_location}, {location?.region}
                               </div>
                             </div>
                           </div>
@@ -167,16 +168,14 @@ export default function ApplicantDetails({
                     </Card>
 
                     {/* About */}
-
-                    {careers.length > 0 && (
+                    {applicant?.career_summary && (
                       <Card>
                         <CardHeader>
                           <CardTitle className="uppercase">Summary</CardTitle>
                         </CardHeader>
-
                         <CardContent>
                           <p className="text-sm leading-7 text-muted-foreground">
-                            {jobseeker?.careers?.[0]?.career}
+                            {applicant?.career_summary}
                           </p>
                         </CardContent>
                       </Card>
@@ -192,52 +191,52 @@ export default function ApplicantDetails({
 
                         <CardContent>
                           <p className="text-sm leading-7 text-muted-foreground">
-                            {jobseeker?.objective?.objective}
+                            {applicant?.objective}
                           </p>
                         </CardContent>
                       </Card>
                     )}
 
                     {experiences.length > 0 && (
-                      <ExperienceSection applicant={jobseeker} />
+                      <ExperienceSection experiences={experiences} />
                     )}
 
                     {educations.length > 0 && (
-                      <EducationSection applicant={jobseeker} />
+                      <EducationSection educations={educations} />
                     )}
 
                     {languages.length > 0 && (
-                      <LanguageSection applicant={jobseeker} />
+                      <LanguageSection languages={languages} />
                     )}
 
                     {proficiencies.length > 0 && (
-                      <ProficiencySection applicant={jobseeker} />
+                      <ProficiencySection proficiencies={proficiencies} />
                     )}
 
                     {trainings.length > 0 && (
-                      <TraniningSection applicant={jobseeker} />
+                      <TraniningSection trainings={trainings} />
                     )}
 
                     {knowledges.length > 0 && (
-                      <SkillsSection jobseeker={jobseeker} />
+                      <SkillsSection knowledges={knowledges} />
                     )}
 
                     {cultures.length > 0 && (
-                      <CultureSection applicant={jobseeker} />
+                      <CultureSection cultures={cultures} />
                     )}
 
                     {personalities.length > 0 && (
-                      <PersonalitySection applicant={jobseeker} />
+                      <PersonalitySection personalities={personalities} />
                     )}
 
                     {softwares.length > 0 && (
-                      <SoftwareSection applicant={jobseeker} />
+                      <SoftwareSection softwares={softwares} />
                     )}
 
-                    {tools.length > 0 && <ToolsSection applicant={jobseeker} />}
+                    {tools.length > 0 && <ToolsSection tools={tools} />}
 
                     {referees.length > 0 && (
-                      <RefereeSection applicant={jobseeker} />
+                      <RefereeSection referees={referees} />
                     )}
                   </div>
                 </>
@@ -252,7 +251,7 @@ export default function ApplicantDetails({
                     {profile?.first_name} {profile?.last_name}
                   </p>
                   <p> {profile?.email}</p>
-                  <p>{jobseeker?.phone?.phone_number}</p>
+                  <p>{applicant?.phone?.phone_number}</p>
                   <p>{applicationDate}</p>
                 </div>
 

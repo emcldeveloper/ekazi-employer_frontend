@@ -47,16 +47,19 @@ export const getJob = async (id: number) => {
 /**
  * Job Applications APIs
  * */
-export const getApplications = async (id: any) => {
-  const res = await api.get(`/employer/applicant/${id}`);
+export const getApplications = async (id: number) => {
+  const res = await api.get(`/employer/jobs/${id}/applications`);
   return res.data;
 };
 
-export const getApplicationsByStage = async (
-  jobId: number,
-  stageId: number,
-) => {
-  const res = await api.get(`/jobs-stages/${stageId}/${jobId}`);
+export const getApplicationsByStage = async ({
+  id,
+  stage,
+}: {
+  id: number;
+  stage: string;
+}) => {
+  const res = await api.get(`/employer/jobs/${id}/application-stages/${stage}`);
   return res.data;
 };
 
@@ -199,12 +202,15 @@ export const addMetaData = async (payload: JobMetaForm) => {
   return res.data;
 };
 
+/**
+ * Job Actions APIs
+ * */
 export const publishJob = async (jobId: number) => {
-  const res = await api.post(`/job-publish/${jobId}`);
+  const res = await api.put(`/employer/jobs/${jobId}/publish`);
   return res.data;
 };
 
 export const deleteJob = async (jobId: number) => {
-  const res = await api.delete(`/job-delete/${jobId}`);
+  const res = await api.delete(`/employer/jobs/${jobId}`);
   return res.data;
 };

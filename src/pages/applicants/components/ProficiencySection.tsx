@@ -1,9 +1,12 @@
+import type { Proficiency } from "@/@types/applicants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/utils/helpers";
 
-const ProficiencySection = ({ applicant }: { applicant: any }) => {
-  const proficiencies = applicant?.proficiency ?? [];
+interface ProficiencySectionProps {
+  proficiencies: Proficiency[];
+}
 
+const ProficiencySection = ({ proficiencies }: ProficiencySectionProps) => {
   return (
     <Card>
       <CardHeader>
@@ -11,11 +14,10 @@ const ProficiencySection = ({ applicant }: { applicant: any }) => {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {proficiencies.map((item: any) => (
+          {proficiencies.map((item: Proficiency) => (
             <div key={item.id} className="flex-1 space-y-1">
-              {/* Title */}
               <h3 className="text-sm font-semibold">
-                {item.proficiency?.proficiency_name}
+                {item.proficiency.name}
                 <span className="ml-2 text-xs text-muted-foreground font-normal">
                   – {formatDate(item.started)} - {formatDate(item.ended)}
                 </span>
@@ -24,9 +26,9 @@ const ProficiencySection = ({ applicant }: { applicant: any }) => {
               {/* Award */}
               <p className="text-sm uppercase">
                 {item.award}{" "}
-                {item.organization?.organization_name && (
+                {item.organization?.name && (
                   <span className="text-muted-foreground normal-case">
-                    ({item.organization.organization_name})
+                    ({item.organization.name})
                   </span>
                 )}
               </p>

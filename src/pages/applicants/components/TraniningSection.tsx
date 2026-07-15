@@ -1,9 +1,12 @@
+import type { Training } from "@/@types/applicants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/utils/helpers";
 
-const TraniningSection = ({ applicant }: { applicant: any }) => {
-  const trainings = applicant?.training ?? [];
+interface TrainingSectionProps {
+  trainings: Training[];
+}
 
+const TraniningSection = ({ trainings }: TrainingSectionProps) => {
   return (
     <Card>
       <CardHeader>
@@ -11,19 +14,17 @@ const TraniningSection = ({ applicant }: { applicant: any }) => {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {trainings.map((training: any) => (
-            <div key={training.id} className="flex-1 space-y-1">
-              {/* Title */}
+          {trainings.map((item: Training) => (
+            <div key={item.id} className="flex-1 space-y-1">
               <h3 className="text-sm font-semibold">
-                {training.name}
+                {item.name}
                 <span className="ml-2 text-xs text-muted-foreground font-normal">
-                  – {formatDate(training.started)} -{" "}
-                  {formatDate(training.ended)}
+                  – {formatDate(item.started)} - {formatDate(item.ended)}
                 </span>
               </h3>
 
               {/* Institution */}
-              <p className="text-sm text-foreground">{training.institution}</p>
+              <p className="text-sm text-foreground">{item.institution}</p>
             </div>
           ))}
         </div>

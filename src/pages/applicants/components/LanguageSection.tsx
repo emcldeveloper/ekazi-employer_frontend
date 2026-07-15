@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -7,9 +6,14 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Language } from "@/@types/applicants";
 
-const LanguageSection = ({ applicant }: { applicant: any }) => {
-  const languages = applicant?.language ?? [];
+interface LanguageSectionProps {
+  languages: Language[];
+}
+
+const LanguageSection = ({ languages }: LanguageSectionProps) => {
   return (
     <Card>
       <CardHeader>
@@ -28,15 +32,13 @@ const LanguageSection = ({ applicant }: { applicant: any }) => {
           </TableHeader>
 
           <TableBody>
-            {languages.map((item: any) => (
+            {languages.map((item: Language) => (
               <TableRow key={item.id}>
-                <TableCell>{item.language?.language_name ?? "-"}</TableCell>
-                <TableCell>{item.read?.read_ability ?? "-"}</TableCell>
-                <TableCell>{item.write?.write_ability ?? "-"}</TableCell>
-                <TableCell>{item.speak?.speak_ability ?? "-"}</TableCell>
-                <TableCell>
-                  {item.understand?.understand_ability ?? "-"}
-                </TableCell>
+                <TableCell>{item.language}</TableCell>
+                <TableCell>{item.read}</TableCell>
+                <TableCell>{item.write}</TableCell>
+                <TableCell>{item.speak}</TableCell>
+                <TableCell>{item.understand}</TableCell>
               </TableRow>
             ))}
           </TableBody>

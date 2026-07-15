@@ -62,7 +62,9 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
           <div className="font-medium flex flex-wrap gap-1">
             {job?.cultures.length > 0
               ? job?.cultures?.map((item: CultureItem) => (
-                  <Badge key={item.id}>{item?.culture?.name}</Badge>
+                  <Badge variant="outline" key={item.id}>
+                    {item?.culture?.name}
+                  </Badge>
                 ))
               : "N/A"}
           </div>
@@ -73,7 +75,9 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
           <div className="font-medium flex flex-wrap gap-1">
             {job?.personalities.length > 0
               ? job?.personalities?.map((item: PersonalityItem) => (
-                  <Badge key={item.id}>{item?.personality?.name}</Badge>
+                  <Badge variant="outline" key={item.id}>
+                    {item?.personality?.name}
+                  </Badge>
                 ))
               : "N/A"}
           </div>
@@ -84,7 +88,9 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
           <div className="font-medium flex flex-wrap gap-1">
             {job?.knowledge.length > 0
               ? job?.knowledge?.map((item: KnowledgeItem) => (
-                  <Badge key={item.id}>{item?.knowledge?.name}</Badge>
+                  <Badge variant="outline" key={item.id}>
+                    {item?.knowledge?.name}
+                  </Badge>
                 ))
               : "N/A"}
           </div>
@@ -95,7 +101,9 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
           <p className="font-medium flex flex-wrap gap-1">
             {job?.softwares.length > 0
               ? job?.softwares?.map((item: SoftwareItem) => (
-                  <Badge key={item.id}>{item?.software?.name}</Badge>
+                  <Badge variant="outline" key={item.id}>
+                    {item?.software?.name}
+                  </Badge>
                 ))
               : "N/A"}
           </p>
@@ -106,7 +114,9 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
           <p className="font-medium flex flex-wrap gap-1">
             {job?.proficiencies.length > 0
               ? job?.proficiencies?.map((item: ProficiencyItem) => (
-                  <Badge key={item.id}>{item?.proficiency?.name}</Badge>
+                  <Badge variant="outline" key={item.id}>
+                    {item?.proficiency?.name}
+                  </Badge>
                 ))
               : "N/A"}
           </p>
@@ -115,7 +125,9 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
           <p className="font-medium flex flex-wrap gap-1">
             {job?.tools.length > 0
               ? job?.tools?.map((item: ToolItem) => (
-                  <Badge key={item.id}>{item?.tool?.name}</Badge>
+                  <Badge variant="outline" key={item.id}>
+                    {item?.tool?.name}
+                  </Badge>
                 ))
               : "N/A"}
           </p>

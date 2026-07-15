@@ -1,8 +1,12 @@
+import type { Culture } from "@/@types/applicants";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const CultureSection = ({ applicant }: { applicant: any }) => {
-  const cultures = applicant?.culture ?? [];
+interface CultureSectionProps {
+  cultures: Culture[];
+}
+
+const CultureSection = ({ cultures }: CultureSectionProps) => {
   return (
     <Card>
       <CardHeader>
@@ -10,13 +14,10 @@ const CultureSection = ({ applicant }: { applicant: any }) => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
-          {cultures.map((item: any) => {
-            const cultureName =
-              item.culture?.culture_name || item.culture_name || "-";
-
+          {cultures.map((item: Culture) => {
             return (
               <Badge key={item.id} variant="secondary">
-                {cultureName}
+                {item.name}
               </Badge>
             );
           })}

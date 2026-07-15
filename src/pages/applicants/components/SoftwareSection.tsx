@@ -1,9 +1,12 @@
+import type { Skill } from "@/@types/applicants";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const SoftwareSection = ({ applicant }: { applicant: any }) => {
-  const softwareList = applicant?.software ?? [];
+interface SoftwareSectionProps {
+  softwares: Skill[];
+}
 
+const SoftwareSection = ({ softwares }: SoftwareSectionProps) => {
   return (
     <Card>
       <CardHeader>
@@ -11,9 +14,9 @@ const SoftwareSection = ({ applicant }: { applicant: any }) => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
-          {softwareList.map((item: any) => (
+          {softwares.map((item: Skill) => (
             <Badge key={item.id} variant="secondary">
-              {item.software?.software_name}
+              {item.name}
             </Badge>
           ))}
         </div>

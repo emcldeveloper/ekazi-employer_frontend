@@ -1,22 +1,70 @@
-import type { Industry, Region } from "./universals";
-
-export type EducationLevel = {
+// Applicant Profile
+export type ApplicantProfile = {
   id: number;
-  education_level: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  dob: string;
+  nationality_id: string | null;
+  picture: string | null;
+  background_picture: string | null;
+  email: string;
+  marital_status: string;
+  gender: string;
 };
 
+// Phone
+export type Phone = {
+  id: number;
+  phone_number: string;
+};
+
+// Address
+export type Address = {
+  id: number;
+  region: string;
+  sub_location: string;
+  postal: string;
+};
+
+// Experience
+export type Experience = {
+  id: number;
+  position: string;
+  position_level: string;
+  industry: string;
+  employer: string;
+  region: string;
+  sub_location: string;
+
+  responsibility: string;
+  remark: string | null;
+
+  start_date: string;
+  end_date: string | null;
+
+  start_salary: number | null;
+  end_salary: number | null;
+};
+
+export type ExperienceGroup = {
+  employer: string;
+  region: string;
+  sub_location: string;
+  positions: Experience[];
+};
+
+// Education
 export type College = {
   id: number;
-  college_name: string;
+  name: string;
   town: string | null;
-  reg: string | null;
-  status: string;
-  region: Region;
+  registration: string | null;
 };
 
 export type Course = {
   id: number;
-  course_name: string;
+  name: string;
 };
 
 export type Major = {
@@ -24,51 +72,122 @@ export type Major = {
   name: string;
 };
 
+export type EducationLevel = {
+  id: number;
+  name: string;
+};
+
 export type Education = {
   id: number;
-  started: Date;
-  ended: Date;
-  name: string | null;
+
+  college_id: number;
+  college: College;
+
+  course_id: number;
+  course: Course;
+
+  major_id: number;
+  major: Major;
+
+  education_level_id: number;
+  education_level: EducationLevel;
+
   attachment: string;
 
-  level: EducationLevel;
-  college: College;
-  course: Course;
-  major: Major;
+  started: string;
+  ended: string;
 };
 
-export type Employer = {
+// Training
+export type Training = {
   id: number;
-  employer_name: string;
-  sub_location: string;
+  name: string;
+  institution: string;
+  description: string | null;
+  started: string;
+  ended: string;
+  attachment: string;
 };
 
-export type Position = {
+// Skills
+export type Skill = {
   id: number;
-  position_name: string;
+  name: string;
 };
 
-export type Experience = {
+export type Skills = {
+  tools: Skill[];
+  knowledge: Skill[];
+  software: Skill[];
+};
+
+// Languages
+export type Language = {
   id: number;
-  applicant_employer_id: number;
-  start_date: string;
-  end_date: string | null;
-  responsibility: string;
-  remark: string | null;
-
-  employer: Employer;
-  region: Region;
-  position: Position;
-  industry?: Industry;
+  language: string;
+  read: string;
+  write: string;
+  speak: string;
+  understand: string;
 };
 
+// Culture
+export type Culture = {
+  id: number;
+  name: string;
+};
+
+// Proficiency
+export type Proficiency = {
+  id: number;
+  proficiency_id: number;
+  proficiency: Skill;
+  organization_id: number;
+  organization: Skill;
+  started: string;
+  ended: string;
+  award: string;
+  attachment: string;
+};
+
+// Referee
+export type Referee = {
+  id: number;
+
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+
+  employer: string;
+  position: string;
+
+  email: string;
+  phone: string;
+
+  type: string | null;
+};
+
+// Applicant
 export type Applicant = {
+  applicant_profile: ApplicantProfile;
+
+  phone: Phone[];
+  address: Address[];
+
+  objective: string;
+  career_summary: string;
+  current_position: string;
+
   experience: Experience[];
   education: Education[];
-};
+  training: Training[];
 
-export type ExperienceGroup = {
-  employer: Employer;
-  region: Region;
-  positions: Experience[];
+  skills: Skills;
+
+  language: Language[];
+  culture: Culture[];
+  applicant_personality: unknown[];
+  proficiency: Proficiency[];
+
+  referees: Referee[];
 };
