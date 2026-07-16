@@ -1,9 +1,13 @@
 import { getApplications } from "@/services/jobs.service";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 
-export const useApplications = (id: number) => {
+export const useApplications = (
+  id: number,
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">,
+) => {
   return useQuery({
-    queryFn: () => getApplications(id),
     queryKey: ["job-applications", id],
+    queryFn: () => getApplications(id),
+    ...options,
   });
 };

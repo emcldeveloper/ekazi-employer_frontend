@@ -35,7 +35,6 @@ import VerifyPage from "./pages/auth/VerifyPage";
 import ContactPage from "./pages/landing/ContactPage";
 import ScrollToTop from "./components/scroll-top";
 import AboutPage from "./pages/landing/AboutPage";
-import JobApplicationsStages from "./pages/applications/JobApplicationsStages";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -85,7 +84,7 @@ const App = () => {
                   />
                   <Route
                     path="/jobs/:id/applications/:stage"
-                    element={<JobApplicationsStages />}
+                    element={<JobApplications />}
                   />
 
                   <Route path="/candidates" element={<CandidatePage />} />

@@ -28,13 +28,14 @@ import {
 import { formatDate } from "@/utils/helpers";
 import ApplicantDetails from "../applicants/ApplicantDetails";
 import ApplicationStages from "./components/ApplicationStages";
-import { useApplications, useJob } from "@/hooks/jobs";
+import { useApplications, useApplicationsByStage, useJob } from "@/hooks/jobs";
 import type { Application } from "@/@types/applications";
 
 const JobApplications = () => {
   const { id, stage } = useParams();
   const jobId = Number(id);
   const jobStage = String(stage);
+  const isStageView = !!stage;
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -46,11 +47,29 @@ const JobApplications = () => {
   const title = job?.position?.name;
 
   // List of applications
-  const { data: applicationsData, isLoading } = useApplications(jobId);
-  const applications = applicationsData?.data ?? [];
+  const allApplicationsQuery = useApplications(jobId, {
+    enabled: !stage,
+  });
 
-  // stats
-  const applied = applications.length;
+  const stageApplicationsQuery = useApplicationsByStage(
+    {
+      id: jobId,
+      stage: jobStage,
+    },
+    {
+      enabled: !!stage,
+    },
+  );
+
+  const applicationsData = (
+    stage ? stageApplicationsQuery.data : allApplicationsQuery.data
+  ) as { data?: Application[] } | undefined;
+
+  const isLoading = stage
+    ? stageApplicationsQuery.isLoading
+    : allApplicationsQuery.isLoading;
+
+  const applications = applicationsData?.data ?? [];
 
   return (
     <>
@@ -79,10 +98,13 @@ const JobApplications = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Applied Time</TableHead>
                     <TableHead>Applicant Name</TableHead>
-                    <TableHead>Stage</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>Current Stage</TableHead>
+                    {isStageView ? (
+                      <TableHead>Moved Date</TableHead>
+                    ) : (
+                      <TableHead>Applied Date</TableHead>
+                    )}
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -108,15 +130,25 @@ const JobApplications = () => {
                     applications.map((application: Application) => (
                       <TableRow key={application?.id}>
                         <TableCell>
-                          {formatDate(application?.created_at)}
-                        </TableCell>
-                        <TableCell>
                           {application?.applicant?.first_name}{" "}
                           {application?.applicant?.middle_name}{" "}
                           {application?.applicant?.last_name}
                         </TableCell>
-                        <TableCell>{application?.stage?.stage_name}</TableCell>
-                        <TableCell>{application?.status}</TableCell>
+                        <TableCell>
+                          {application?.current_stage?.name ||
+                            application?.stage?.name}
+                        </TableCell>
+
+                        {isStageView ? (
+                          <TableCell>
+                            {formatDate(application?.moved_at)}
+                          </TableCell>
+                        ) : (
+                          <TableCell>
+                            {formatDate(application?.created_at)}
+                          </TableCell>
+                        )}
+
                         <TableCell className="text-right">
                           <Button
                             variant="link"
@@ -140,11 +172,7 @@ const JobApplications = () => {
         {/* right side */}
         <div className="md:col-span-1">
           <div className="sticky top-4 space-y-4">
-            <ApplicationStages
-              jobId={jobId}
-              currentStage={jobStage}
-              applied={applied}
-            />
+            <ApplicationStages jobId={jobId} currentStage={jobStage} />
           </div>
         </div>
       </div>

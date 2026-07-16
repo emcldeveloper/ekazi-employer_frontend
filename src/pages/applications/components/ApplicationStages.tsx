@@ -10,15 +10,11 @@ interface ApplicationStagesProps {
   applied?: number;
 }
 
-const ApplicationStages = ({
-  jobId,
-  currentStage,
-  applied,
-}: ApplicationStagesProps) => {
+const ApplicationStages = ({ jobId, currentStage }: ApplicationStagesProps) => {
   const navigate = useNavigate();
 
   const stages = [
-    { label: "Applied", value: "applied", count: applied },
+    { label: "Applied", value: "applied", count: 0 },
     { label: "Shortlisted", value: "shortlisted", count: 0 },
     { label: "Screening", value: "screening", count: 0 },
     { label: "Interview", value: "interview", count: 0 },

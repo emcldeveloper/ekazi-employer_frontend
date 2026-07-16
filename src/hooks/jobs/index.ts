@@ -14,6 +14,7 @@ export * from "./useAddMetaData";
 export * from "./useAddReporting";
 
 export * from "./usePublishJob";
+export * from "./useJobSettings";
 export * from "./useDeleteJob";
 export * from "./useApplications";
 export * from "./useApplicationsByStage";

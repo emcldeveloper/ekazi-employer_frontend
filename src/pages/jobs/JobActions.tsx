@@ -6,6 +6,7 @@ import {
   FileStack,
   Plus,
   Trash2,
+  UserCheck,
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -27,6 +28,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useDeleteJob, usePublishJob } from "@/hooks/jobs";
+import JobSettings from "./components/actions/JobSettings";
 
 interface JobActionsProps {
   jobId: number;
@@ -81,16 +83,6 @@ const JobActions = ({ jobId, isPublished }: JobActionsProps) => {
         </CardHeader>
         <CardContent className="space-y-4">
           {!published && (
-            // <Button
-            //   variant="outline"
-            //   onClick={handlePublishJob}
-            //   disabled={isPublishing}
-            //   className="w-full justify-between"
-            // >
-            //   {isPublishing ? "Publishing..." : "Publish Job"}
-            //   <ArrowUpIcon size={16} />
-            // </Button>
-
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
@@ -181,8 +173,17 @@ const JobActions = ({ jobId, isPublished }: JobActionsProps) => {
             onClick={() => {}}
             className="w-full justify-between"
           >
-            Selected Applicants
+            Potential Candidates
             <Users size={16} />
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => {}}
+            className="w-full justify-between"
+          >
+            Selected Applicants
+            <UserCheck size={16} />
           </Button>
 
           <Button
@@ -193,6 +194,9 @@ const JobActions = ({ jobId, isPublished }: JobActionsProps) => {
             Add Screener
             <Plus size={16} />
           </Button>
+
+          {/* Job settings  */}
+          <JobSettings jobId={jobId} />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -227,11 +231,6 @@ const JobActions = ({ jobId, isPublished }: JobActionsProps) => {
             </AlertDialogContent>
           </AlertDialog>
         </CardContent>
-      </Card>
-
-      {/* potential candidates */}
-      <Card>
-        <CardContent>Potential candidates</CardContent>
       </Card>
     </>
   );

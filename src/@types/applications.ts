@@ -7,15 +7,17 @@ export interface Application {
 
   created_at: string;
   updated_at: string;
+  moved_at: string;
 
   applicant: Applicant;
   job: Job;
   stage: Stage;
+  current_stage: Stage;
 }
 
 export interface Stage {
   id: number;
-  stage_name: string;
+  name: string;
 }
 
 export interface Job {

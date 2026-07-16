@@ -84,3 +84,11 @@ export type JobOtherRequirementForm = {
   job_id: number;
   other_requirement: string;
 };
+
+export type JobSettingsForm = {
+  show_client_name?: boolean;
+  apply_condition?: boolean;
+  apply_type?: "email" | "external_url" | "";
+  email?: string;
+  external_url?: string;
+};

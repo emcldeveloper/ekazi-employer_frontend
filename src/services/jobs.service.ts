@@ -6,6 +6,7 @@ import type {
   JobMetaForm,
   JobOtherRequirementForm,
   JobRequirementPayload,
+  JobSettingsForm,
 } from "@/@types/job-forms";
 import type {
   JobFilters,
@@ -207,6 +208,17 @@ export const addMetaData = async (payload: JobMetaForm) => {
  * */
 export const publishJob = async (jobId: number) => {
   const res = await api.put(`/employer/jobs/${jobId}/publish`);
+  return res.data;
+};
+
+export const settingsJob = async ({
+  jobId,
+  payload,
+}: {
+  jobId: number;
+  payload: JobSettingsForm;
+}) => {
+  const res = await api.post(`/employer/jobs/${jobId}/job-settings`, payload);
   return res.data;
 };
 
