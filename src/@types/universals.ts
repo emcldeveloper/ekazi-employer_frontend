@@ -75,7 +75,7 @@ export interface Keyword {
 }
 export interface EducationLevel {
   id: number;
-  educational_level: string;
+  education_level: string;
 }
 export interface Course {
   id: number;
