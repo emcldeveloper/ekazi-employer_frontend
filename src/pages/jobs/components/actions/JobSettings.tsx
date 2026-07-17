@@ -1,3 +1,4 @@
+import type { Job } from "@/@types/job";
 import type { JobSettingsForm } from "@/@types/job-forms";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -30,6 +31,7 @@ import { useJobSettings } from "@/hooks/jobs";
 import { Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 
 const items = [
   { label: "Email", value: "email" },
@@ -37,13 +39,15 @@ const items = [
 ];
 
 interface JobSettingsProps {
-  jobId: number;
+  job: Job;
 }
 
-const JobSettings = ({ jobId }: JobSettingsProps) => {
+const JobSettings = ({ job }: JobSettingsProps) => {
+  const jobId = job?.id;
+
   const [open, setOpen] = useState(false);
 
-  const { register, handleSubmit, control, setValue } =
+  const { register, handleSubmit, control, reset, setValue } =
     useForm<JobSettingsForm>({
       defaultValues: {
         show_client_name: false,
@@ -84,6 +88,22 @@ const JobSettings = ({ jobId }: JobSettingsProps) => {
     }
   }, [applyType, setValue]);
 
+  // PRE FILL FORM DATA FOR EXISTING JOB SETTINGS
+  useEffect(() => {
+    if (!job) return;
+
+    const hasEmail = !!job.job_email;
+    const hasExternalUrl = !!job.job_externalUrl;
+
+    reset({
+      show_client_name: job.show_client_name,
+      apply_condition: hasEmail || hasExternalUrl,
+      apply_type: hasEmail ? "email" : hasExternalUrl ? "external_url" : "",
+      email: job.job_email?.name ?? "",
+      external_url: job.job_externalUrl?.name ?? "",
+    });
+  }, [job, reset]);
+
   const onSubmit = (data: JobSettingsForm) => {
     const payload = {
       show_client_name: data.show_client_name,
@@ -93,10 +113,22 @@ const JobSettings = ({ jobId }: JobSettingsProps) => {
       external_url: data.apply_type === "external_url" ? data.external_url : "",
     };
 
-    updateJobSettings({
-      jobId,
-      payload,
-    });
+    updateJobSettings(
+      {
+        jobId,
+        payload,
+      },
+      {
+        onSuccess: (res) => {
+          toast.success(res?.message || "Job settings updated succesfully");
+          reset();
+          setOpen(false);
+        },
+        onError: () => {
+          toast.error("Failed to update job settings");
+        },
+      },
+    );
   };
 
   return (

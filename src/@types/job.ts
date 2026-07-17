@@ -39,6 +39,8 @@ export interface Job {
   created_at: string;
   updated_at: string;
   total_applicants: number;
+  job_email: JobEmail;
+  job_externalUrl: JobExternalUrl;
 
   client: Client;
   industry: Industry;
@@ -71,6 +73,16 @@ export interface Job {
   report_to: ReportTo[];
   requirements: Requirement[];
   other_requirements: OtherRequirement[];
+}
+
+export interface JobEmail {
+  id: number;
+  name: string;
+}
+
+export interface JobExternalUrl {
+  id: number;
+  name: string;
 }
 
 export interface Client {

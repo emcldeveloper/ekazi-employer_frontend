@@ -29,16 +29,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useDeleteJob, usePublishJob } from "@/hooks/jobs";
 import JobSettings from "./components/actions/JobSettings";
+import type { Job } from "@/@types/job";
 
 interface JobActionsProps {
-  jobId: number;
-  isPublished: number;
+  job: Job;
 }
 
-const JobActions = ({ jobId, isPublished }: JobActionsProps) => {
+const JobActions = ({ job }: JobActionsProps) => {
+  // job published status, 1 === true or 0 === false
+  const publishedStatus = Number(job?.published);
+  const jobId = job?.id;
+
   const navigate = useNavigate();
 
-  const published = isPublished === 1;
+  const published = publishedStatus === 1;
 
   const { mutate: publishJob, isPending: isPublishing } = usePublishJob(jobId);
 
@@ -196,7 +200,7 @@ const JobActions = ({ jobId, isPublished }: JobActionsProps) => {
           </Button>
 
           {/* Job settings  */}
-          <JobSettings jobId={jobId} />
+          <JobSettings job={job} />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>

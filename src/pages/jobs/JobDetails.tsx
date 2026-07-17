@@ -21,9 +21,6 @@ const JobDetails = () => {
 
   const { data: job } = useJob(jobId);
 
-  // job published status, 1 === true or 0 === false
-  const publishedStatus = Number(job?.published);
-
   return (
     <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
       <div className="md:col-span-2 space-y-4">
@@ -77,7 +74,7 @@ const JobDetails = () => {
 
       <div className="md:col-span-1 ">
         <div className="sticky top-4 space-y-4">
-          <JobActions jobId={jobId} isPublished={publishedStatus} />
+          <JobActions job={job} />
         </div>
       </div>
     </div>

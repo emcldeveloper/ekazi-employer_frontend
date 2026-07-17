@@ -218,7 +218,7 @@ export const settingsJob = async ({
   jobId: number;
   payload: JobSettingsForm;
 }) => {
-  const res = await api.post(`/employer/jobs/${jobId}/job-settings`, payload);
+  const res = await api.put(`/employer/jobs/${jobId}/job-settings`, payload);
   return res.data;
 };
 
