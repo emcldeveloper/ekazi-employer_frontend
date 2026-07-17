@@ -2,7 +2,6 @@ import type {
   Category,
   Country,
   Course,
-  EducationLevel,
   Gender,
   Industry,
   Keyword,
@@ -174,6 +173,11 @@ export interface Salary {
   id: number;
   from_salary: SalaryRange;
   to_salary: SalaryRange;
+}
+
+export interface EducationLevel {
+  id: number;
+  name: string;
 }
 
 export interface Education {

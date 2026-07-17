@@ -52,7 +52,7 @@ const EducationForm = ({
   const levelOptions: OptionType[] =
     levels?.map((level: EducationLevel) => ({
       value: level.id,
-      label: level.name,
+      label: level.educational_level,
     })) ?? [];
 
   // fetch courses
