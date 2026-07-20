@@ -51,6 +51,7 @@ export interface Category {
 export interface Position {
   id: number;
   name: string;
+  position_name: string;
 }
 export interface PositionLevel {
   id: number;

@@ -46,6 +46,7 @@ import { Badge } from "@/components/ui/badge";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
+import type { Job } from "@/@types/job";
 
 const JobsPage = () => {
   const navigate = useNavigate();
@@ -261,7 +262,7 @@ const JobsPage = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                jobs.map((job: any) => (
+                jobs.map((job: Job) => (
                   <TableRow key={job.id}>
                     <TableCell>{job.position?.position_name}</TableCell>
                     <TableCell>{formatDate(job?.created_at)}</TableCell>

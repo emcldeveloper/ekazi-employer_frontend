@@ -1,18 +1,21 @@
+import type { CreateTaskForm } from "@/@types/tasks";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Field, FieldGroup } from "@/components/ui/field";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -20,11 +23,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCreateTask } from "@/hooks/tasks";
 import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const CreateTask = () => {
+  const [open, setOpen] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<CreateTaskForm>({
+    defaultValues: {
+      title: "",
+      description: "",
+      priority: "Medium",
+      status: "Pending",
+    },
+  });
+
+  // Creating Job
+  const { mutate: createTask, isPending: isCreating } = useCreateTask();
+
+  const onSubmit = async (data: CreateTaskForm) => {
+    createTask(data, {
+      onSuccess: (res) => {
+        toast.success(res?.message || "Job created succesfully");
+        setOpen(false);
+        reset();
+      },
+    });
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <PlusIcon size={16} />
@@ -41,89 +78,99 @@ const CreateTask = () => {
           </DialogDescription>
         </DialogHeader>
 
-        <FieldGroup>
-          <Field>
-            <Label>Task Title</Label>
-
-            <Input placeholder="Enter task title" />
-          </Field>
-
-          <Field>
-            <Label>Description</Label>
-
-            <Input placeholder="Enter task description" />
-          </Field>
-
-          <Field>
-            <Label>Assign To</Label>
-
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select user" />
-              </SelectTrigger>
-
-              <SelectContent>
-                <SelectItem value="amina">Amina Yusuf</SelectItem>
-
-                <SelectItem value="kelvin">Kelvin George</SelectItem>
-
-                <SelectItem value="sophia">Sophia Andrew</SelectItem>
-              </SelectContent>
-            </Select>
-          </Field>
-
-          <div className="grid gap-4 md:grid-cols-2">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FieldGroup>
             <Field>
-              <Label>Priority</Label>
-
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Priority" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-
-                  <SelectItem value="medium">Medium</SelectItem>
-
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
+              <FieldLabel>Task Title</FieldLabel>
+              <Input
+                placeholder="Enter task title"
+                {...register("title", {
+                  required: "Title is required",
+                })}
+              />
+              {errors.title && <FieldError>{errors.title.message}</FieldError>}
             </Field>
 
             <Field>
-              <Label>Status</Label>
-
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  <SelectItem value="pending">Pending</SelectItem>
-
-                  <SelectItem value="progress">In Progress</SelectItem>
-
-                  <SelectItem value="completed">Completed</SelectItem>
-                </SelectContent>
-              </Select>
+              <FieldLabel>Description</FieldLabel>
+              <Input
+                placeholder="Enter task description"
+                {...register("description")}
+              />
             </Field>
-          </div>
 
-          <Field>
-            <Label>Due Date</Label>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field>
+                <FieldLabel>Priority</FieldLabel>
 
-            <Input type="date" />
-          </Field>
-        </FieldGroup>
+                <Controller
+                  name="priority"
+                  control={control}
+                  rules={{ required: "Priority is required" }}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Priority" />
+                      </SelectTrigger>
 
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
+                      <SelectContent>
+                        <SelectItem value="Low">Low</SelectItem>
+                        <SelectItem value="Medium">Medium</SelectItem>
+                        <SelectItem value="High">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.priority && (
+                  <FieldError>{errors.priority.message}</FieldError>
+                )}
+              </Field>
 
-          <Button>Create Task</Button>
-        </DialogFooter>
+              <Field>
+                <FieldLabel>Status</FieldLabel>
+
+                <Controller
+                  name="status"
+                  control={control}
+                  rules={{ required: "Status is required" }}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="InProgress">In Progress</SelectItem>
+                        <SelectItem value="Completed">Completed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.status && (
+                  <FieldError>{errors.status.message}</FieldError>
+                )}
+              </Field>
+            </div>
+
+            <Field>
+              <FieldLabel>Due Date</FieldLabel>
+              <Input
+                type="date"
+                {...register("deadline", {
+                  required: "Due date is required",
+                })}
+              />
+              {errors.deadline && (
+                <FieldError>{errors.deadline.message}</FieldError>
+              )}
+            </Field>
+
+            <Button type="submit" disabled={isCreating}>
+              {isCreating ? "Creating..." : "Create Task"}
+            </Button>
+          </FieldGroup>
+        </form>
       </DialogContent>
     </Dialog>
   );

@@ -1,17 +1,18 @@
+import type { CreateTaskForm } from "@/@types/tasks";
 import api from "@/lib/axios";
 
-export const allTasks = async () => {
+export const tasksList = async () => {
   const res = await api.get("/employer/tasks");
   return res.data;
 };
 
-export const createTask = async (payload: any) => {
-  const res = await api.post("/employer/tasks", payload);
-  return res.data;
+export const taskDetails = async (id: number) => {
+  const res = await api.get(`/employer/tasks/${id}`);
+  return res.data?.data;
 };
 
-export const singleTask = async (id: number) => {
-  const res = await api.get(`/employer/tasks/${id}`);
+export const createTask = async (payload: CreateTaskForm) => {
+  const res = await api.post("/employer/tasks", payload);
   return res.data;
 };
 
@@ -20,7 +21,7 @@ export const updateTask = async ({
   payload,
 }: {
   id: number;
-  payload: any;
+  payload: CreateTaskForm;
 }) => {
   const res = await api.put(`/employer/tasks/${id}`, payload);
   return res.data;

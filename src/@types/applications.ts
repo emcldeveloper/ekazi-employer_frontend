@@ -1,6 +1,7 @@
 export interface Application {
   id: number;
   applicant_id: number;
+  job_id: number;
 
   letter: string;
   status?: string;

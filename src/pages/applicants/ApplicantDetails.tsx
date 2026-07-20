@@ -46,6 +46,7 @@ import { formatDate } from "@/utils/helpers";
 import type { Application } from "@/@types/applications";
 import { toast } from "sonner";
 import { BASE_URL } from "@/config/config";
+import { useShortlist } from "@/hooks/jobs";
 
 type ApplicantDetailsProps = {
   application: Application | null;
@@ -58,6 +59,7 @@ export default function ApplicantDetails({
   open,
   onOpenChange,
 }: ApplicantDetailsProps) {
+  const jobId = application?.job_id as number;
   const applicantId = application?.applicant_id;
   const applicationTitle = application?.job?.job_position?.position_name;
   const applicationLetter = application?.letter;
@@ -65,6 +67,8 @@ export default function ApplicantDetails({
   // const applicationStage = application?.stage?.stage_name;
 
   const { data: applicant, isLoading } = useApplicant(applicantId ?? 0);
+  const { mutate: shortlistCandidate, isPending: isShortlisting } =
+    useShortlist();
 
   // sections
   const profile = applicant?.applicant_profile;
@@ -77,17 +81,33 @@ export default function ApplicantDetails({
   const cultures = applicant?.culture ?? [];
   const personalities = applicant?.applicant_personality ?? [];
   const proficiencies = applicant?.proficiency ?? [];
-
-  // skills (tools, knowledge, softwares)
   const knowledges = applicant?.skills?.knowledge ?? [];
   const softwares = applicant?.skills?.software ?? [];
   const tools = applicant?.skills?.tools ?? [];
-
   const location = applicant?.address?.[0];
+
+  console.log(application);
 
   // Handlers
   const handleShortlist = () => {
-    toast.success("Candidate shortlisted succesfully");
+    const payload = {
+      stage_id: 2,
+      stage_name: "Shortlisted",
+      applicant_id: [applicantId],
+    };
+
+    shortlistCandidate(
+      { jobId, payload },
+      {
+        onSuccess: () => {
+          toast.success("Candidate shortlisted successfully");
+          onOpenChange(false);
+        },
+        onError: (error: any) => {
+          toast.error(error?.response?.data?.message || "Failed to shortlist");
+        },
+      },
+    );
   };
 
   return (
@@ -305,8 +325,11 @@ export default function ApplicantDetails({
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
 
-                    <AlertDialogAction onClick={handleShortlist}>
-                      Shortlist
+                    <AlertDialogAction
+                      disabled={isShortlisting}
+                      onClick={handleShortlist}
+                    >
+                      {isShortlisting ? "Shortlisting..." : "Shortlist"}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>

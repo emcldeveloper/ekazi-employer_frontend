@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { allTasks } from "@/services/tasks.service";
+import { tasksList } from "@/services/tasks.service";
 
 export const useTasks = () => {
   return useQuery({
-    queryFn: allTasks,
+    queryFn: tasksList,
     queryKey: ["tasks"],
   });
 };

@@ -226,3 +226,18 @@ export const deleteJob = async (jobId: number) => {
   const res = await api.delete(`/employer/jobs/${jobId}`);
   return res.data;
 };
+
+// shortlisting a candidate
+export const shortlistCandidate = async ({
+  jobId,
+  payload,
+}: {
+  jobId: number;
+  payload: any;
+}) => {
+  const res = await api.post(
+    `/employer/jobs/${jobId}/application-stages/shortlist`,
+    payload,
+  );
+  return res.data;
+};

@@ -23,9 +23,12 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import CreateTask from "./components/CreateTask";
+// import { useTasks } from "@/hooks/tasks";
 
 const TasksPage = () => {
   const [search, setSearch] = useState("");
+
+  // const { data: tasks } = useTasks();
 
   return (
     <div className="mt-4 space-y-4">
