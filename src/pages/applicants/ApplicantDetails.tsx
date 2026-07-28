@@ -92,9 +92,13 @@ export default function ApplicantDetails({
 
   // Handlers
   const handleShortlist = () => {
+    if (applicantId == null) {
+      toast.error("Applicant ID is missing");
+      return;
+    }
+
     const payload = {
       stage_id: 2,
-      stage_name: "Shortlisted",
       applicant_id: [applicantId],
     };
 
