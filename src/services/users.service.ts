@@ -31,3 +31,8 @@ export const userSettings = async () => {
   const res = await api.get("/employer-user-management");
   return res.data;
 };
+
+export const getStaffs = async () => {
+  const res = await api.get("/client-staffs");
+  return res.data?.data;
+};

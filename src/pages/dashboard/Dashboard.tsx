@@ -11,7 +11,6 @@ const Dashboard = () => {
 
   const { data: statisticsData } = useStatistics();
   const statistics = statisticsData?.data;
-  console.log(statistics);
 
   const allJobs = statistics?.totalJobs;
   const allApplications = statistics?.totalApplications;

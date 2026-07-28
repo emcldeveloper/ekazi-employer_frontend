@@ -28,8 +28,18 @@ import {
 import { formatDate } from "@/utils/helpers";
 import ApplicantDetails from "../applicants/ApplicantDetails";
 import ApplicationStages from "./components/ApplicationStages";
-import { useApplications, useApplicationsByStage, useJob } from "@/hooks/jobs";
-import type { Application } from "@/@types/applications";
+import { useApplicationsByStage, useJob } from "@/hooks/jobs";
+import type { Application, StageStatistics } from "@/@types/applications";
+import { Checkbox } from "@/components/ui/checkbox";
+import { MoveStage } from "./components/MoveStage";
+
+type ApplicationsByStageResponse = {
+  data?: {
+    data: Application[];
+    statistics?: StageStatistics;
+  };
+  isLoading: boolean;
+};
 
 const JobApplications = () => {
   const { id, stage } = useParams();
@@ -41,35 +51,49 @@ const JobApplications = () => {
   const [search, setSearch] = useState("");
   const [selectedApplication, setSelectedApplication] =
     useState<Application | null>(null);
+  const [selectedApplications, setSelectedApplications] = useState<number[]>(
+    [],
+  );
 
   // Job Details
   const { data: job } = useJob(jobId);
   const title = job?.position?.name;
 
   // List of applications
-  const allApplicationsQuery = useApplications(jobId, {
-    enabled: !stage,
-  });
 
-  const stageApplicationsQuery = useApplicationsByStage(
-    {
-      id: jobId,
-      stage: jobStage,
-    },
-    {
-      enabled: !!stage,
-    },
-  );
-
-  const applicationsData = (
-    stage ? stageApplicationsQuery.data : allApplicationsQuery.data
-  ) as { data?: Application[] } | undefined;
-
-  const isLoading = stage
-    ? stageApplicationsQuery.isLoading
-    : allApplicationsQuery.isLoading;
+  const { data: applicationsData, isLoading } = useApplicationsByStage({
+    id: jobId,
+    stage: jobStage,
+  }) as ApplicationsByStageResponse;
 
   const applications = applicationsData?.data ?? [];
+  const statistics = applicationsData?.statistics;
+
+  // TOGGLE SELECT ALL AND SELECT APPLICATIONS
+  const isAllSelected =
+    applications.length > 0 &&
+    selectedApplications.length === applications.length;
+
+  const toggleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedApplications(
+        applications.map((app: Application) => app.applicant_id),
+      );
+    } else {
+      setSelectedApplications([]);
+    }
+  };
+
+  console.log("applications", applications);
+  console.log("selectedApplications", selectedApplications);
+
+  const toggleSelectApplication = (id: number, checked: boolean) => {
+    setSelectedApplications((prev) =>
+      checked
+        ? [...prev, id]
+        : prev.filter((applicationId) => applicationId !== id),
+    );
+  };
 
   return (
     <>
@@ -82,6 +106,21 @@ const JobApplications = () => {
               <CardDescription>List of Job Applicantions</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {selectedApplications.length > 0 && (
+                <div className="flex items-center justify-between rounded-md border p-3">
+                  <span className="text-sm">
+                    {selectedApplications.length} selected
+                  </span>
+
+                  <MoveStage
+                    jobId={jobId}
+                    jobTitle={title}
+                    jobStage={jobStage}
+                    selectedApplications={selectedApplications}
+                  />
+                </div>
+              )}
+
               <div>
                 <InputGroup className="w-full">
                   <InputGroupInput
@@ -98,6 +137,16 @@ const JobApplications = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    {isStageView && stage !== "applied" && (
+                      <TableHead className="w-10">
+                        <Checkbox
+                          checked={isAllSelected}
+                          onCheckedChange={(checked) =>
+                            toggleSelectAll(checked === true)
+                          }
+                        />
+                      </TableHead>
+                    )}
                     <TableHead>Applicant Name</TableHead>
                     <TableHead>Current Stage</TableHead>
                     {isStageView ? (
@@ -129,6 +178,21 @@ const JobApplications = () => {
                   ) : (
                     applications.map((application: Application) => (
                       <TableRow key={application?.id}>
+                        {isStageView && stage !== "applied" && (
+                          <TableCell>
+                            <Checkbox
+                              checked={selectedApplications.includes(
+                                application.applicant_id,
+                              )}
+                              onCheckedChange={(checked) =>
+                                toggleSelectApplication(
+                                  application.applicant_id,
+                                  checked === true,
+                                )
+                              }
+                            />
+                          </TableCell>
+                        )}
                         <TableCell>
                           {application?.applicant?.first_name}{" "}
                           {application?.applicant?.middle_name}{" "}
@@ -172,16 +236,28 @@ const JobApplications = () => {
         {/* right side */}
         <div className="md:col-span-1">
           <div className="sticky top-4 space-y-4">
-            <ApplicationStages jobId={jobId} currentStage={jobStage} />
+            <ApplicationStages
+              jobId={jobId}
+              stageStatistics={statistics}
+              currentStage={jobStage}
+            />
           </div>
         </div>
       </div>
 
-      <ApplicantDetails
-        application={selectedApplication}
-        open={open}
-        onOpenChange={setOpen}
-      />
+      {selectedApplication && (
+        <ApplicantDetails
+          application={selectedApplication}
+          open={open}
+          onOpenChange={(value) => {
+            setOpen(value);
+
+            if (!value) {
+              setSelectedApplication(null);
+            }
+          }}
+        />
+      )}
     </>
   );
 };

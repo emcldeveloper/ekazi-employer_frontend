@@ -109,3 +109,11 @@ export interface MetaKeywordData {
   entity_type: string;
   name: string;
 }
+
+export interface ApplicationStage {
+  id: number;
+  stage_number: number;
+  stage_code: string;
+  stage_name: string;
+  hide: boolean;
+}

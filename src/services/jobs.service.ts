@@ -1,4 +1,13 @@
 import type {
+  BackgroundCheckPayload,
+  EmployedPayload,
+  InterviewPayload,
+  OfferPayload,
+  ScreeningPayload,
+  SelectionPayload,
+  ShortlistPayload,
+} from "@/@types/applications";
+import type {
   JobCreateForm,
   JobEducationForm,
   JobLanguageForm,
@@ -227,16 +236,104 @@ export const deleteJob = async (jobId: number) => {
   return res.data;
 };
 
+/**
+ * APPLICATION STAGES
+ * */
 // shortlisting a candidate
 export const shortlistCandidate = async ({
   jobId,
   payload,
 }: {
   jobId: number;
-  payload: any;
+  payload: ShortlistPayload;
 }) => {
   const res = await api.post(
     `/employer/jobs/${jobId}/application-stages/shortlist`,
+    payload,
+  );
+  return res.data;
+};
+
+// screening a candidate
+export const screenCandidate = async ({
+  jobId,
+  payload,
+}: {
+  jobId: number;
+  payload: ScreeningPayload;
+}) => {
+  const res = await api.post(
+    `/employer/jobs/${jobId}/application-stages/screening`,
+    payload,
+  );
+  return res.data;
+};
+
+export const interviewCandidate = async ({
+  jobId,
+  payload,
+}: {
+  jobId: number;
+  payload: InterviewPayload;
+}) => {
+  const res = await api.post(
+    `/employer/jobs/${jobId}/application-stages/interview`,
+    payload,
+  );
+  return res.data;
+};
+
+export const selectCandidate = async ({
+  jobId,
+  payload,
+}: {
+  jobId: number;
+  payload: SelectionPayload;
+}) => {
+  const res = await api.post(
+    `/employer/jobs/${jobId}/application-stages/selection`,
+    payload,
+  );
+  return res.data;
+};
+
+export const backgroundCheckCandidate = async ({
+  jobId,
+  payload,
+}: {
+  jobId: number;
+  payload: BackgroundCheckPayload;
+}) => {
+  const res = await api.post(
+    `/employer/jobs/${jobId}/application-stages/background-check`,
+    payload,
+  );
+  return res.data;
+};
+
+export const offerCandidate = async ({
+  jobId,
+  payload,
+}: {
+  jobId: number;
+  payload: OfferPayload;
+}) => {
+  const res = await api.post(
+    `/employer/jobs/${jobId}/application-stages/offer`,
+    payload,
+  );
+  return res.data;
+};
+
+export const employCandidate = async ({
+  jobId,
+  payload,
+}: {
+  jobId: number;
+  payload: EmployedPayload;
+}) => {
+  const res = await api.post(
+    `/employer/jobs/${jobId}/application-stages/employed`,
     payload,
   );
   return res.data;

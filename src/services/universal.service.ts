@@ -240,3 +240,13 @@ export const metaKeywords = async (
 
   return res.data.data;
 };
+
+export const applicationStages = async () => {
+  const res = await api.get("/stages");
+  return res.data?.data;
+};
+
+export const interviewTypes = async () => {
+  const res = await api.get("/interview-types");
+  return res.data?.data;
+};

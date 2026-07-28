@@ -9,12 +9,12 @@ const ProtectedRoutes = () => {
 
   useEffect(() => {
     if (!token) {
-      window.location.href = "http://localhost:3001/";
+      window.location.href = "http://localhost:3000/";
     }
 
     if (!isLoading && !data) {
       localStorage.removeItem("token");
-      window.location.href = "http://localhost:3001/";
+      window.location.href = "http://localhost:3000/";
     }
   }, [token, isLoading, data]);
 

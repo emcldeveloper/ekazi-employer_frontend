@@ -62,7 +62,7 @@ const JobActions = ({ job }: JobActionsProps) => {
   };
 
   const handleViewApplications = () => {
-    navigate(`/jobs/${jobId}/applications`);
+    navigate(`/jobs/${jobId}/applications/applied`);
   };
 
   const handleDeleteJob = () => {

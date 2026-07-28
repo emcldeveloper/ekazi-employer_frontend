@@ -13,9 +13,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -64,9 +65,12 @@ export default function ApplicantDetails({
   const applicationTitle = application?.job?.job_position?.position_name;
   const applicationLetter = application?.letter;
   const applicationDate = formatDate(application?.updated_at);
-  // const applicationStage = application?.stage?.stage_name;
 
-  const { data: applicant, isLoading } = useApplicant(applicantId ?? 0);
+  // stages
+  const applicationStageId = application?.stage?.id;
+
+  // applicant data
+  const { data: applicant, isLoading } = useApplicant(applicantId);
   const { mutate: shortlistCandidate, isPending: isShortlisting } =
     useShortlist();
 
@@ -86,8 +90,6 @@ export default function ApplicantDetails({
   const tools = applicant?.skills?.tools ?? [];
   const location = applicant?.address?.[0];
 
-  console.log(application);
-
   // Handlers
   const handleShortlist = () => {
     const payload = {
@@ -103,8 +105,8 @@ export default function ApplicantDetails({
           toast.success("Candidate shortlisted successfully");
           onOpenChange(false);
         },
-        onError: (error: any) => {
-          toast.error(error?.response?.data?.message || "Failed to shortlist");
+        onError: () => {
+          toast.error("Failed to shortlist candidate");
         },
       },
     );
@@ -113,198 +115,199 @@ export default function ApplicantDetails({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-4xl">
-        <Tabs defaultValue="profile">
-          <TabsList variant="line">
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="letter">Application Letter</TabsTrigger>
-          </TabsList>
-          <TabsContent value="profile">
-            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              {isLoading ? (
-                <div className="flex h-40 items-center justify-center">
-                  <Spinner className="size-6" />
-                </div>
-              ) : (
-                <>
-                  <div className="space-y-6">
-                    <Card>
-                      <CardContent className="flex flex-col flex-wrap gap-6 p-6 lg:flex-row lg:items-center lg:justify-between">
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                          <Avatar className="h-24 w-24">
-                            <AvatarImage
-                              src={
-                                profile?.picture
-                                  ? `${BASE_URL}/${profile.picture}`
-                                  : "/images/default-img.jpeg"
-                              }
-                              alt={profile?.first_name || "Profile"}
-                            />
+        <DialogHeader>
+          <DialogTitle>Applicant Details</DialogTitle>
+        </DialogHeader>
 
-                            <AvatarFallback>
-                              {profile?.first_name?.charAt(0) || "U"}
-                            </AvatarFallback>
-                          </Avatar>
+        <div className="-mx-4 no-scrollbar max-h-[70vh] overflow-y-auto px-4">
+          <Tabs defaultValue="profile">
+            <TabsList variant="line">
+              <TabsTrigger value="profile">Profile</TabsTrigger>
+              <TabsTrigger value="letter">Application Letter</TabsTrigger>
+            </TabsList>
+            <TabsContent value="profile">
+              <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                {isLoading ? (
+                  <div className="flex h-40 items-center justify-center">
+                    <Spinner className="size-6" />
+                  </div>
+                ) : (
+                  <>
+                    <div className="space-y-6">
+                      <Card>
+                        <CardContent className="flex flex-col flex-wrap gap-6 p-6 lg:flex-row lg:items-center lg:justify-between">
+                          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                            <Avatar className="h-24 w-24">
+                              <AvatarImage
+                                src={
+                                  profile?.picture
+                                    ? `${BASE_URL}/${profile.picture}`
+                                    : "/images/default-img.jpeg"
+                                }
+                                alt={profile?.first_name || "Profile"}
+                              />
 
-                          <div className="space-y-2">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <h2 className="text-2xl font-bold">{`${profile?.first_name} ${profile?.middle_name} ${profile?.last_name}`}</h2>
+                              <AvatarFallback>
+                                {profile?.first_name?.charAt(0) || "U"}
+                              </AvatarFallback>
+                            </Avatar>
 
-                              {/* {profile.verified && (
+                            <div className="space-y-2">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <h2 className="text-2xl font-bold">{`${profile?.first_name} ${profile?.middle_name} ${profile?.last_name}`}</h2>
+
+                                {/* {profile.verified && (
                                 <Badge className="gap-1">
                                   <BadgeCheck className="h-3.5 w-3.5" />
                                   Verified
                                 </Badge>
                               )} */}
-                            </div>
-                            <p className="text-muted-foreground">
-                              {applicant?.current_position}
-                            </p>
-                            <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center">
-                              <div className="flex items-center gap-1">
-                                <Mail className="h-4 w-4" />
-                                {profile?.email}
                               </div>
+                              <p className="text-muted-foreground">
+                                {applicant?.current_position}
+                              </p>
+                              <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center">
+                                <div className="flex items-center gap-1">
+                                  <Mail className="h-4 w-4" />
+                                  {profile?.email}
+                                </div>
 
-                              <div className="flex items-center gap-1">
-                                <Phone className="h-4 w-4" />
-                                {applicant?.phone?.[0]?.phone_number}
-                              </div>
+                                <div className="flex items-center gap-1">
+                                  <Phone className="h-4 w-4" />
+                                  {applicant?.phone?.[0]?.phone_number}
+                                </div>
 
-                              <div className="flex items-center gap-1">
-                                <MapPin className="h-4 w-4" />
-                                {location?.sub_location}, {location?.region}
+                                <div className="flex items-center gap-1">
+                                  <MapPin className="h-4 w-4" />
+                                  {location?.sub_location}, {location?.region}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="flex flex-wrap gap-2">
-                          <Button variant="outline" className="gap-2">
-                            <Download className="h-4 w-4" />
-                            Download CV
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* About */}
-                    {applicant?.career_summary && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="uppercase">Summary</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-sm leading-7 text-muted-foreground">
-                            {applicant?.career_summary}
-                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            <Button variant="outline" className="gap-2">
+                              <Download className="h-4 w-4" />
+                              Download CV
+                            </Button>
+                          </div>
                         </CardContent>
                       </Card>
-                    )}
 
-                    {objectives && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="uppercase">
-                            Objectives
-                          </CardTitle>
-                        </CardHeader>
+                      {/* About */}
+                      {applicant?.career_summary && (
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="uppercase">Summary</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm leading-7 text-muted-foreground">
+                              {applicant?.career_summary}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      )}
 
-                        <CardContent>
-                          <p className="text-sm leading-7 text-muted-foreground">
-                            {applicant?.objective}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    )}
+                      {objectives && (
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="uppercase">
+                              Objectives
+                            </CardTitle>
+                          </CardHeader>
 
-                    {experiences.length > 0 && (
-                      <ExperienceSection experiences={experiences} />
-                    )}
+                          <CardContent>
+                            <p className="text-sm leading-7 text-muted-foreground">
+                              {applicant?.objective}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      )}
 
-                    {educations.length > 0 && (
-                      <EducationSection educations={educations} />
-                    )}
+                      {experiences.length > 0 && (
+                        <ExperienceSection experiences={experiences} />
+                      )}
 
-                    {languages.length > 0 && (
-                      <LanguageSection languages={languages} />
-                    )}
+                      {educations.length > 0 && (
+                        <EducationSection educations={educations} />
+                      )}
 
-                    {proficiencies.length > 0 && (
-                      <ProficiencySection proficiencies={proficiencies} />
-                    )}
+                      {languages.length > 0 && (
+                        <LanguageSection languages={languages} />
+                      )}
 
-                    {trainings.length > 0 && (
-                      <TraniningSection trainings={trainings} />
-                    )}
+                      {proficiencies.length > 0 && (
+                        <ProficiencySection proficiencies={proficiencies} />
+                      )}
 
-                    {knowledges.length > 0 && (
-                      <SkillsSection knowledges={knowledges} />
-                    )}
+                      {trainings.length > 0 && (
+                        <TraniningSection trainings={trainings} />
+                      )}
 
-                    {cultures.length > 0 && (
-                      <CultureSection cultures={cultures} />
-                    )}
+                      {knowledges.length > 0 && (
+                        <SkillsSection knowledges={knowledges} />
+                      )}
 
-                    {personalities.length > 0 && (
-                      <PersonalitySection personalities={personalities} />
-                    )}
+                      {cultures.length > 0 && (
+                        <CultureSection cultures={cultures} />
+                      )}
 
-                    {softwares.length > 0 && (
-                      <SoftwareSection softwares={softwares} />
-                    )}
+                      {personalities.length > 0 && (
+                        <PersonalitySection personalities={personalities} />
+                      )}
 
-                    {tools.length > 0 && <ToolsSection tools={tools} />}
+                      {softwares.length > 0 && (
+                        <SoftwareSection softwares={softwares} />
+                      )}
 
-                    {referees.length > 0 && (
-                      <RefereeSection referees={referees} />
-                    )}
+                      {tools.length > 0 && <ToolsSection tools={tools} />}
+
+                      {referees.length > 0 && (
+                        <RefereeSection referees={referees} />
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            </TabsContent>
+            <TabsContent value="letter">
+              <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                <div className="p-6 border border-gray-300 rounded bg-white space-y-4">
+                  <div>
+                    <p className="font-semibold">
+                      {profile?.first_name} {profile?.last_name}
+                    </p>
+                    <p> {profile?.email}</p>
+                    <p>{applicant?.phone?.phone_number}</p>
+                    <p>{applicationDate}</p>
                   </div>
-                </>
-              )}
-            </div>
-          </TabsContent>
-          <TabsContent value="letter">
-            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              <div className="p-6 border border-gray-300 rounded bg-white space-y-4">
-                <div>
-                  <p className="font-semibold">
+
+                  <p>Dear Mr/Mrs,</p>
+
+                  <h5 className="font-semibold underline">
+                    RE: APPLICATION FOR {applicationTitle} POSITION
+                  </h5>
+
+                  <div className="whitespace-pre-wrap">{applicationLetter}</div>
+
+                  <p>Sincerely,</p>
+                  <p>
                     {profile?.first_name} {profile?.last_name}
                   </p>
-                  <p> {profile?.email}</p>
-                  <p>{applicant?.phone?.phone_number}</p>
-                  <p>{applicationDate}</p>
                 </div>
-
-                <p>Dear Mr/Mrs,</p>
-
-                <h5 className="font-semibold underline">
-                  RE: APPLICATION FOR {applicationTitle} POSITION
-                </h5>
-
-                <div className="whitespace-pre-wrap">{applicationLetter}</div>
-
-                <p>Sincerely,</p>
-                <p>
-                  {profile?.first_name} {profile?.last_name}
-                </p>
               </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
+        </div>
 
-        <DialogFooter>
-          <form>
+        {applicationStageId === 1 && (
+          <DialogFooter>
             <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              {/* <Button type="submit">
-                {applicationStage === "Applied" ? "Shortlist" : "Screen"}
-              </Button> */}
-
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button>Shortlist Candidate</Button>
+                  <Button disabled={isShortlisting}>
+                    {isShortlisting ? "Shortlisting..." : "Shortlist candidate"}
+                  </Button>
                 </AlertDialogTrigger>
 
                 <AlertDialogContent size="sm">
@@ -325,18 +328,15 @@ export default function ApplicantDetails({
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
 
-                    <AlertDialogAction
-                      disabled={isShortlisting}
-                      onClick={handleShortlist}
-                    >
-                      {isShortlisting ? "Shortlisting..." : "Shortlist"}
+                    <AlertDialogAction onClick={handleShortlist}>
+                      Shortlist
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
             </DialogFooter>
-          </form>
-        </DialogFooter>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

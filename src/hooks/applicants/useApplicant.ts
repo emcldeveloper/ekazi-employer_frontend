@@ -1,7 +1,7 @@
 import { fetchApplicant } from "@/services/applicant.service";
 import { useQuery } from "@tanstack/react-query";
 
-export const useApplicant = (applicant_id: number) => {
+export const useApplicant = (applicant_id?: number) => {
   return useQuery({
     queryFn: () => fetchApplicant(applicant_id),
 

@@ -72,7 +72,6 @@ const CreateTask = () => {
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Create Task</DialogTitle>
-
           <DialogDescription>
             Assign tasks to your recruiters or team members.
           </DialogDescription>

@@ -3,27 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useApplicationStages } from "@/hooks/universals";
+import type { ApplicationStage } from "@/@types/universals";
+import type { StageStatistics } from "@/@types/applications";
 
 interface ApplicationStagesProps {
   jobId?: number;
+  stageStatistics?: StageStatistics;
   currentStage?: string;
   applied?: number;
 }
 
-const ApplicationStages = ({ jobId, currentStage }: ApplicationStagesProps) => {
+const ApplicationStages = ({
+  jobId,
+  currentStage,
+  stageStatistics,
+}: ApplicationStagesProps) => {
   const navigate = useNavigate();
 
-  const stages = [
-    { label: "Applied", value: "applied", count: 0 },
-    { label: "Shortlisted", value: "shortlisted", count: 0 },
-    { label: "Screening", value: "screening", count: 0 },
-    { label: "Interview", value: "interview", count: 0 },
-    { label: "Selected", value: "selected", count: 0 },
-    { label: "Background Check", value: "background-check", count: 0 },
-    { label: "Offer", value: "offer", count: 0 },
-    { label: "Employed", value: "employed", count: 0 },
-    { label: "Indirect Applicants", value: "indirect", count: 0 },
-  ];
+  const { data: stages = [] } = useApplicationStages();
 
   return (
     <Card>
@@ -32,17 +30,28 @@ const ApplicationStages = ({ jobId, currentStage }: ApplicationStagesProps) => {
       </CardHeader>
 
       <CardContent className="space-y-2">
-        {stages.map((stage) => (
+        {[...stages].reverse().map((stage: ApplicationStage) => (
           <Button
-            key={stage.value}
-            variant={currentStage === stage.value ? "default" : "outline"}
+            key={stage.id}
+            variant={
+              currentStage === stage.stage_name.toLocaleLowerCase()
+                ? "default"
+                : "outline"
+            }
             className="w-full justify-between"
             onClick={() =>
-              navigate(`/jobs/${jobId}/applications/${stage.value}`)
+              navigate(
+                `/jobs/${jobId}/applications/${stage.stage_name.toLowerCase()}`,
+              )
             }
           >
-            {stage.label}
-            <Badge>{stage.count}</Badge>
+            {stage.stage_name}
+
+            {/* stage statistics */}
+            <Badge>
+              {stageStatistics?.[stage.stage_name as keyof StageStatistics] ??
+                0}
+            </Badge>
           </Button>
         ))}
       </CardContent>
