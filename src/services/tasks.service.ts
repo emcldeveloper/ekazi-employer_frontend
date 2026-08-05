@@ -2,17 +2,17 @@ import type { CreateTaskForm } from "@/@types/tasks";
 import api from "@/lib/axios";
 
 export const tasksList = async () => {
-  const res = await api.get("/employer/tasks");
+  const res = await api.get("/tasks");
   return res.data;
 };
 
 export const taskDetails = async (id: number) => {
-  const res = await api.get(`/employer/tasks/${id}`);
+  const res = await api.get(`/tasks/${id}`);
   return res.data?.data;
 };
 
 export const createTask = async (payload: CreateTaskForm) => {
-  const res = await api.post("/employer/tasks", payload);
+  const res = await api.post("/tasks", payload);
   return res.data;
 };
 
@@ -23,12 +23,12 @@ export const updateTask = async ({
   id: number;
   payload: CreateTaskForm;
 }) => {
-  const res = await api.put(`/employer/tasks/${id}`, payload);
+  const res = await api.put(`/tasks/${id}`, payload);
   return res.data;
 };
 
 export const deleteTask = async (id: number) => {
-  const res = await api.delete(`/employer/tasks/${id}`);
+  const res = await api.delete(`/tasks/${id}`);
   return res.data;
 };
 
@@ -39,7 +39,7 @@ export const assignTask = async ({
   task_id: number;
   user_id: number;
 }) => {
-  const res = await api.delete("/employer/task-assignments", {
+  const res = await api.delete("/task-assignments", {
     params: {
       task_id,
       user_id,

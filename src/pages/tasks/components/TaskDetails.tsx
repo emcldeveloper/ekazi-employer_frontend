@@ -1,12 +1,23 @@
-// TaskDetails.tsx
+import {
+  CalendarDays,
+  CheckCircle2,
+  Clock3,
+  Flag,
+  MessageCircle,
+  Users2Icon,
+} from "lucide-react";
 
-import { CalendarDays, CheckCircle2, Clock3, Flag, User2 } from "lucide-react";
-
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-
 import { Button } from "@/components/ui/button";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const task = {
   id: 1,
@@ -42,127 +53,95 @@ const task = {
 
 const TaskDetails = () => {
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{task.title}</h1>
-
-          <p className="mt-1 text-muted-foreground">
-            Detailed task management and tracking
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Badge>{task.status}</Badge>
-
-          <Badge variant="destructive">{task.priority}</Badge>
-        </div>
+    <div className="px-4 space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold">{task.title}</h1>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Task Description</CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              <p className="leading-7 text-muted-foreground">
-                {task.description}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Timeline</CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              <div className="space-y-5">
-                {task.timeline.map((item, index) => (
-                  <div key={index} className="flex gap-4">
-                    <div className="mt-1 h-3 w-3 rounded-full bg-primary" />
-
-                    <div>
-                      <h3 className="font-medium">{item.title}</h3>
-
-                      <p className="text-sm text-muted-foreground">
-                        {item.date}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+      <div className="grid grid-cols-[150px_1fr] gap-y-3">
+        <div className="flex items-center gap-2">
+          <Users2Icon size={16} className="text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">Assigned to:</p>
         </div>
+        <p>{task.assignedTo}</p>
 
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Task Information</CardTitle>
-            </CardHeader>
-
-            <CardContent className="space-y-5">
-              <div className="flex items-center gap-3">
-                <User2 className="h-4 w-4 text-muted-foreground" />
-
-                <div>
-                  <p className="text-sm text-muted-foreground">Assigned To</p>
-
-                  <h3 className="font-medium">{task.assignedTo}</h3>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Flag className="h-4 w-4 text-muted-foreground" />
-
-                <div>
-                  <p className="text-sm text-muted-foreground">Priority</p>
-
-                  <h3 className="font-medium">{task.priority}</h3>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Clock3 className="h-4 w-4 text-muted-foreground" />
-
-                <div>
-                  <p className="text-sm text-muted-foreground">Status</p>
-
-                  <h3 className="font-medium">{task.status}</h3>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <CalendarDays className="h-4 w-4 text-muted-foreground" />
-
-                <div>
-                  <p className="text-sm text-muted-foreground">Due Date</p>
-
-                  <h3 className="font-medium">{task.dueDate}</h3>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-
-                <div>
-                  <p className="text-sm text-muted-foreground">Created At</p>
-
-                  <h3 className="font-medium">{task.createdAt}</h3>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3 pt-4">
-                <Button>Mark As Completed</Button>
-
-                <Button variant="outline">Edit Task</Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="flex items-center gap-2">
+          <Flag size={16} className="text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">Priority</p>
         </div>
+        <Badge variant="default">{task.priority}</Badge>
+
+        <div className="flex items-center gap-2">
+          <Clock3 size={16} className="text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">Status</p>
+        </div>
+        <Badge>{task.status}</Badge>
+
+        <div className="flex items-center gap-2">
+          <CalendarDays size={16} className="text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">Due Date</p>
+        </div>
+        <p>{task.dueDate}</p>
+
+        <div className="flex items-center gap-2">
+          <CheckCircle2 size={16} className="text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">Created At</p>
+        </div>
+        <p>{task.createdAt}</p>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-lg">Description</h3>
+        <p className="leading-7 text-muted-foreground">{task.description}</p>
+      </div>
+
+      <Tabs defaultValue="comments">
+        <TabsList variant="line">
+          <TabsTrigger value="comments">Comments</TabsTrigger>
+          <TabsTrigger value="attachments">Attachments</TabsTrigger>
+        </TabsList>
+        <TabsContent value="comments">
+          <div>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <MessageCircle />
+                </EmptyMedia>
+                <EmptyTitle className="text-sm">No Comments Yet</EmptyTitle>
+                <EmptyDescription>
+                  No comments have been added to this task. Start the discussion
+                  by adding the first comment.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent className="flex-row justify-center gap-2">
+                <Button size="sm">Add Comment</Button>
+              </EmptyContent>
+            </Empty>
+          </div>
+        </TabsContent>
+        <TabsContent value="attachments">
+          <div>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <MessageCircle />
+                </EmptyMedia>
+                <EmptyTitle className="text-sm">No Attachments Yet</EmptyTitle>
+                <EmptyDescription>
+                  No files have been attached to this task. Upload documents,
+                  images, or other relevant files.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent className="flex-row justify-center gap-2">
+                <Button size="sm">Add File</Button>
+              </EmptyContent>
+            </Empty>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      <div className="flex gap-3 pt-4">
+        <Button>Mark As Completed</Button>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { PlusIcon } from "lucide-react";
 
 import {
   Drawer,
@@ -21,8 +20,13 @@ import { Button } from "@/components/ui/button";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import TaskForm from "./TaskForm";
+import type { Task } from "@/@types/tasks";
 
-const CreateTask = () => {
+interface UpdateTaskProps {
+  task: Task;
+}
+
+const UpdateTask = ({ task }: UpdateTaskProps) => {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
 
@@ -32,21 +36,19 @@ const CreateTask = () => {
         // For mobile devices
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerTrigger asChild>
-            <Button>
-              <PlusIcon size={16} /> Add Task
+            <Button size="xs" variant="secondary">
+              Edit
             </Button>
           </DrawerTrigger>
 
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>Create Task</DrawerTitle>
-              <DrawerDescription>
-                Assign tasks to your recruiters or team members.
-              </DrawerDescription>
+              <DrawerTitle>Update Task</DrawerTitle>
+              <DrawerDescription>Update task details.</DrawerDescription>
             </DrawerHeader>
 
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <TaskForm onSuccess={() => setOpen(false)} />
+              <TaskForm task={task} onSuccess={() => setOpen(false)} />
             </div>
           </DrawerContent>
         </Drawer>
@@ -54,21 +56,19 @@ const CreateTask = () => {
         // For large screen devices
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button>
-              <PlusIcon size={16} /> Add Task
+            <Button size="xs" variant="secondary">
+              Edit
             </Button>
           </SheetTrigger>
 
           <SheetContent className="sm:max-w-2xl!">
             <SheetHeader>
-              <SheetTitle>Create Task</SheetTitle>
-              <SheetDescription>
-                Assign tasks to your recruiters or team members.
-              </SheetDescription>
+              <SheetTitle>Update Task</SheetTitle>
+              <SheetDescription>Update task details.</SheetDescription>
             </SheetHeader>
 
             <div className="scrollbar overflow-y-auto px-4 pb-10">
-              <TaskForm onSuccess={() => setOpen(false)} />
+              <TaskForm task={task} onSuccess={() => setOpen(false)} />
             </div>
           </SheetContent>
         </Sheet>
@@ -77,4 +77,4 @@ const CreateTask = () => {
   );
 };
 
-export default CreateTask;
+export default UpdateTask;

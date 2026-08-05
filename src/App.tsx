@@ -14,7 +14,6 @@ import UsersPage from "./pages/users/UsersPage";
 import ClientsPage from "./pages/clients/ClientsPage";
 import ClientDetails from "./pages/clients/components/ClientDetails";
 import TasksPage from "./pages/tasks/TasksPage";
-import TaskDetails from "./pages/tasks/components/TaskDetails";
 import AccountProfile from "./pages/account/AccountProfile";
 import CreateProfile from "./pages/account/components/CreateProfile";
 import AuthCallback from "./pages/auth/AuthCallback";
@@ -22,9 +21,7 @@ import ProtectedRoutes from "./routes/ProtectedRoutes";
 import SubscriptionPage from "./pages/subscriptions/SubscriptionPage";
 import CandidatePage from "./pages/candidates/CandidatePage";
 import SettingsPage from "./pages/settings/SettingsPage";
-import FormsPage from "./pages/form_builder/FormsPage";
-import CreateFormPage from "./pages/form_builder/CreateFormPage";
-import PreviewFormPage from "./pages/form_builder/PreviewFormPage";
+
 import { ThemeProvider } from "./components/theme-provider";
 import LandingPage from "./pages/landing/LandingPage";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -87,22 +84,16 @@ const App = () => {
                     element={<JobApplications />}
                   />
 
-                  <Route path="/candidates" element={<CandidatePage />} />
+                  <Route path="/job-seekers" element={<CandidatePage />} />
+
+                  <Route path="/applicants" element={<CandidatePage />} />
 
                   <Route path="/clients" element={<ClientsPage />} />
                   <Route path="/clients/:id" element={<ClientDetails />} />
 
                   <Route path="/tasks" element={<TasksPage />} />
-                  <Route path="/tasks/:id" element={<TaskDetails />} />
 
                   <Route path="/users" element={<UsersPage />} />
-
-                  <Route path="/forms" element={<FormsPage />} />
-                  <Route path="/forms/create" element={<CreateFormPage />} />
-                  <Route
-                    path="/forms/:id/preview"
-                    element={<PreviewFormPage />}
-                  />
 
                   <Route path="/subscription" element={<SubscriptionPage />} />
 

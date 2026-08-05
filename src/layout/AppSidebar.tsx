@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/sidebar";
 
 import {
-  Settings2Icon,
   LayoutDashboard,
   Briefcase,
   ChevronDown,
@@ -27,8 +26,10 @@ import {
   LayoutList,
   SquareUser,
   WalletCardsIcon,
-  FolderOpenIcon,
   type LucideIcon,
+  UserSearchIcon,
+  UserCheckIcon,
+  SettingsIcon,
 } from "lucide-react";
 import { isRouteActive } from "@/utils/helpers";
 import { NavUser } from "@/components/nav-user";
@@ -61,11 +62,16 @@ const navItems: NavItem[] = [
     url: "/jobs",
     icon: Briefcase,
   },
-  // {
-  //   title: "Job Seeker",
-  //   url: "/candidates",
-  //   icon: UserSearchIcon,
-  // },
+  {
+    title: "Job Seekers",
+    url: "/job-seekers",
+    icon: UserSearchIcon,
+  },
+  {
+    title: "Applicants",
+    url: "/applicants",
+    icon: UserCheckIcon,
+  },
   // {
   //   title: "Clients",
   //   url: "/clients",
@@ -87,15 +93,9 @@ const navItems: NavItem[] = [
     icon: WalletCardsIcon,
   },
   {
-    title: "Forms",
-    url: "/forms",
-    icon: FolderOpenIcon,
-  },
-
-  {
     title: "Settings",
     url: "/settings",
-    icon: Settings2Icon,
+    icon: SettingsIcon,
   },
 ];
 
