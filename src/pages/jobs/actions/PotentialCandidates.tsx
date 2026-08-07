@@ -48,7 +48,6 @@ const PotentialCandidates = () => {
 
   const title = potentialData?.job?.position;
   const potentialCandidates = potentialData?.data ?? [];
-  const paginationData = potentialData?.pagination;
 
   return (
     <div className="space-y-6">
@@ -119,9 +118,9 @@ const PotentialCandidates = () => {
 
           {/* Pagination */}
           <DataPagination
-            page={paginationData?.page}
-            perPage={paginationData?.limit}
-            totalPages={paginationData?.totalPages}
+            page={potentialData?.page}
+            perPage={potentialData?.limit}
+            totalPages={potentialData?.totalPages}
             onPageChange={setPage}
             onPerPageChange={setPerPage}
           />

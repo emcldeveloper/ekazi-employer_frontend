@@ -2,7 +2,13 @@ import type {
   MatchDetail,
   PotentialCandidate,
 } from "@/@types/potential-candidates";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -36,6 +42,9 @@ const CandidateDetails = ({ candidate }: CandidateDetailsProps) => {
           <Card>
             <CardHeader>
               <CardTitle>Job Match Details ({matchPercentage}%)</CardTitle>
+              <CardDescription>
+                {Math.round(candidate.experience_years)} years of experience
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
