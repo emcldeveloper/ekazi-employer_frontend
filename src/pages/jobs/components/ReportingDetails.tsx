@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PencilLineIcon, UsersIcon } from "lucide-react";
-import ReportingForm from "./forms/ReportingForm";
+import ReportingForm from "../forms/ReportingForm";
 import { useState } from "react";
 import type { Job } from "@/@types/job";
 

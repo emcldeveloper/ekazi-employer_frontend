@@ -1,6 +1,7 @@
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -8,16 +9,23 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import BasicInfoForm from "./forms/BasicInfoForm";
+import CandidateDetails from "./CandidateDetails";
+import type { PotentialCandidate } from "@/@types/potential-candidates";
 
-const CreateJob = () => {
+interface ViewCandidateProps {
+  candidate: PotentialCandidate;
+}
+
+const ViewCandidate = ({ candidate }: ViewCandidateProps) => {
   const isMobile = useIsMobile();
 
   return (
@@ -26,16 +34,19 @@ const CreateJob = () => {
         // For mobile devices
         <Drawer>
           <DrawerTrigger asChild>
-            <Button>Create Job</Button>
+            <Button size="xs">View</Button>
           </DrawerTrigger>
 
           <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Create New Job</DrawerTitle>
-            </DrawerHeader>
+            <VisuallyHidden>
+              <DrawerHeader>
+                <DrawerTitle />
+                <DrawerDescription />
+              </DrawerHeader>
+            </VisuallyHidden>
 
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <BasicInfoForm />
+              <CandidateDetails candidate={candidate} />
             </div>
           </DrawerContent>
         </Drawer>
@@ -43,16 +54,19 @@ const CreateJob = () => {
         // For large screen devices
         <Sheet>
           <SheetTrigger asChild>
-            <Button>Create Job</Button>
+            <Button size="xs">View</Button>
           </SheetTrigger>
 
           <SheetContent className="sm:max-w-3xl!">
-            <SheetHeader>
-              <SheetTitle>Create New Job</SheetTitle>
-            </SheetHeader>
+            <VisuallyHidden>
+              <SheetHeader>
+                <SheetTitle />
+                <SheetDescription />
+              </SheetHeader>
+            </VisuallyHidden>
 
             <div className="scrollbar overflow-y-auto px-4 pb-8">
-              <BasicInfoForm />
+              <CandidateDetails candidate={candidate} />
             </div>
           </SheetContent>
         </Sheet>
@@ -61,4 +75,4 @@ const CreateJob = () => {
   );
 };
 
-export default CreateJob;
+export default ViewCandidate;

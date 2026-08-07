@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PencilLineIcon, ShieldCheckIcon } from "lucide-react";
-import MetaForm from "./forms/MetaForm";
+import MetaForm from "../forms/MetaForm";
 import { useState } from "react";
 import type { Job } from "@/@types/job";
 

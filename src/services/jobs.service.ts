@@ -338,3 +338,23 @@ export const employCandidate = async ({
   );
   return res.data;
 };
+
+/**
+ * Potential Candidates
+ */
+export const getPotentialCandidates = async (
+  id: number,
+  search = "",
+  page = 1,
+  limit = 25,
+) => {
+  const res = await api.get(`/employer/jobs/${id}/match-applicants`, {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+
+  return res.data;
+};

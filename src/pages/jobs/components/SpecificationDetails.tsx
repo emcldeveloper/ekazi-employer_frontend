@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { BriefcaseBusinessIcon, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
-import RequirementsForm from "./forms/RequirementsForm";
+import RequirementsForm from "../forms/RequirementsForm";
 import { Badge } from "@/components/ui/badge";
 import type {
   CultureItem,

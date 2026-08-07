@@ -56,7 +56,7 @@ const ApplicantsPage = () => {
   };
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="space-y-4">
       <div>
         <h2 className="text-2xl font-bold">Applicants</h2>
         <p className="mt-1 text-sm text-muted-foreground">

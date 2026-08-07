@@ -21,7 +21,7 @@ import {
   PencilLineIcon,
   Trash2Icon,
 } from "lucide-react";
-import EducationForm from "./forms/EducationForm";
+import EducationForm from "../forms/EducationForm";
 import { useState } from "react";
 import type { Education, Job } from "@/@types/job";
 import { useDeleteEducation } from "@/hooks/jobs";

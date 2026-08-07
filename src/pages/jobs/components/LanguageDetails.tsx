@@ -21,7 +21,7 @@ import {
   PencilLineIcon,
   Trash2Icon,
 } from "lucide-react";
-import LanguageForm from "./forms/LanguageForm";
+import LanguageForm from "../forms/LanguageForm";
 import { useState } from "react";
 import type { Job, LanguageRequirement } from "@/@types/job";
 import { toast } from "sonner";

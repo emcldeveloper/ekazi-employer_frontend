@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { ListPlusIcon, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
-import OtherRequirementsForm from "./forms/OtherRequirementsForm";
+import OtherRequirementsForm from "../forms/OtherRequirementsForm";
 import type { Job } from "@/@types/job";
 
 interface OtherRequirementsDetailsProps {

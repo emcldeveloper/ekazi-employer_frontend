@@ -18,6 +18,7 @@ export * from "./usePublishJob";
 export * from "./useJobSettings";
 export * from "./useDeleteJob";
 export * from "./useApplications";
+export * from "./usePotentialCandidates";
 export * from "./useApplicationsByStage";
 
 // Job Application Stages

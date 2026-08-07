@@ -460,15 +460,11 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
             <FieldError>{errors.dead_line.message}</FieldError>
           )}
         </Field>
-      </FieldGroup>
 
-      <Button
-        type="submit"
-        disabled={isCreating || isUpdating}
-        className="mt-4"
-      >
-        {isCreating || isUpdating ? "Saving..." : jobId ? "Update" : "Create"}
-      </Button>
+        <Button type="submit" disabled={isCreating || isUpdating}>
+          {isCreating || isUpdating ? "Saving..." : jobId ? "Update" : "Create"}
+        </Button>
+      </FieldGroup>
     </form>
   );
 };

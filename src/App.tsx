@@ -32,6 +32,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import VerifyPage from "./pages/auth/VerifyPage";
 import ContactPage from "./pages/landing/ContactPage";
 import AboutPage from "./pages/landing/AboutPage";
+import PotentialCandidates from "./pages/jobs/actions/PotentialCandidates";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -82,6 +83,10 @@ const App = () => {
                   <Route
                     path="/jobs/:id/applications/:stage"
                     element={<JobApplications />}
+                  />
+                  <Route
+                    path="/jobs/:id/potential-candidates"
+                    element={<PotentialCandidates />}
                   />
 
                   <Route path="/job-seekers" element={<JobseekersPage />} />

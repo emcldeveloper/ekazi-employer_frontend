@@ -18,7 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/utils/helpers";
 import { Button } from "@/components/ui/button";
-import BasicInfoForm from "./forms/BasicInfoForm";
+import BasicInfoForm from "../forms/BasicInfoForm";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import type { Job } from "@/@types/job";

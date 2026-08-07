@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  ArrowDownLeft,
+  ArrowUpRight,
   BriefcaseBusinessIcon,
   CircleCheckBigIcon,
   Clock3Icon,
   Search,
-  SendIcon,
 } from "lucide-react";
 
 import {
@@ -40,6 +41,7 @@ import { formatDate } from "@/utils/helpers";
 import { useDebounce } from "@/hooks/useDebounce";
 import type { Job } from "@/@types/job";
 import { DataPagination } from "@/components/data-pagination";
+import CreateJob from "./CreateJob";
 
 const JobsPage = () => {
   const navigate = useNavigate();
@@ -63,14 +65,11 @@ const JobsPage = () => {
   const activeJobs = jobsData?.stats?.active_jobs;
   const expiredJobs = jobsData?.stats?.expired_jobs;
   const publishedJobs = jobsData?.stats?.published_jobs;
+  const unpublishedJobs = jobsData?.stats?.unpublished_jobs;
 
   // Handlers
   const handleView = (id: number) => {
     navigate(`/jobs/${id}`);
-  };
-
-  const handlePostJob = () => {
-    navigate("/jobs/create");
   };
 
   return (
@@ -84,8 +83,8 @@ const JobsPage = () => {
       </div>
 
       {/* stats */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card size="sm">
+      <div className="grid gap-2 grid-cols-2 md:grid-cols-5">
+        <Card>
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">All Jobs</h3>
@@ -98,7 +97,7 @@ const JobsPage = () => {
           </CardContent>
         </Card>
 
-        <Card size="sm">
+        <Card>
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Active</h3>
@@ -111,7 +110,7 @@ const JobsPage = () => {
           </CardContent>
         </Card>
 
-        <Card size="sm">
+        <Card>
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Expired</h3>
@@ -124,15 +123,28 @@ const JobsPage = () => {
           </CardContent>
         </Card>
 
-        <Card size="sm">
+        <Card>
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Published</h3>
               <p className="mt-1 text-3xl font-bold">{publishedJobs}</p>
             </div>
 
-            <div className="rounded-lg bg-indigo-100 p-3 text-indigo-600">
-              <SendIcon size={16} />
+            <div className="rounded-lg bg-yellow-100 p-3 text-yellow-600">
+              <ArrowUpRight size={16} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm text-muted-foreground">Unpublished</h3>
+              <p className="mt-1 text-3xl font-bold">{unpublishedJobs}</p>
+            </div>
+
+            <div className="rounded-lg bg-orange-100 p-3 text-orange-600">
+              <ArrowDownLeft size={16} />
             </div>
           </CardContent>
         </Card>
@@ -157,7 +169,7 @@ const JobsPage = () => {
             </InputGroup>
 
             {/* filters */}
-            <div className="flex gap-2">
+            <div className="flex gap-4">
               <Select
                 value={statusFilter}
                 onValueChange={(value) => {
@@ -166,11 +178,11 @@ const JobsPage = () => {
                 }}
               >
                 <SelectTrigger className="w-full max-w-48">
-                  <SelectValue placeholder="Status" />
+                  <SelectValue placeholder="Filters" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Status</SelectLabel>
+                    <SelectLabel>Filters</SelectLabel>
                     <SelectItem value="all">All Jobs</SelectItem>
                     <SelectItem value="active">Active</SelectItem>
                     <SelectItem value="expired">Expired</SelectItem>
@@ -178,10 +190,10 @@ const JobsPage = () => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-            </div>
 
-            {/* create job */}
-            <Button onClick={handlePostJob}>Create Job</Button>
+              {/* create job */}
+              <CreateJob />
+            </div>
           </div>
 
           <Table>
