@@ -49,7 +49,7 @@ export const getPositions = async (search = "", page = 1, limit = 100) => {
       limit,
     },
   });
-  return res.data;
+  return res.data?.data;
 };
 
 export const positionLevels = async () => {

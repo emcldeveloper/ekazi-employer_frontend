@@ -1,11 +1,10 @@
-import { fetchApplicant } from "@/services/applicant.service";
+import { getApplicant } from "@/services/applicant.service";
 import { useQuery } from "@tanstack/react-query";
 
-export const useApplicant = (applicant_id?: number) => {
+export const useApplicant = (id: number) => {
   return useQuery({
-    queryFn: () => fetchApplicant(applicant_id),
-
-    queryKey: ["applicant-profile", applicant_id],
-    enabled: applicant_id !== null,
+    queryFn: () => getApplicant(id),
+    queryKey: ["applicant-details", id],
+    enabled: id !== null,
   });
 };

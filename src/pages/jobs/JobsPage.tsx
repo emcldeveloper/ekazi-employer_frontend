@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BriefcaseBusinessIcon,
@@ -21,15 +21,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Button } from "@/components/ui/button";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -39,14 +30,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
+import { Badge } from "@/components/ui/badge";
+
 import { useJobs } from "@/hooks/jobs";
 import { formatDate } from "@/utils/helpers";
-import { Badge } from "@/components/ui/badge";
 import { useDebounce } from "@/hooks/useDebounce";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Spinner } from "@/components/ui/spinner";
 import type { Job } from "@/@types/job";
+import { DataPagination } from "@/components/data-pagination";
 
 const JobsPage = () => {
   const navigate = useNavigate();
@@ -71,23 +64,6 @@ const JobsPage = () => {
   const expiredJobs = jobsData?.stats?.expired_jobs;
   const publishedJobs = jobsData?.stats?.published_jobs;
 
-  const visiblePages = useMemo(() => {
-    const totalPages = jobsData?.total_pages ?? 0;
-
-    if (totalPages <= 5) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
-
-    let start = Math.max(page - 2, 1);
-    const end = Math.min(start + 4, totalPages);
-
-    if (end === totalPages) {
-      start = Math.max(totalPages - 4, 1);
-    }
-
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  }, [page, jobsData?.total_pages]);
-
   // Handlers
   const handleView = (id: number) => {
     navigate(`/jobs/${id}`);
@@ -98,7 +74,7 @@ const JobsPage = () => {
   };
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="space-y-4">
       <div className="sm:w-2/3">
         <h2 className="text-2xl font-bold">Job Management</h2>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -108,7 +84,6 @@ const JobsPage = () => {
       </div>
 
       {/* stats */}
-
       <div className="grid gap-4 md:grid-cols-4">
         <Card size="sm">
           <CardContent className="flex items-center justify-between">
@@ -203,27 +178,6 @@ const JobsPage = () => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-
-              {/* <Select
-                value={deadlineFilter}
-                onValueChange={(value) => {
-                  setDeadlineFilter(value);
-                  setPage(1);
-                }}
-              >
-                <SelectTrigger className="w-full max-w-48">
-                  <SelectValue placeholder="Deadline" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Deadline</SelectLabel>
-                    <SelectItem value="All">All Jobs</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="expired">Expired</SelectItem>
-                    <SelectItem value="expire_today">Expires Today</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select> */}
             </div>
 
             {/* create job */}
@@ -292,62 +246,14 @@ const JobsPage = () => {
             </TableBody>
           </Table>
 
-          <div className="flex items-center">
-            {/* Data per page */}
-            <Field orientation="horizontal" className="w-fit">
-              <FieldLabel htmlFor="select-rows-per-page">
-                Rows per page
-              </FieldLabel>
-              <Select
-                value={String(perPage)}
-                onValueChange={(value) => {
-                  setPerPage(Number(value));
-                  setPage(1); // Reset to first page
-                }}
-              >
-                <SelectTrigger className="w-20" id="select-rows-per-page">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent align="start">
-                  <SelectGroup>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="25">25</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </Field>
-
-            {/* Pagination */}
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => page > 1 && setPage(page - 1)}
-                  />
-                </PaginationItem>
-
-                {visiblePages.map((pageNumber) => (
-                  <PaginationItem key={pageNumber}>
-                    <PaginationLink
-                      isActive={page === pageNumber}
-                      onClick={() => setPage(pageNumber)}
-                    >
-                      {pageNumber}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() =>
-                      page < (jobsData?.total_pages ?? 1) && setPage(page + 1)
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+          {/* Pagination */}
+          <DataPagination
+            page={jobsData?.page}
+            perPage={jobsData?.limit}
+            totalPages={jobsData?.totalPages}
+            onPageChange={setPage}
+            onPerPageChange={setPerPage}
+          />
         </CardContent>
       </Card>
     </div>

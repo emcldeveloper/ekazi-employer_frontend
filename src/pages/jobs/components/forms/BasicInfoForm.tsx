@@ -76,7 +76,7 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
   // fetch positions
   const { data: positions } = usePositions(positionSearch);
   const positionOptions: OptionType[] =
-    positions?.data?.map((position: Position) => ({
+    positions?.map((position: Position) => ({
       value: position.id,
       label: position.name,
     })) ?? [];

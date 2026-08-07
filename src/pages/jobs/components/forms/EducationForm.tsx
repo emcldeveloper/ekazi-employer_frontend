@@ -49,7 +49,6 @@ const EducationForm = ({
 
   // Fetch education levels
   const { data: levels } = useEducationLevels();
-  console.log("levels", levels);
   const levelOptions: OptionType[] =
     levels?.map((level: EducationLevel) => ({
       value: level.id,

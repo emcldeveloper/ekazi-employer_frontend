@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { Toaster } from "sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
+import { ThemeProvider } from "./components/theme-provider";
+import ScrollToTop from "./components/scroll-top";
 
 import AppLayout from "./layout/AppLayout";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -19,10 +21,9 @@ import CreateProfile from "./pages/account/components/CreateProfile";
 import AuthCallback from "./pages/auth/AuthCallback";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import SubscriptionPage from "./pages/subscriptions/SubscriptionPage";
-import CandidatePage from "./pages/candidates/CandidatePage";
 import SettingsPage from "./pages/settings/SettingsPage";
-
-import { ThemeProvider } from "./components/theme-provider";
+import JobseekersPage from "./pages/jobseekers/JobseekersPage";
+import ApplicantsPage from "./pages/applicants/ApplicantsPage";
 import LandingPage from "./pages/landing/LandingPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import SigninPage from "./pages/auth/SigninPage";
@@ -30,7 +31,6 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPassword from "./pages/auth/ResetPassword";
 import VerifyPage from "./pages/auth/VerifyPage";
 import ContactPage from "./pages/landing/ContactPage";
-import ScrollToTop from "./components/scroll-top";
 import AboutPage from "./pages/landing/AboutPage";
 
 const queryClient = new QueryClient({
@@ -84,9 +84,9 @@ const App = () => {
                     element={<JobApplications />}
                   />
 
-                  <Route path="/job-seekers" element={<CandidatePage />} />
+                  <Route path="/job-seekers" element={<JobseekersPage />} />
 
-                  <Route path="/applicants" element={<CandidatePage />} />
+                  <Route path="/applicants" element={<ApplicantsPage />} />
 
                   <Route path="/clients" element={<ClientsPage />} />
                   <Route path="/clients/:id" element={<ClientDetails />} />

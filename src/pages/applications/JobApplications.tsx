@@ -84,9 +84,6 @@ const JobApplications = () => {
     }
   };
 
-  console.log("applications", applications);
-  console.log("selectedApplications", selectedApplications);
-
   const toggleSelectApplication = (id: number, checked: boolean) => {
     setSelectedApplications((prev) =>
       checked

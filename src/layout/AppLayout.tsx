@@ -48,7 +48,7 @@ export default function AppLayout() {
           </div>
         </header>
 
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0 font-sen">
+        <div className="flex flex-1 flex-col gap-4 p-4 font-sen">
           <Outlet />
         </div>
 
