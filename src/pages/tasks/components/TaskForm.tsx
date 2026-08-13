@@ -59,7 +59,7 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
 
   const isPending = isCreating || isUpdating;
 
-  const { data: users } = useUsers();
+  const { data: users } = useUsers({});
   const userOptions =
     users?.data.map((item: User) => ({
       value: item.id,
