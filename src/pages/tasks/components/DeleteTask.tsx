@@ -12,8 +12,28 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useDeleteTask } from "@/hooks/tasks";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/utils/axios-helpers";
 
-const DeleteTask = () => {
+interface DeleteTaskProps {
+  taskId: number;
+}
+
+const DeleteTask = ({ taskId }: DeleteTaskProps) => {
+  const { mutate: deleteTask } = useDeleteTask(taskId);
+
+  const handleDelete = () => {
+    deleteTask(undefined, {
+      onSuccess: (res) => {
+        toast.success(res.message || "Task deleted successfully");
+      },
+      onError: (err) => {
+        getErrorMessage(err || "Failed to delete task");
+      },
+    });
+  };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger>
@@ -33,7 +53,9 @@ const DeleteTask = () => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
+          <AlertDialogAction variant="destructive" onClick={handleDelete}>
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

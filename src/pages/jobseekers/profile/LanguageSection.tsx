@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Language } from "@/@types/applicants";
+import { Languages } from "lucide-react";
+import { capitalizeText } from "@/utils/helpers";
 
 interface LanguageSectionProps {
   languages: Language[];
@@ -17,7 +19,12 @@ const LanguageSection = ({ languages }: LanguageSectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">Language</CardTitle>
+        <CardTitle className="uppercase">
+          <div className="bg-blue-100 text-primary p-2 rounded-md">
+            <Languages size={16} />
+          </div>
+          Language
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
@@ -34,11 +41,11 @@ const LanguageSection = ({ languages }: LanguageSectionProps) => {
           <TableBody>
             {languages.map((item: Language) => (
               <TableRow key={item.id}>
-                <TableCell>{item.language}</TableCell>
-                <TableCell>{item.read}</TableCell>
-                <TableCell>{item.write}</TableCell>
-                <TableCell>{item.speak}</TableCell>
-                <TableCell>{item.understand}</TableCell>
+                <TableCell>{capitalizeText(item.language)}</TableCell>
+                <TableCell>{capitalizeText(item.read)}</TableCell>
+                <TableCell>{capitalizeText(item.write)}</TableCell>
+                <TableCell>{capitalizeText(item.speak)}</TableCell>
+                <TableCell>{capitalizeText(item.understand)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

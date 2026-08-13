@@ -61,9 +61,9 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
 
   const { data: users } = useUsers();
   const userOptions =
-    users?.map((item: User) => ({
+    users?.data.map((item: User) => ({
       value: item.id,
-      label: item.name,
+      label: item.username,
     })) ?? [];
 
   //   Pre-fill for updating product
@@ -131,6 +131,34 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
             placeholder="Enter task description"
             {...register("description")}
           />
+        </Field>
+
+        <Field>
+          <FieldLabel>Assign To</FieldLabel>
+          <Controller
+            name="assignees"
+            control={control}
+            rules={{
+              required: "Select staff for this task",
+            }}
+            render={({ field }) => (
+              <SearchSelect
+                {...field}
+                isClearable
+                isMulti
+                options={userOptions}
+                value={userOptions.filter((option: OptionType) =>
+                  field.value?.includes(option.value),
+                )}
+                onChange={(options) =>
+                  field.onChange(options.map((option) => option.value))
+                }
+              />
+            )}
+          />
+          {errors.assignees && (
+            <FieldError>{errors.assignees.message}</FieldError>
+          )}
         </Field>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -211,31 +239,6 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
           />
 
           <FieldDescription>Select one or more files.</FieldDescription>
-        </Field>
-
-        <Field>
-          <FieldLabel>Company Size</FieldLabel>
-          <Controller
-            name="assignees"
-            control={control}
-            rules={{
-              required: "Select staff for this task",
-            }}
-            render={({ field }) => (
-              <SearchSelect
-                {...field}
-                isClearable
-                options={userOptions}
-                value={userOptions.filter((option: OptionType) =>
-                  field.value?.includes(option.value),
-                )}
-                onChange={(option) => field.onChange(option?.value ?? null)}
-              />
-            )}
-          />
-          {errors.assignees && (
-            <FieldError>{errors.assignees.message}</FieldError>
-          )}
         </Field>
 
         <Button type="submit" disabled={isPending}>

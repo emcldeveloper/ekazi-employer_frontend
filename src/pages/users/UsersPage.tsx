@@ -20,26 +20,28 @@ import { useUsers } from "@/hooks/users";
 import CreateUser from "./components/CreateUser";
 import { Spinner } from "@/components/ui/spinner";
 import UpdateUser from "./components/UpdateUser";
+import type { User } from "@/@types/users";
+import { DataPagination } from "@/components/data-pagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const UsersPage = () => {
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(25);
   const [search, setSearch] = useState("");
 
-  const { data: usersData, isLoading } = useUsers();
-  const users = usersData?.data ?? [];
-  const totalUsers = users.length;
+  const debouncedSearch = useDebounce(search, 500);
 
-  const filteredUsers = users.filter((user: any) => {
-    const query = search.toLowerCase();
-
-    return (
-      user?.username?.toLowerCase().includes(query) ||
-      user?.email?.toLowerCase().includes(query) ||
-      user?.roles?.some((role: string) => role?.toLowerCase().includes(query))
-    );
+  const { data: usersData, isLoading } = useUsers({
+    page,
+    limit: perPage,
+    search: debouncedSearch,
   });
 
+  const users = usersData?.data ?? [];
+  const totalUsers = usersData?.total;
+
   return (
-    <div className="mt-4 space-y-4">
+    <div className="space-y-4">
       <div>
         <h2 className="text-2xl font-bold">Manage Users</h2>
         <p className="text-sm text-muted-foreground mt-1">
@@ -48,7 +50,7 @@ const UsersPage = () => {
       </div>
 
       {/* stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
         <Card size="sm" className="">
           <CardContent className="flex items-center justify-between">
             <div>
@@ -97,7 +99,10 @@ const UsersPage = () => {
                 <InputGroupInput
                   placeholder="Search user..."
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
                 />
 
                 <InputGroupAddon>
@@ -127,7 +132,7 @@ const UsersPage = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : filteredUsers.length === 0 ? (
+                ) : users.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={6}
@@ -137,24 +142,31 @@ const UsersPage = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredUsers.map((user: any) => (
+                  users.map((user: User) => (
                     <TableRow key={user?.id}>
-                      <TableCell className="font-medium">
-                        {user?.username}
-                      </TableCell>
+                      <TableCell>{user?.username}</TableCell>
                       <TableCell>{user?.email}</TableCell>
-                      <TableCell>
-                        {user?.roles?.map((item: any) => item)}
-                      </TableCell>
+                      <TableCell>{user?.role?.name}</TableCell>
 
                       <TableCell className="text-right">
-                        <UpdateUser user={user} />
+                        <UpdateUser userId={user?.id} />
                       </TableCell>
                     </TableRow>
                   ))
                 )}
               </TableBody>
             </Table>
+
+            {/* Pagination */}
+            {!isLoading && (
+              <DataPagination
+                page={usersData?.page}
+                perPage={usersData?.limit}
+                totalPages={usersData?.totalPages}
+                onPageChange={setPage}
+                onPerPageChange={setPerPage}
+              />
+            )}
           </div>
         </CardContent>
       </Card>

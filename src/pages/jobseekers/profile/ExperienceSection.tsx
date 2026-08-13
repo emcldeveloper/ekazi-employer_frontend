@@ -4,6 +4,8 @@ import moment from "moment";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Experience, ExperienceGroup } from "@/@types/applicants";
+import { Building2 } from "lucide-react";
+import { capitalizeText } from "@/utils/helpers";
 
 interface ExperienceSectionProps {
   experiences: Experience[];
@@ -64,7 +66,12 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">Experience</CardTitle>
+        <CardTitle className="uppercase">
+          <div className="bg-blue-100 text-primary p-2 rounded-md">
+            <Building2 size={16} />
+          </div>
+          Experience
+        </CardTitle>
       </CardHeader>
 
       <CardContent>
@@ -75,7 +82,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
         ) : (
           <div className="space-y-6">
             {groupedExperience.map((group) => {
-              const employer = group.employer;
+              const employer = capitalizeText(group.employer);
               const subLocation = group.sub_location;
               const region = group.region;
               // const country = group.country;
@@ -97,14 +104,16 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                   <div className="relative mt-3 space-y-4 border-l pl-4">
                     {group.positions.map((position, idx: number) => (
                       <div key={position.id || idx} className="relative">
-                        <span className="absolute -left-5.5 top-1 h-3 w-3 rounded-full bg-blue-600" />
+                        <span className="absolute -left-5.5 top-1.5 h-3 w-3 rounded-full bg-blue-600" />
 
                         <div className="space-y-1">
-                          <p className="font-medium">{position.position}</p>
+                          <p className="text-base font-bold">
+                            {capitalizeText(position.position)}
+                          </p>
 
                           {position.industry && (
                             <p className="text-sm">
-                              {position.industry} Industry
+                              {capitalizeText(position.industry)} Industry
                             </p>
                           )}
 

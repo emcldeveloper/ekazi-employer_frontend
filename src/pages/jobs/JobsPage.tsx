@@ -37,7 +37,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 
 import { useJobs } from "@/hooks/jobs";
-import { formatDate } from "@/utils/helpers";
+import { capitalizeText, formatDate } from "@/utils/helpers";
 import { useDebounce } from "@/hooks/useDebounce";
 import type { Job } from "@/@types/job";
 import { DataPagination } from "@/components/data-pagination";
@@ -230,7 +230,9 @@ const JobsPage = () => {
               ) : (
                 jobs.map((job: Job) => (
                   <TableRow key={job.id}>
-                    <TableCell>{job.position?.position_name}</TableCell>
+                    <TableCell>
+                      {capitalizeText(job.position?.position_name)}
+                    </TableCell>
                     <TableCell>{formatDate(job?.created_at)}</TableCell>
                     <TableCell>{formatDate(job?.dead_line)}</TableCell>
                     <TableCell>
@@ -259,13 +261,15 @@ const JobsPage = () => {
           </Table>
 
           {/* Pagination */}
-          <DataPagination
-            page={jobsData?.page}
-            perPage={jobsData?.limit}
-            totalPages={jobsData?.totalPages}
-            onPageChange={setPage}
-            onPerPageChange={setPerPage}
-          />
+          {!isLoading && (
+            <DataPagination
+              page={jobsData?.page}
+              perPage={jobsData?.limit}
+              totalPages={jobsData?.totalPages}
+              onPageChange={setPage}
+              onPerPageChange={setPerPage}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

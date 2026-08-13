@@ -2,9 +2,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import type { Education } from "@/@types/applicants";
-import { formatDate } from "@/utils/helpers";
+import { capitalizeText, formatDate } from "@/utils/helpers";
 import { Button } from "@/components/ui/button";
 import { BASE_URL } from "@/config/config";
+import { GraduationCap } from "lucide-react";
 
 interface EducationSectionProps {
   educations: Education[];
@@ -18,15 +19,21 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="uppercase">Education</CardTitle>
+        <CardTitle className="uppercase">
+          <div className="bg-blue-100 text-primary p-2 rounded-md">
+            <GraduationCap size={16} />
+          </div>
+          Education
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {educations.map((education: Education) => (
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">
-                {education.education_level.name}{" "}
-                {education.course?.name && `in ${education.course?.name}`}
+              <h3 className="text-base font-semibold">
+                {capitalizeText(education.education_level.name)}{" "}
+                {capitalizeText(education.course?.name) &&
+                  `in ${capitalizeText(education.course?.name)}`}
               </h3>
 
               <Button
@@ -40,11 +47,13 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
 
             {education.major?.name && (
               <Badge variant="secondary" className="text-xs">
-                Major: {education.major.name}
+                Major: {capitalizeText(education.major.name)}
               </Badge>
             )}
 
-            <p className="text-sm text-foreground">{education.college?.name}</p>
+            <p className="text-sm text-foreground">
+              {capitalizeText(education.college?.name)}
+            </p>
 
             <p className="text-xs text-muted-foreground">
               {formatDate(education.started)} – {formatDate(education.ended)}

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useUser } from "@/hooks/auth";
 import { Outlet } from "react-router-dom";
+import { FRONTEND_URL } from "@/config/config";
 
 const ProtectedRoutes = () => {
   const token = localStorage.getItem("token");
@@ -9,12 +10,12 @@ const ProtectedRoutes = () => {
 
   useEffect(() => {
     if (!token) {
-      window.location.href = "http://localhost:3000/";
+      window.location.href = FRONTEND_URL;
     }
 
     if (!isLoading && !data) {
       localStorage.removeItem("token");
-      window.location.href = "http://localhost:3000/";
+      window.location.href = FRONTEND_URL;
     }
   }, [token, isLoading, data]);
 

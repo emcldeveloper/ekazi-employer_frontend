@@ -31,16 +31,27 @@ import CreateTask from "./components/CreateTask";
 import ViewTask from "./components/ViewTask";
 import DeleteTask from "./components/DeleteTask";
 import UpdateTask from "./components/UpdateTask";
+import { DataPagination } from "@/components/data-pagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const TasksPage = () => {
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(25);
   const [search, setSearch] = useState("");
 
-  const { data: tasksData, isLoading } = useTasks();
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { data: tasksData, isLoading } = useTasks({
+    page,
+    limit: perPage,
+    search: debouncedSearch,
+  });
+
   const tasks = tasksData?.data || [];
   const statistics = tasksData?.statistics || {};
 
   return (
-    <div className="mt-4 space-y-4">
+    <div className="space-y-4">
       <div>
         <h2 className="text-2xl font-bold">Task Management</h2>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -49,7 +60,7 @@ const TasksPage = () => {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
         <Card size="sm">
           <CardContent className="flex items-center justify-between">
             <div>
@@ -116,7 +127,10 @@ const TasksPage = () => {
               <InputGroupInput
                 placeholder="Search client..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
               />
 
               <InputGroupAddon>
@@ -186,7 +200,7 @@ const TasksPage = () => {
                       <div className="flex items-center justify-end gap-1">
                         <ViewTask />
                         <UpdateTask task={task} />
-                        <DeleteTask />
+                        <DeleteTask taskId={task.id} />
                       </div>
                     </TableCell>
                   </TableRow>
@@ -194,6 +208,18 @@ const TasksPage = () => {
               )}
             </TableBody>
           </Table>
+
+          {/* Pagination */}
+
+          {!isLoading && (
+            <DataPagination
+              page={tasksData?.current_page}
+              perPage={tasksData?.per_page}
+              totalPages={tasksData?.total_pages}
+              onPageChange={setPage}
+              onPerPageChange={setPerPage}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

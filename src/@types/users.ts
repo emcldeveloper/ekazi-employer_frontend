@@ -1,34 +1,42 @@
 import type { OptionType } from "./jobs";
 
-export type FormValues = {
+export type Permission = {
+  id: string;
+  name: string;
+};
+
+export type Role = {
+  id: string;
+  name: string;
+  permissions: Permission[];
+};
+
+export type UserPermission = Record<string, unknown>;
+
+export type User = {
+  id: number;
+  username: string;
+  email: string;
+  hide: boolean;
+  verified: number;
+  created_at: string;
+  client_id: number;
+  role: Role;
+  userPermissions: UserPermission[];
+};
+
+export type UsersResponse = {
+  data: User[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
+
+export type CreateUserFormData = {
   username: string;
   email: string;
   password: string;
   role: OptionType | null;
   permissions: string[];
-};
-
-export type Client = {
-  id: number;
-  client_name: string;
-};
-
-export type User = {
-  id: number;
-  name: string;
-  email: string;
-};
-
-export type StaffRecord = {
-  id: number;
-  prefix_id: number;
-  client_id: number;
-  user_id: number;
-  first_name: string;
-  middle_name: string;
-  last_name: string;
-  phone_number: string;
-
-  client: Client;
-  user: User;
 };

@@ -2,6 +2,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -10,6 +11,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -20,12 +22,14 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CandidateDetails from "./CandidateDetails";
 import type { PotentialCandidate } from "@/@types/potential-candidates";
+import ShortlistCandidate from "./ShortlistCandidate";
 
 interface ViewCandidateProps {
+  jobId: number;
   candidate: PotentialCandidate;
 }
 
-const ViewCandidate = ({ candidate }: ViewCandidateProps) => {
+const ViewCandidate = ({ jobId, candidate }: ViewCandidateProps) => {
   const isMobile = useIsMobile();
 
   return (
@@ -48,6 +52,13 @@ const ViewCandidate = ({ candidate }: ViewCandidateProps) => {
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
               <CandidateDetails candidate={candidate} />
             </div>
+
+            <DrawerFooter>
+              <ShortlistCandidate
+                jobId={jobId}
+                applicantId={candidate.applicant_id}
+              />
+            </DrawerFooter>
           </DrawerContent>
         </Drawer>
       ) : (
@@ -68,6 +79,15 @@ const ViewCandidate = ({ candidate }: ViewCandidateProps) => {
             <div className="scrollbar overflow-y-auto px-4 pb-8">
               <CandidateDetails candidate={candidate} />
             </div>
+
+            <SheetFooter>
+              <div>
+                <ShortlistCandidate
+                  jobId={jobId}
+                  applicantId={candidate.applicant_id}
+                />
+              </div>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       )}

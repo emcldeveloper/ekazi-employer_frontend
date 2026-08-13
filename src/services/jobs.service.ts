@@ -65,11 +65,20 @@ export const getApplications = async (id: number) => {
 export const getApplicationsByStage = async ({
   id,
   stage,
+  search,
+  page,
+  limit,
 }: {
   id: number;
   stage: string;
+  search?: string;
+  page?: number;
+  limit?: number;
 }) => {
-  const res = await api.get(`/employer/jobs/${id}/application-stages/${stage}`);
+  const res = await api.get(
+    `/employer/jobs/${id}/application-stages/${stage}`,
+    { params: { search, page, limit } },
+  );
   return res.data;
 };
 

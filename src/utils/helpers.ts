@@ -32,3 +32,12 @@ export const formatNumber = (num: number) => {
 
   return `${value.toFixed(1).replace(/\.0$/, "")}${units[unitIndex]}`;
 };
+
+// Capitalize words
+export const capitalizeText = (value: string | null | undefined): string => {
+  if (!value) return "";
+
+  return value
+    .toLowerCase()
+    .replace(/(^|\s|-)\S/g, (char) => char.toUpperCase());
+};

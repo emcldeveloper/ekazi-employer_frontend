@@ -28,6 +28,7 @@ import { DataPagination } from "@/components/data-pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import type { PotentialCandidate } from "@/@types/potential-candidates";
 import ViewCandidate from "./ViewCandidate";
+import { capitalizeText } from "@/utils/helpers";
 
 const PotentialCandidates = () => {
   const { id } = useParams();
@@ -103,12 +104,16 @@ const PotentialCandidates = () => {
               ) : (
                 potentialCandidates.map((candidate: PotentialCandidate) => (
                   <TableRow key={candidate?.applicant_id}>
-                    <TableCell>{candidate?.full_name}</TableCell>
-                    <TableCell>{candidate?.current_position}</TableCell>
+                    <TableCell>
+                      {capitalizeText(candidate?.full_name)}
+                    </TableCell>
+                    <TableCell>
+                      {capitalizeText(candidate?.current_position)}
+                    </TableCell>
                     <TableCell>{candidate?.match_percentage}</TableCell>
 
                     <TableCell className="text-right">
-                      <ViewCandidate candidate={candidate} />
+                      <ViewCandidate jobId={jobId} candidate={candidate} />
                     </TableCell>
                   </TableRow>
                 ))

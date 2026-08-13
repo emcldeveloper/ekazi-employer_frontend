@@ -33,6 +33,18 @@ import VerifyPage from "./pages/auth/VerifyPage";
 import ContactPage from "./pages/landing/ContactPage";
 import AboutPage from "./pages/landing/AboutPage";
 import PotentialCandidates from "./pages/jobs/actions/PotentialCandidates";
+import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";
+import AdminLayout from "./layout/AdminLayout";
+import AdminEmployersPage from "./pages/admin/employers/AdminEmployersPage";
+import AdminRecruitersPage from "./pages/admin/recruiters/AdminRecruitersPage";
+import AdminJobseekersPage from "./pages/admin/jobseekers/AdminJobseekersPage";
+import AdminFreelancersPage from "./pages/admin/freelancers/AdminFreelancersPage";
+import AdminApplicantsPage from "./pages/admin/applicants/AdminApplicantsPage";
+import AdminJobsPage from "./pages/admin/jobs/AdminJobsPage";
+import AdminArticlesPage from "./pages/admin/articles/AdminArticlesPage";
+import AdminSubscriptionsPage from "./pages/admin/subscriptions/AdminSubscriptionsPage";
+import AdminSettingsPage from "./pages/admin/settings/AdminSettingsPage";
+import AdminReportsPage from "./pages/admin/reports/AdminReportsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -105,6 +117,33 @@ const App = () => {
                   <Route path="/reports" element={<Dashboard />} />
 
                   <Route path="/settings" element={<SettingsPage />} />
+                </Route>
+              </Route>
+
+              {/* Admin routes */}
+              {/* <Route element={<AdminRoutes />}>
+                
+              </Route> */}
+
+              <Route element={<AdminLayout />}>
+                <Route path="/admin">
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="employers" element={<AdminEmployersPage />} />
+                  <Route path="recruiters" element={<AdminRecruitersPage />} />
+                  <Route path="jobseekers" element={<AdminJobseekersPage />} />
+                  <Route
+                    path="freelancers"
+                    element={<AdminFreelancersPage />}
+                  />
+                  <Route path="applicants" element={<AdminApplicantsPage />} />
+                  <Route path="jobs" element={<AdminJobsPage />} />
+                  <Route path="articles" element={<AdminArticlesPage />} />
+                  <Route
+                    path="subscriptions"
+                    element={<AdminSubscriptionsPage />}
+                  />
+                  <Route path="settings" element={<AdminSettingsPage />} />
+                  <Route path="reports" element={<AdminReportsPage />} />
                 </Route>
               </Route>
             </Routes>

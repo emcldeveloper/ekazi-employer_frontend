@@ -48,3 +48,7 @@ export type ProfileCompletionSections = {
   training: number;
   referees: number;
 };
+
+export type ShortlistJobForm = {
+  job_id: number;
+};

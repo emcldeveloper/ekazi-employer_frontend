@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { Search } from "lucide-react";
 
 import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,18 +24,21 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 
-import { formatDate } from "@/utils/helpers";
-import ApplicantDetails from "../applicants/ApplicantDetails";
+import { capitalizeText, formatDate } from "@/utils/helpers";
 import ApplicationStages from "./components/ApplicationStages";
 import { useApplicationsByStage, useJob } from "@/hooks/jobs";
 import type { Application, StageStatistics } from "@/@types/applications";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MoveStage } from "./components/MoveStage";
+import { DataPagination } from "@/components/data-pagination";
+import { useDebounce } from "@/hooks/useDebounce";
+import ViewApplication from "./components/ViewApplication";
 
 type ApplicationsByStageResponse = {
   data?: {
     data: Application[];
     statistics?: StageStatistics;
+    pagination?: any;
   };
   isLoading: boolean;
 };
@@ -47,13 +49,15 @@ const JobApplications = () => {
   const jobStage = String(stage);
   const isStageView = !!stage;
 
-  const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(25);
   const [search, setSearch] = useState("");
-  const [selectedApplication, setSelectedApplication] =
-    useState<Application | null>(null);
+
   const [selectedApplications, setSelectedApplications] = useState<number[]>(
     [],
   );
+
+  const debouncedSearch = useDebounce(search, 500);
 
   // Job Details
   const { data: job } = useJob(jobId);
@@ -64,10 +68,14 @@ const JobApplications = () => {
   const { data: applicationsData, isLoading } = useApplicationsByStage({
     id: jobId,
     stage: jobStage,
+    search: debouncedSearch,
+    page,
+    limit: perPage,
   }) as ApplicationsByStageResponse;
 
   const applications = applicationsData?.data ?? [];
   const statistics = applicationsData?.statistics;
+  const paginationData = applicationsData?.pagination;
 
   // TOGGLE SELECT ALL AND SELECT APPLICATIONS
   const isAllSelected =
@@ -191,9 +199,9 @@ const JobApplications = () => {
                           </TableCell>
                         )}
                         <TableCell>
-                          {application?.applicant?.first_name}{" "}
-                          {application?.applicant?.middle_name}{" "}
-                          {application?.applicant?.last_name}
+                          {capitalizeText(
+                            `${application.applicant?.first_name ?? ""} ${application.applicant?.middle_name ?? ""} ${application.applicant?.last_name ?? ""}`,
+                          )}
                         </TableCell>
                         <TableCell>
                           {application?.current_stage?.name ||
@@ -211,21 +219,24 @@ const JobApplications = () => {
                         )}
 
                         <TableCell className="text-right">
-                          <Button
-                            variant="link"
-                            onClick={() => {
-                              setSelectedApplication(application);
-                              setOpen(true);
-                            }}
-                          >
-                            View
-                          </Button>
+                          <ViewApplication application={application} />
                         </TableCell>
                       </TableRow>
                     ))
                   )}
                 </TableBody>
               </Table>
+
+              {/* Pagination */}
+              {!isLoading && (
+                <DataPagination
+                  page={paginationData?.page}
+                  perPage={paginationData?.limit}
+                  totalPages={paginationData?.totalPages}
+                  onPageChange={setPage}
+                  onPerPageChange={setPerPage}
+                />
+              )}
             </CardContent>
           </Card>
         </div>
@@ -241,20 +252,6 @@ const JobApplications = () => {
           </div>
         </div>
       </div>
-
-      {selectedApplication && (
-        <ApplicantDetails
-          application={selectedApplication}
-          open={open}
-          onOpenChange={(value) => {
-            setOpen(value);
-
-            if (!value) {
-              setSelectedApplication(null);
-            }
-          }}
-        />
-      )}
     </>
   );
 };

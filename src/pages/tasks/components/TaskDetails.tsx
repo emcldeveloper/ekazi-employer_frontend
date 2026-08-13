@@ -3,6 +3,7 @@ import {
   CheckCircle2,
   Clock3,
   Flag,
+  FolderOpen,
   MessageCircle,
   Users2Icon,
 } from "lucide-react";
@@ -10,7 +11,6 @@ import {
 import {
   Empty,
   EmptyContent,
-  EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
@@ -107,11 +107,7 @@ const TaskDetails = () => {
                 <EmptyMedia variant="icon">
                   <MessageCircle />
                 </EmptyMedia>
-                <EmptyTitle className="text-sm">No Comments Yet</EmptyTitle>
-                <EmptyDescription>
-                  No comments have been added to this task. Start the discussion
-                  by adding the first comment.
-                </EmptyDescription>
+                <EmptyTitle className="text-sm">No Comments</EmptyTitle>
               </EmptyHeader>
               <EmptyContent className="flex-row justify-center gap-2">
                 <Button size="sm">Add Comment</Button>
@@ -124,13 +120,9 @@ const TaskDetails = () => {
             <Empty>
               <EmptyHeader>
                 <EmptyMedia variant="icon">
-                  <MessageCircle />
+                  <FolderOpen />
                 </EmptyMedia>
-                <EmptyTitle className="text-sm">No Attachments Yet</EmptyTitle>
-                <EmptyDescription>
-                  No files have been attached to this task. Upload documents,
-                  images, or other relevant files.
-                </EmptyDescription>
+                <EmptyTitle className="text-sm">No Attachments</EmptyTitle>
               </EmptyHeader>
               <EmptyContent className="flex-row justify-center gap-2">
                 <Button size="sm">Add File</Button>

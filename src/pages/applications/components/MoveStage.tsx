@@ -18,14 +18,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
 import { useState } from "react";
-import ScreeningForm from "./ScreeningForm";
+import ScreeningForm from "../forms/ScreeningForm";
 import { useApplicationStages } from "@/hooks/universals";
 import type { ApplicationStage } from "@/@types/universals";
-import InterviewForm from "./InterviewForm";
-import SelectionForm from "./SelectionForm";
-import BackgroundCheckForm from "./BackgroundCheckForm";
-import OfferForm from "./OfferForm";
-import EmployedForm from "./EmployedForm";
+import InterviewForm from "../forms/InterviewForm";
+import SelectionForm from "../forms/SelectionForm";
+import BackgroundCheckForm from "../forms/BackgroundCheckForm";
+import OfferForm from "../forms/OfferForm";
+import EmployedForm from "../forms/EmployedForm";
 
 interface MoveStageProps {
   jobId: number;

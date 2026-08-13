@@ -24,6 +24,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { FilterJobseekers } from "../jobseekers/components/FilterJobseekers";
 import { DataPagination } from "@/components/data-pagination";
 import { Button } from "@/components/ui/button";
+import { capitalizeText } from "@/utils/helpers";
 
 const ApplicantsPage = () => {
   const [search, setSearch] = useState("");
@@ -131,10 +132,15 @@ const ApplicantsPage = () => {
                 applicants.map((applicant: Jobseeker) => (
                   <TableRow key={applicant.id}>
                     <TableCell className="font-medium">
-                      {applicant.first_name} {applicant.last_name}
+                      {capitalizeText(
+                        `${applicant.first_name} ${applicant.last_name}`,
+                      )}
                     </TableCell>
 
-                    <TableCell>{applicant.applicant_position ?? "-"}</TableCell>
+                    <TableCell>
+                      {capitalizeText(applicant.applicant_position) ||
+                        "No Experience"}
+                    </TableCell>
 
                     <TableCell>
                       {applicant.profile_completion?.total_percentage ?? "-"}
@@ -150,13 +156,15 @@ const ApplicantsPage = () => {
           </Table>
 
           {/* pagination */}
-          <DataPagination
-            page={applicantsData?.page}
-            perPage={applicantsData?.limit}
-            totalPages={applicantsData?.totalPages}
-            onPageChange={setPage}
-            onPerPageChange={setPerPage}
-          />
+          {!isLoading && (
+            <DataPagination
+              page={applicantsData?.page}
+              perPage={applicantsData?.limit}
+              totalPages={applicantsData?.totalPages}
+              onPageChange={setPage}
+              onPerPageChange={setPerPage}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

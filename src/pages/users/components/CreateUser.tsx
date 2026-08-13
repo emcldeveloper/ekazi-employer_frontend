@@ -1,66 +1,68 @@
-import { toast } from "sonner";
-import { Plus } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
-import { useCreateUser } from "@/hooks/users";
-import type { FormValues } from "@/@types/users";
-import UserForm from "./UserForm";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { PlusIcon } from "lucide-react";
+import CreateUserForm from "../forms/CreateUserForm";
 
 const CreateUser = () => {
-  const { mutate: createUser, isPending } = useCreateUser();
-
-  const handleCreate = (data: FormValues) => {
-    const payload = {
-      email: data.email,
-      password: data.password,
-      permissions: data.permissions,
-      role: data.role?.label,
-      role_id: data.role?.value,
-      username: data.username,
-    };
-
-    createUser(payload, {
-      onSuccess: () => {
-        toast.success("User created successfully");
-      },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.message || "Failed to create user");
-      },
-    });
-  };
+  const isMobile = useIsMobile();
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus /> Add User
-        </Button>
-      </DialogTrigger>
+    <>
+      {isMobile ? (
+        // For mobile devices
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button>
+              <PlusIcon /> Create User
+            </Button>
+          </DrawerTrigger>
 
-      <DialogContent className="sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Create User</DialogTitle>
-          <DialogDescription>
-            Add a new employer user and assign permissions.
-          </DialogDescription>
-        </DialogHeader>
-        {/* form */}
-        <UserForm
-          onSubmit={handleCreate}
-          isPending={isPending}
-          submitLabel="Create User"
-        />
-      </DialogContent>
-    </Dialog>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Create User</DrawerTitle>
+            </DrawerHeader>
+
+            <div className="flex-1 scroll-fade overflow-y-auto p-4">
+              <CreateUserForm />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        // For large screen devices
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button>
+              <PlusIcon /> Create User
+            </Button>
+          </SheetTrigger>
+
+          <SheetContent className="sm:max-w-2xl!">
+            <SheetHeader>
+              <SheetTitle>Create User</SheetTitle>
+            </SheetHeader>
+
+            <div className="scrollbar overflow-y-auto px-4">
+              <CreateUserForm />
+            </div>
+          </SheetContent>
+        </Sheet>
+      )}
+    </>
   );
 };
 

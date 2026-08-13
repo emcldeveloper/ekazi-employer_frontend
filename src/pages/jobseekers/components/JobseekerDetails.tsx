@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { BASE_URL } from "@/config/config";
 import { useJobseeker } from "@/hooks/jobseekers";
-import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
+import { ChartBar, List, MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
 import ExperienceSection from "../profile/ExperienceSection";
 import EducationSection from "../profile/EducationSection";
 import LanguageSection from "../profile/LanguageSection";
@@ -15,6 +15,7 @@ import PersonalitySection from "../profile/PersonalitySection";
 import SoftwareSection from "../profile/SoftwareSection";
 import { ToolsSection } from "../profile/ToolsSection";
 import RefereeSection from "../profile/RefereeSection";
+import { capitalizeText } from "@/utils/helpers";
 
 interface JobseekerDetailsProps {
   jobseekerId: number;
@@ -67,17 +68,14 @@ const JobseekerDetails = ({ jobseekerId }: JobseekerDetailsProps) => {
 
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="text-2xl font-bold">{`${profile?.first_name} ${profile?.middle_name} ${profile?.last_name}`}</h2>
-
-                      {/* {profile.verified && (
-                                <Badge className="gap-1">
-                                  <BadgeCheck className="h-3.5 w-3.5" />
-                                  Verified
-                                </Badge>
-                              )} */}
+                      <h2 className="text-2xl font-bold">
+                        {capitalizeText(
+                          `${profile?.first_name} ${profile?.middle_name} ${profile?.last_name}`,
+                        )}
+                      </h2>
                     </div>
                     <p className="text-muted-foreground">
-                      {jobseeker?.current_position}
+                      {capitalizeText(jobseeker?.current_position)}
                     </p>
                     <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center">
                       <div className="flex items-center gap-1">
@@ -104,7 +102,12 @@ const JobseekerDetails = ({ jobseekerId }: JobseekerDetailsProps) => {
             {jobseeker?.career_summary && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="uppercase">Summary</CardTitle>
+                  <CardTitle className="uppercase ">
+                    <div className="bg-blue-100 text-primary p-2 rounded-md">
+                      <ChartBar size={16} />
+                    </div>
+                    Summary
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm leading-7 text-muted-foreground">
@@ -117,7 +120,12 @@ const JobseekerDetails = ({ jobseekerId }: JobseekerDetailsProps) => {
             {objectives && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="uppercase">Objectives</CardTitle>
+                  <CardTitle className="uppercase">
+                    <div className="bg-blue-100 text-primary p-2 rounded-md">
+                      <List size={16} />
+                    </div>
+                    Objectives
+                  </CardTitle>
                 </CardHeader>
 
                 <CardContent>

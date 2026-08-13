@@ -1,8 +1,14 @@
 import type { CreateTaskForm } from "@/@types/tasks";
 import api from "@/lib/axios";
 
-export const tasksList = async () => {
-  const res = await api.get("/tasks");
+export const tasksList = async (page = 1, limit = 25, search = "") => {
+  const res = await api.get("/tasks", {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
   return res.data;
 };
 

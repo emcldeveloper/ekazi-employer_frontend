@@ -1,81 +1,71 @@
-import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import UserForm from "./UserForm";
-import type { FormValues } from "@/@types/users";
-import { useUpdateUser } from "@/hooks/users";
-import { toast } from "sonner";
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
-type UpdateUserProps = {
-  user: any;
-};
+import { useIsMobile } from "@/hooks/use-mobile";
+import CreateUserForm from "../forms/CreateUserForm";
 
-const UpdateUser = ({ user }: UpdateUserProps) => {
-  const { mutate: updateUser, isPending } = useUpdateUser();
+interface UpdateUserProps {
+  userId: number;
+}
 
-  const handleUpdate = (data: FormValues) => {
-    const payload = {
-      username: data.username,
-      email: data.email,
-      role: data.role?.label,
-      role_id: data.role?.value,
-      permissions: data.permissions,
-    };
-
-    console.log("PAYLOAD: ", payload);
-
-    updateUser(
-      {
-        id: user.id,
-        payload,
-      },
-      {
-        onSuccess: (res) => {
-          toast.success(res?.message || "User updated succesfully");
-        },
-        onError: (error: any) => {
-          toast.error(
-            error?.response?.data?.message || "Failed to update user",
-          );
-        },
-      },
-    );
-  };
+const UpdateUser = ({ userId }: UpdateUserProps) => {
+  const isMobile = useIsMobile();
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button size="sm">Edit</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Edit User</DialogTitle>
-          <DialogDescription>Update employer user details.</DialogDescription>
-        </DialogHeader>
-        {/* Form */}
-        <UserForm
-          defaultValues={{
-            username: user.username,
-            email: user.email,
-            password: user.password,
-            role: {
-              value: user.role_id,
-              label: user.role,
-            },
-            permissions: user.permissions,
-          }}
-          onSubmit={handleUpdate}
-          isPending={isPending}
-          submitLabel="Update User"
-        />
-      </DialogContent>
-    </Dialog>
+    <>
+      {isMobile ? (
+        // For mobile devices
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button size="xs" variant="outline">
+              Edit
+            </Button>
+          </DrawerTrigger>
+
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Edit User</DrawerTitle>
+            </DrawerHeader>
+
+            <div className="flex-1 scroll-fade overflow-y-auto p-4">
+              <CreateUserForm userId={userId} />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        // For large screen devices
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size="xs" variant="outline">
+              Edit
+            </Button>
+          </SheetTrigger>
+
+          <SheetContent className="sm:max-w-2xl!">
+            <SheetHeader>
+              <SheetTitle>Edit User</SheetTitle>
+            </SheetHeader>
+
+            <div className="scrollbar overflow-y-auto px-4">
+              <CreateUserForm userId={userId} />
+            </div>
+          </SheetContent>
+        </Sheet>
+      )}
+    </>
   );
 };
 

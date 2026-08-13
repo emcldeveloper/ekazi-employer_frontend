@@ -2,6 +2,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -10,6 +11,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -19,6 +21,8 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import JobseekerDetails from "./JobseekerDetails";
+import ShortlistJobseeker from "./ShortlistJobseeker";
+import CollectJobseeker from "./CollectJobseeker";
 
 interface ViewJobseekerProps {
   jobseekerId: number;
@@ -49,6 +53,13 @@ const ViewJobseeker = ({ jobseekerId }: ViewJobseekerProps) => {
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
               <JobseekerDetails jobseekerId={jobseekerId} />
             </div>
+
+            <DrawerFooter>
+              <div className="flex items-center gap-2">
+                <ShortlistJobseeker jobseekerId={jobseekerId} />
+                <CollectJobseeker />
+              </div>
+            </DrawerFooter>
           </DrawerContent>
         </Drawer>
       ) : (
@@ -68,9 +79,16 @@ const ViewJobseeker = ({ jobseekerId }: ViewJobseekerProps) => {
               </SheetHeader>
             </VisuallyHidden>
 
-            <div className="scrollbar overflow-y-auto px-4 py-8">
+            <div className="scrollbar overflow-y-auto px-4">
               <JobseekerDetails jobseekerId={jobseekerId} />
             </div>
+
+            <SheetFooter>
+              <div className="flex items-center gap-4">
+                <ShortlistJobseeker jobseekerId={jobseekerId} />
+                <CollectJobseeker />
+              </div>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       )}
