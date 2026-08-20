@@ -68,7 +68,7 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
   // fetch job types
   const { data: jobTypes } = useJobTypes();
   const jobTypeOptions =
-    jobTypes?.map((type: JobType) => ({
+    jobTypes?.data.map((type: JobType) => ({
       value: type.id,
       label: type.type_name,
     })) ?? [];
@@ -76,7 +76,7 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
   // fetch positions
   const { data: positions } = usePositions(positionSearch);
   const positionOptions: OptionType[] =
-    positions?.map((position: Position) => ({
+    positions?.data.map((position: Position) => ({
       value: position.id,
       label: position.name,
     })) ?? [];
@@ -92,7 +92,7 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
   // fetch industries
   const { data: industries } = useIndustries(industrySearch);
   const industryOptions =
-    industries?.map((industry: Industry) => ({
+    industries?.data.map((industry: Industry) => ({
       value: industry.id,
       label: industry.name,
     })) ?? [];
@@ -100,7 +100,7 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
   // fetch salary ranges
   const { data: salaryRanges } = useSalaryRange();
   const salaryOptions =
-    salaryRanges?.map((range: SalaryRange) => ({
+    salaryRanges?.data.map((range: SalaryRange) => ({
       value: range.id,
       label: Number(range.low).toLocaleString(),
     })) ?? [];
@@ -108,7 +108,7 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
   // fetch countries
   const { data: countries } = useCountries();
   const countryOptions =
-    countries?.map((country: Country) => ({
+    countries?.data.map((country: Country) => ({
       value: country.id,
       label: country.name,
     })) ?? [];
@@ -146,7 +146,7 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
   }, [selectedCountry, setValue, job]);
 
   const filteredRegions =
-    regions
+    regions?.data
       ?.filter((region: Region) => region.country?.id === selectedCountry)
       .map((region: Region) => ({
         value: region.id,

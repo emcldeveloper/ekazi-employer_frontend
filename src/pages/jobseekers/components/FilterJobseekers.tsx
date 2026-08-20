@@ -46,12 +46,12 @@ export function FilterJobseekers({ value, onApply }: FilterJobseekersProps) {
 
   // fetch industries
   const { data: industries } = useIndustries(industrySearch);
-  const industryOptions = toOptions(industries);
+  const industryOptions = toOptions(industries?.data);
 
   // Fetch education levels
   const { data: levels } = useEducationLevels();
   const levelOptions: OptionType[] =
-    levels?.map((level: EducationLevel) => ({
+    levels?.data.map((level: EducationLevel) => ({
       value: level.id,
       label: level.education_level,
     })) ?? [];

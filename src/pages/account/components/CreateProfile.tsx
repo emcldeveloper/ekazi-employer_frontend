@@ -72,7 +72,7 @@ const CreateProfile = () => {
 
   const { data: industries } = useIndustries(industrySearch);
   const industryOptions =
-    industries?.map((industry: Industry) => ({
+    industries?.data.map((industry: Industry) => ({
       value: industry.id,
       label: industry.name,
     })) ?? [];
@@ -86,7 +86,7 @@ const CreateProfile = () => {
 
   const { data: countries } = useCountries();
   const countryOptions =
-    countries?.map((country: Country) => ({
+    countries?.data.map((country: Country) => ({
       value: country.id,
       label: country.name,
     })) ?? [];
@@ -98,7 +98,7 @@ const CreateProfile = () => {
   const selectedRegion = watch("region_id");
 
   const filteredRegions =
-    regions
+    regions?.data
       ?.filter((region: Region) => region.country?.id === selectedCountry)
       .map((region: Region) => ({
         value: region.id,

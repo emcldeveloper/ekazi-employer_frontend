@@ -41,3 +41,20 @@ export const capitalizeText = (value: string | null | undefined): string => {
     .toLowerCase()
     .replace(/(^|\s|-)\S/g, (char) => char.toUpperCase());
 };
+
+// money format
+export const formatMoney = (
+  amount: number | string | null | undefined,
+): string => {
+  if (amount === null || amount === undefined || amount === "") {
+    return "0";
+  }
+
+  const number = Number(amount);
+
+  if (Number.isNaN(number)) {
+    return "0";
+  }
+
+  return new Intl.NumberFormat("en-US").format(number);
+};

@@ -7,10 +7,10 @@ import {
 } from "@/services/universal.service";
 import { useQuery } from "@tanstack/react-query";
 
-export const useLanguage = () =>
+export const useLanguage = (search = "", page = 1, limit = 25) =>
   useQuery({
-    queryKey: ["language"],
-    queryFn: getLanguage,
+    queryFn: () => getLanguage(search, page, limit),
+    queryKey: ["language", search, page, limit],
   });
 
 export const useLanguageRead = () =>

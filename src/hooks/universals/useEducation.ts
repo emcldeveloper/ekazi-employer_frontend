@@ -5,21 +5,21 @@ import {
 } from "@/services/universal.service";
 import { useQuery } from "@tanstack/react-query";
 
-export const useEducationLevels = () => {
+export const useEducationLevels = (search = "", page = 1, limit = 25) => {
   return useQuery({
-    queryKey: ["education-levels"],
-    queryFn: getEducationLevels,
+    queryFn: () => getEducationLevels(search, page, limit),
+    queryKey: ["education-levels", search, page, limit],
   });
 };
 
-export const useCourses = (search: string, page = 1, limit = 50) => {
+export const useCourses = (search = "", page = 1, limit = 50) => {
   return useQuery({
     queryKey: ["courses", search, page, limit],
     queryFn: () => getCourses(search, page, limit),
   });
 };
 
-export const useMajors = (search: string, page = 1, limit = 50) => {
+export const useMajors = (search = "", page = 1, limit = 25) => {
   return useQuery({
     queryKey: ["majors", search, page, limit],
     queryFn: () => getMajors(search, page, limit),

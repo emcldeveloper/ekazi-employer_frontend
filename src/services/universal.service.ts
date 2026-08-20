@@ -10,9 +10,19 @@ export const companyTypes = async () => {
   return res.data?.data;
 };
 
-export const getCountries = async () => {
-  const res = await api.get("/countries");
-  return res.data?.data;
+export const getCountries = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
+  const res = await api.get("/countries", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data;
 };
 
 export const getRegions = async (
@@ -27,10 +37,15 @@ export const getRegions = async (
       limit,
     },
   });
-  return res.data?.data;
+
+  return res.data;
 };
 
-export const getIndustry = async (search = "", page = 1, limit = 50) => {
+export const getIndustry = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
   const res = await api.get("/industries", {
     params: {
       search,
@@ -38,10 +53,14 @@ export const getIndustry = async (search = "", page = 1, limit = 50) => {
       limit,
     },
   });
-  return res.data?.data;
+  return res.data;
 };
 
-export const getPositions = async (search = "", page = 1, limit = 100) => {
+export const getPositions = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
   const res = await api.get("/positions", {
     params: {
       search,
@@ -49,7 +68,7 @@ export const getPositions = async (search = "", page = 1, limit = 100) => {
       limit,
     },
   });
-  return res.data?.data;
+  return res.data;
 };
 
 export const positionLevels = async () => {
@@ -62,12 +81,26 @@ export const getGenders = async () => {
   return res.data?.data;
 };
 
-export const getJobTypes = async () => {
-  const res = await api.get("/job-types");
-  return res.data?.data;
+export const getJobTypes = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
+  const res = await api.get("/job-types", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data;
 };
 
-export const getSalaryRange = async (search = "", page = 1, limit = 50) => {
+export const getSalaryRange = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
   const res = await api.get("/salary-ranges", {
     params: {
       search,
@@ -75,13 +108,38 @@ export const getSalaryRange = async (search = "", page = 1, limit = 50) => {
       limit,
     },
   });
-  return res.data?.data;
+  return res.data;
 };
 
 // universal education apis
-export const getEducationLevels = async () => {
-  const res = await api.get("/education-levels");
-  return res.data?.data;
+export const getColleges = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
+  const res = await api.get("/colleges", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data;
+};
+
+export const getEducationLevels = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
+  const res = await api.get("/education-levels", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data;
 };
 
 export const getCourses = async (
@@ -97,10 +155,14 @@ export const getCourses = async (
     },
   });
 
-  return res.data?.data;
+  return res.data;
 };
 
-export const getMajors = async (search = "", page = 1, limit = 50) => {
+export const getMajors = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
   const res = await api.get("/majors", {
     params: {
       search,
@@ -109,13 +171,23 @@ export const getMajors = async (search = "", page = 1, limit = 50) => {
     },
   });
 
-  return res.data?.data;
+  return res.data;
 };
 
 // universal language apis
-export const getLanguage = async () => {
-  const res = await api.get("/languages");
-  return res.data?.data;
+export const getLanguage = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
+  const res = await api.get("/languages", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data;
 };
 
 export const getReadLanguage = async () => {
@@ -151,7 +223,7 @@ export const getCultures = async (
       limit,
     },
   });
-  return res.data?.data;
+  return res.data;
 };
 
 export const getTools = async (search: string, page: number, limit: number) => {
@@ -162,7 +234,7 @@ export const getTools = async (search: string, page: number, limit: number) => {
       limit,
     },
   });
-  return res.data?.data;
+  return res.data;
 };
 
 export const getSoftwares = async (
@@ -177,7 +249,7 @@ export const getSoftwares = async (
       limit,
     },
   });
-  return res.data?.data;
+  return res.data;
 };
 
 export const getKnowledges = async (
@@ -192,7 +264,7 @@ export const getKnowledges = async (
       limit,
     },
   });
-  return res.data?.data;
+  return res.data;
 };
 
 export const getProficiencies = async (
@@ -207,7 +279,7 @@ export const getProficiencies = async (
       limit,
     },
   });
-  return res.data?.data;
+  return res.data;
 };
 
 export const getPersonalities = async (
@@ -222,7 +294,7 @@ export const getPersonalities = async (
       limit,
     },
   });
-  return res.data?.data;
+  return res.data;
 };
 
 export const metaKeywords = async (

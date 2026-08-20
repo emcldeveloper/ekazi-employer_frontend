@@ -45,6 +45,30 @@ import AdminArticlesPage from "./pages/admin/articles/AdminArticlesPage";
 import AdminSubscriptionsPage from "./pages/admin/subscriptions/AdminSubscriptionsPage";
 import AdminSettingsPage from "./pages/admin/settings/AdminSettingsPage";
 import AdminReportsPage from "./pages/admin/reports/AdminReportsPage";
+import Countries from "./pages/admin/universals/countries/Countries";
+import Regions from "./pages/admin/universals/regions/Regions";
+import Industries from "./pages/admin/universals/industries/Industries";
+import Languages from "./pages/admin/universals/languages/Languages";
+import LanguageRead from "./pages/admin/universals/language-reads/LanguageRead";
+import LanguageSpeak from "./pages/admin/universals/language-speaks/LanguageSpeak";
+import LanguageWrite from "./pages/admin/universals/language-writes/LanguageWrite";
+import LanguageUnderstand from "./pages/admin/universals/language-understands/LanguageUnderstand";
+import Institutions from "./pages/admin/universals/institutions/Institutions";
+import EducationLevels from "./pages/admin/universals/education-levels/EducationLevels";
+import Courses from "./pages/admin/universals/courses/Courses";
+import Majors from "./pages/admin/universals/majors/Majors";
+import Skills from "./pages/admin/universals/skills/Skills";
+import Softwares from "./pages/admin/universals/softwares/Softwares";
+import Tools from "./pages/admin/universals/tools/Tools";
+import Cultures from "./pages/admin/universals/cultures/Cultures";
+import Personalities from "./pages/admin/universals/personalities/Personalities";
+import Proficiencies from "./pages/admin/universals/proficiencies/Proficiencies";
+import Genders from "./pages/admin/universals/genders/Genders";
+import Positions from "./pages/admin/universals/positions/Positions";
+import PositionLevels from "./pages/admin/universals/position-levels/PositionLevels";
+import JobTypes from "./pages/admin/universals/job-types/JobTypes";
+import ExperienceLevels from "./pages/admin/universals/experience-levels/ExperienceLevels";
+import SalaryRanges from "./pages/admin/universals/salary-ranges/SalaryRanges";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -142,8 +166,44 @@ const App = () => {
                     path="subscriptions"
                     element={<AdminSubscriptionsPage />}
                   />
-                  <Route path="settings" element={<AdminSettingsPage />} />
                   <Route path="reports" element={<AdminReportsPage />} />
+
+                  <Route path="settings" element={<AdminSettingsPage />}>
+                    <Route index element={<Countries />} />
+                    <Route path="countries" element={<Countries />} />
+                    <Route path="regions" element={<Regions />} />
+                    <Route path="industries" element={<Industries />} />
+                    <Route path="languages" element={<Languages />} />
+                    <Route path="language-read" element={<LanguageRead />} />
+                    <Route path="language-speak" element={<LanguageSpeak />} />
+                    <Route path="language-write" element={<LanguageWrite />} />
+                    <Route
+                      path="language-understand"
+                      element={<LanguageUnderstand />}
+                    />
+                    <Route path="institutions" element={<Institutions />} />
+                    <Route
+                      path="education-level"
+                      element={<EducationLevels />}
+                    />
+                    <Route path="courses" element={<Courses />} />
+                    <Route path="majors" element={<Majors />} />
+                    <Route path="skills" element={<Skills />} />
+                    <Route path="softwares" element={<Softwares />} />
+                    <Route path="tools" element={<Tools />} />
+                    <Route path="cultures" element={<Cultures />} />
+                    <Route path="personalities" element={<Personalities />} />
+                    <Route path="proficiencies" element={<Proficiencies />} />
+                    <Route path="genders" element={<Genders />} />
+                    <Route path="positions" element={<Positions />} />
+                    <Route path="position-level" element={<PositionLevels />} />
+                    <Route path="job-types" element={<JobTypes />} />
+                    <Route
+                      path="experience-levels"
+                      element={<ExperienceLevels />}
+                    />
+                    <Route path="salary-ranges" element={<SalaryRanges />} />
+                  </Route>
                 </Route>
               </Route>
             </Routes>

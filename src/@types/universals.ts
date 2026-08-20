@@ -74,6 +74,11 @@ export interface Keyword {
   id: number;
   name: string;
 }
+export interface College {
+  id: number;
+  college_name: string;
+}
+
 export interface EducationLevel {
   id: number;
   education_level: string;
