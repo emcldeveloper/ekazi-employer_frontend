@@ -37,8 +37,8 @@ const DeleteTask = ({ taskId }: DeleteTaskProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <Button size="xs" variant="destructive">
-          Delete
+        <Button size="sm" variant="destructive">
+          <Trash2Icon />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent size="sm">

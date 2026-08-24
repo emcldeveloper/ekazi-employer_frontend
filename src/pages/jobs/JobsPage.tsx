@@ -261,7 +261,7 @@ const JobsPage = () => {
           </Table>
 
           {/* Pagination */}
-          {!isLoading && (
+          {jobs.length > 0 && (
             <DataPagination
               page={jobsData?.page}
               perPage={jobsData?.limit}

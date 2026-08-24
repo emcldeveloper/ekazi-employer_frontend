@@ -27,6 +27,12 @@ export type Task = {
 
 export type Assignment = {
   id: number;
-  email: string;
-  name: string;
+  task_id: number;
+  user_id: number;
+  user: {
+    id: number;
+    username: string;
+    email: string;
+  };
+  assigned_at: string;
 };

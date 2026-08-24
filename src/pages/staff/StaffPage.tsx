@@ -33,14 +33,14 @@ const StaffPage = () => {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data: usersData, isLoading } = useStaffs({
+  const { data: staffData, isLoading } = useStaffs({
     page,
     limit: perPage,
     search: debouncedSearch,
   });
 
-  const users = usersData?.data ?? [];
-  const totalUsers = usersData?.total;
+  const staffs = staffData?.data ?? [];
+  const totalStaffs = staffData?.total;
 
   return (
     <div className="space-y-4">
@@ -57,7 +57,7 @@ const StaffPage = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Total </h3>
-              <p className="text-2xl font-bold">{totalUsers}</p>
+              <p className="text-2xl font-bold">{totalStaffs}</p>
             </div>
 
             <div className="rounded-lg bg-blue-100 p-3 text-blue-600">
@@ -135,17 +135,17 @@ const StaffPage = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : users.length === 0 ? (
+                ) : staffs.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={6}
                       className="h-20 text-center text-muted-foreground"
                     >
-                      No users found
+                      No staffs found
                     </TableCell>
                   </TableRow>
                 ) : (
-                  users.map((staff: ClientStaff) => (
+                  staffs.map((staff: ClientStaff) => (
                     <TableRow key={staff?.id}>
                       <TableCell>
                         {capitalizeText(
@@ -169,11 +169,11 @@ const StaffPage = () => {
             </Table>
 
             {/* Pagination */}
-            {!isLoading && (
+            {staffs.length > 0 && (
               <DataPagination
-                page={usersData?.page}
-                perPage={usersData?.limit}
-                totalPages={usersData?.totalPages}
+                page={staffData?.page}
+                perPage={staffData?.limit}
+                totalPages={staffData?.totalPages}
                 onPageChange={setPage}
                 onPerPageChange={setPerPage}
               />

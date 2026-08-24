@@ -19,6 +19,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import TaskDetails from "./TaskDetails";
+import { Eye } from "lucide-react";
 
 const ViewTask = () => {
   const isMobile = useIsMobile();
@@ -30,7 +31,7 @@ const ViewTask = () => {
         <Drawer>
           <DrawerTrigger>
             <Button size="xs" variant="link">
-              View
+              <Eye />
             </Button>
           </DrawerTrigger>
 
@@ -51,8 +52,8 @@ const ViewTask = () => {
         // For large screen devices
         <Sheet>
           <SheetTrigger asChild>
-            <Button size="xs" variant="link">
-              View
+            <Button size="sm" variant="link">
+              <Eye />
             </Button>
           </SheetTrigger>
 

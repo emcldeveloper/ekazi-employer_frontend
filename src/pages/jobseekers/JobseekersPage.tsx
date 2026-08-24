@@ -158,7 +158,7 @@ const JobseekersPage = () => {
           </Table>
 
           {/* pagination */}
-          {!isLoading && (
+          {jobseekers.length > 0 && (
             <DataPagination
               page={jobseekersData?.page}
               perPage={jobseekersData?.limit}

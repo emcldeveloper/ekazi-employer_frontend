@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TaskForm from "./TaskForm";
 import type { Task } from "@/@types/tasks";
+import { PencilLine } from "lucide-react";
 
 interface UpdateTaskProps {
   task: Task;
@@ -36,8 +37,8 @@ const UpdateTask = ({ task }: UpdateTaskProps) => {
         // For mobile devices
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerTrigger asChild>
-            <Button size="xs" variant="secondary">
-              Edit
+            <Button size="sm" variant="secondary">
+              <PencilLine />
             </Button>
           </DrawerTrigger>
 
@@ -56,8 +57,8 @@ const UpdateTask = ({ task }: UpdateTaskProps) => {
         // For large screen devices
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button size="xs" variant="secondary">
-              Edit
+            <Button size="sm" variant="secondary">
+              <PencilLine />
             </Button>
           </SheetTrigger>
 

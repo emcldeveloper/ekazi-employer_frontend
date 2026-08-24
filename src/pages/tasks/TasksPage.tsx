@@ -36,7 +36,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 const TasksPage = () => {
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(25);
+  const [perPage, setPerPage] = useState(10);
   const [search, setSearch] = useState("");
 
   const debouncedSearch = useDebounce(search, 500);
@@ -145,7 +145,6 @@ const TasksPage = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>Task</TableHead>
-                {/* <TableHead>Assigned To</TableHead> */}
                 <TableHead>Priority</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Due Date</TableHead>
@@ -176,15 +175,17 @@ const TasksPage = () => {
                   <TableRow key={task.id}>
                     <TableCell>
                       <div>
-                        <p className="font-medium">{task.title}</p>
+                        <p className="">{task.title}</p>
+                        <p className="text-xs text-muted-foreground font-semibold">
+                          Assigned to:{" "}
+                          {task.assignments?.length
+                            ? task.assignments
+                                .map((staff) => staff.user?.username)
+                                .join(", ")
+                            : "Unassigned"}
+                        </p>
                       </div>
                     </TableCell>
-
-                    {/* <TableCell>
-                      {task.assigned_to
-                        ? `${task.assigned_to.first_name} ${task.assigned_to.last_name}`
-                        : "Unassigned"}
-                    </TableCell> */}
 
                     <TableCell>
                       <Badge>{task.priority}</Badge>
@@ -211,7 +212,7 @@ const TasksPage = () => {
 
           {/* Pagination */}
 
-          {!isLoading && (
+          {tasks.length > 0 && (
             <DataPagination
               page={tasksData?.current_page}
               perPage={tasksData?.per_page}
