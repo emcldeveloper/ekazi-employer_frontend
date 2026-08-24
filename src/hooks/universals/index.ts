@@ -20,3 +20,5 @@ export * from "./useExperienceLevels";
 export * from "./useColleges";
 export * from "./usePositionLevels";
 export * from "./usePositions";
+
+export * from "./usePermissions";

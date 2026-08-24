@@ -83,8 +83,8 @@ const navItems: NavItem[] = [
     icon: LayoutList,
   },
   {
-    title: "Users",
-    url: "/users",
+    title: "Staff",
+    url: "/staff",
     icon: Users,
   },
   {

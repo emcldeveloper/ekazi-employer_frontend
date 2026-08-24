@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 const plans = [
   {
     title: "Basic Plan",
@@ -67,50 +68,14 @@ const plans = [
   },
 ];
 
-// const plans = [
-//   {
-//     name: "Starter",
-//     price: "Free",
-//     popular: false,
-//     features: [
-//       "2 Active Jobs",
-//       "Basic Applicant Tracking",
-//       "1 Recruiter",
-//       "Email Support",
-//     ],
-//   },
-//   {
-//     name: "Professional",
-//     price: "$29",
-//     popular: true,
-//     features: [
-//       "Unlimited Jobs",
-//       "Unlimited Recruiters",
-//       "Task Management",
-//       "Interview Scheduling",
-//       "Analytics",
-//       "Priority Support",
-//     ],
-//   },
-//   {
-//     name: "Enterprise",
-//     price: "Custom",
-//     popular: false,
-//     features: [
-//       "Everything in Professional",
-//       "Dedicated Account Manager",
-//       "Custom Integrations",
-//       "Advanced Reports",
-//     ],
-//   },
-// ];
-
 export default function Pricing() {
+  const navigate = useNavigate();
+
   return (
-    <section id="pricing" className="py-24 bg-gray-50">
+    <section id="pricing" className="py-30 bg-gray-50">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
-          <h2 className="text-5xl font-bold">Simple pricing</h2>
+          <h2 className="text-4xl font-bold">Pricing</h2>
 
           <p className="mt-4 text-gray-600">
             Choose a plan that grows with your business.
@@ -121,7 +86,7 @@ export default function Pricing() {
           {plans.map((plan) => (
             <div
               key={plan.title}
-              className={`flex flex-col rounded-3xl border bg-white p-6 shadow-sm transition hover:-translate-y-2 hover:shadow-xl ${
+              className={`flex flex-col rounded-3xl border bg-white p-6 shadow-sm ${
                 plan.popular ? "border-green-600 ring-2 ring-blue-500" : ""
               }`}
             >
@@ -143,6 +108,7 @@ export default function Pricing() {
               </div>
 
               <Button
+                onClick={() => navigate("/register")}
                 variant={plan.popular ? "default" : "outline"}
                 className="mt-auto w-full"
               >

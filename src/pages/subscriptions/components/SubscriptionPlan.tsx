@@ -1,4 +1,5 @@
 import { CheckIcon } from "lucide-react";
+import UpgradePlan from "./UpgradePlan";
 
 const SubscriptionPlan = () => {
   const plans = [
@@ -64,12 +65,12 @@ const SubscriptionPlan = () => {
   ];
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
       {plans.map((plan, i) => (
         <div
           key={i}
           className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-col
-            hover:shadow-xl transition duration-300"
+            hover:shadow-xl transition duration-300 space-y-4"
         >
           {/* Title */}
           <div className="flex gap-2 justify-start items-center">
@@ -81,7 +82,7 @@ const SubscriptionPlan = () => {
           </div>
 
           {/* Price */}
-          <div className="mt-3 mb-2">
+          <div className="">
             <span className="text-3xl font-bold text-gray-900">
               {plan.price}
             </span>
@@ -91,7 +92,7 @@ const SubscriptionPlan = () => {
           </div>
 
           {/* Subtitle */}
-          <p className="text-gray-500 text-sm mb-6">{plan.subtitle}</p>
+          <p className="text-gray-500 text-sm">{plan.subtitle}</p>
 
           {/* Features */}
           <ul className="space-y-3 flex-1">
@@ -107,16 +108,7 @@ const SubscriptionPlan = () => {
           </ul>
 
           {/* Button */}
-          <button
-            className={`mt-8 w-full py-3 rounded-lg text-sm font-medium transition
-              ${
-                plan.price === "Free"
-                  ? "border border-gray-300 text-gray-700 hover:bg-gray-100"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
-              }`}
-          >
-            {plan.button}
-          </button>
+          <UpgradePlan />
         </div>
       ))}
     </div>

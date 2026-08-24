@@ -5,12 +5,12 @@ export const createUser = async (payload: any) => {
   return res.data;
 };
 
-export const getUsers = async (page = 1, limit = 25, search = "") => {
+export const getUsers = async (search: string, page: number, limit: number) => {
   const res = await api.get("/employer/users", {
     params: {
+      search,
       page,
       limit,
-      search,
     },
   });
   return res.data;
@@ -36,9 +36,4 @@ export const updateUser = async ({
 export const userSettings = async () => {
   const res = await api.get("/employer-user-management");
   return res.data;
-};
-
-export const getStaffs = async () => {
-  const res = await api.get("/client-staffs");
-  return res.data?.data;
 };

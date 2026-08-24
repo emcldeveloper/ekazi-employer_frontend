@@ -322,3 +322,18 @@ export const interviewTypes = async () => {
   const res = await api.get("/interview-types");
   return res.data?.data;
 };
+
+export const getPermissions = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
+  const res = await api.get("/permissions", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data;
+};

@@ -12,13 +12,11 @@ import JobsPage from "./pages/jobs/JobsPage";
 import JobDetails from "./pages/jobs/JobDetails";
 import CreateJob from "./pages/jobs/CreateJob";
 import JobApplications from "./pages/applications/JobApplications";
-import UsersPage from "./pages/users/UsersPage";
 import ClientsPage from "./pages/clients/ClientsPage";
 import ClientDetails from "./pages/clients/components/ClientDetails";
 import TasksPage from "./pages/tasks/TasksPage";
 import AccountProfile from "./pages/account/AccountProfile";
 import CreateProfile from "./pages/account/components/CreateProfile";
-import AuthCallback from "./pages/auth/AuthCallback";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import SubscriptionPage from "./pages/subscriptions/SubscriptionPage";
 import SettingsPage from "./pages/settings/SettingsPage";
@@ -69,6 +67,8 @@ import PositionLevels from "./pages/admin/universals/position-levels/PositionLev
 import JobTypes from "./pages/admin/universals/job-types/JobTypes";
 import ExperienceLevels from "./pages/admin/universals/experience-levels/ExperienceLevels";
 import SalaryRanges from "./pages/admin/universals/salary-ranges/SalaryRanges";
+import PricingPage from "./pages/landing/PricingPage";
+import StaffPage from "./pages/staff/StaffPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -89,12 +89,14 @@ const App = () => {
             <ScrollToTop />
 
             <Routes>
-              <Route path="/auth/callback" element={<AuthCallback />} />
+              {/* Landing Page */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/home" element={<Navigate to="/" replace />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/pricing" element={<PricingPage />} />
               <Route path="/contact" element={<ContactPage />} />
 
+              {/* Auth */}
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/verification" element={<VerifyPage />} />
               <Route path="/login" element={<SigninPage />} />
@@ -134,7 +136,7 @@ const App = () => {
 
                   <Route path="/tasks" element={<TasksPage />} />
 
-                  <Route path="/users" element={<UsersPage />} />
+                  <Route path="/staff" element={<StaffPage />} />
 
                   <Route path="/subscription" element={<SubscriptionPage />} />
 

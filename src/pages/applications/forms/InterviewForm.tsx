@@ -27,7 +27,7 @@ import { useCountries, useRegions } from "@/hooks/universals";
 import type { Country, Region } from "@/@types/universals";
 import type { OptionType } from "@/@types/jobs";
 import { Textarea } from "@/components/ui/textarea";
-import { useStaffs } from "@/hooks/users";
+import { useStaffs } from "@/hooks/staff";
 
 interface InterviewFormProps {
   jobId: number;

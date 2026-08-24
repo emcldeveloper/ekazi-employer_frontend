@@ -3,7 +3,7 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const links = ["Home", "About", "Contact"];
+const links = ["Home", "About", "Pricing", "Contact"];
 
 export default function Navbar() {
   const navigate = useNavigate();
