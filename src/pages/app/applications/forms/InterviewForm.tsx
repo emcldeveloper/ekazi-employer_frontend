@@ -54,8 +54,8 @@ const InterviewForm = ({
 
   const interviewType = watch("interview_type");
 
-  const { data: staffs = [] } = useStaffs();
-  const staffOptions = staffs?.map((staff: any) => ({
+  const { data: staffs } = useStaffs();
+  const staffOptions = staffs?.data?.map((staff: any) => ({
     value: staff.id,
     label: staff.first_name,
   }));
