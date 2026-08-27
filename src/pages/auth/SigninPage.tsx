@@ -16,6 +16,7 @@ import type { LoginPayload } from "@/@types/auth";
 import { useLogin } from "@/hooks/auth";
 import AuthLayout from "./AuthLayout";
 import { useState } from "react";
+import { getErrorMessage } from "@/utils/axios-helpers";
 
 const SigninPage = () => {
   const navigate = useNavigate();
@@ -34,24 +35,30 @@ const SigninPage = () => {
   const onSubmit = (data: LoginPayload) => {
     loginUser(data, {
       onSuccess: (res) => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("user_id", res.data?.id);
-        localStorage.setItem("role_id", res.data?.role_id);
-        localStorage.setItem("verified", res.data?.verified);
-
         const role = res.data?.role_id;
 
-        // 9 as Recruiter, 5 as Employer
+        // Check if the user's role is allowed before storing login data
         if (role === 9 || role === 5) {
-          navigate("/dashboard", { replace: true });
-        }
+          localStorage.setItem("token", res.token);
+          localStorage.setItem("verified", String(res.data?.verified));
 
-        toast.success(res?.message || "Logged in successfully");
-        reset();
+          toast.success(res?.message || "Logged in successfully");
+          reset();
+          navigate("/app/dashboard", { replace: true });
+        } else if (role === 2) {
+          localStorage.setItem("token", res.token);
+          localStorage.setItem("verified", res.data?.verified);
+
+          toast.success(res?.message || "Logged in successfully");
+          reset();
+          navigate("/admin/dashboard", { replace: true });
+        } else {
+          toast.error("You do not have permission to access this application.");
+        }
       },
-      onError: (err: any) => {
-        const message = err?.response?.data?.message;
-        toast.error(message || "Login Failed");
+
+      onError: (error) => {
+        getErrorMessage(error);
       },
     });
   };

@@ -1,5 +1,11 @@
+import JobseekersPage from "@/pages/app/jobseekers/JobseekersPage";
+
 const AdminJobseekersPage = () => {
-  return <div>AdminJobseekersPage</div>;
+  return (
+    <div>
+      <JobseekersPage />
+    </div>
+  );
 };
 
 export default AdminJobseekersPage;

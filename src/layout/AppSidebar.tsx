@@ -49,27 +49,27 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/app/dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Profile",
-    url: "/profile",
+    url: "/app/profile",
     icon: SquareUser,
   },
   {
     title: "Jobs",
-    url: "/jobs",
+    url: "/app/jobs",
     icon: Briefcase,
   },
   {
     title: "Job Seekers",
-    url: "/job-seekers",
+    url: "/app/job-seekers",
     icon: UserSearchIcon,
   },
   {
     title: "Applicants",
-    url: "/applicants",
+    url: "/app/applicants",
     icon: UserCheckIcon,
   },
   // {
@@ -79,22 +79,22 @@ const navItems: NavItem[] = [
   // },
   {
     title: "Tasks",
-    url: "/tasks",
+    url: "/app/tasks",
     icon: LayoutList,
   },
   {
     title: "Staff",
-    url: "/staff",
+    url: "/app/staff",
     icon: Users,
   },
   {
     title: "Subscription",
-    url: "/subscription",
+    url: "/app/subscription",
     icon: WalletCardsIcon,
   },
   {
     title: "Settings",
-    url: "/settings",
+    url: "/app/settings",
     icon: SettingsIcon,
   },
 ];

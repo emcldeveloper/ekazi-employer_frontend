@@ -16,7 +16,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useLogout, useUser } from "@/hooks/auth";
+import { FRONTEND_URL } from "@/config/config";
+import { useUser } from "@/hooks/auth";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
   ChevronsUpDownIcon,
@@ -28,20 +30,20 @@ import {
 export function NavUser() {
   const { isMobile } = useSidebar();
 
+  const queryClient = useQueryClient();
+
   // user data
   const { data: userAccount } = useUser();
   const user = userAccount?.data;
 
   // logout
-  const { mutate: logoutUser } = useLogout();
 
   const handleLogout = () => {
-    logoutUser(undefined, {
-      onSuccess: () => {
-        localStorage.clear();
-        window.location.href = "https://recruitment.ekazi.co.tz/";
-      },
-    });
+    localStorage.clear();
+
+    queryClient.clear();
+
+    window.location.href = FRONTEND_URL;
   };
 
   return (

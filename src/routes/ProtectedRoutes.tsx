@@ -5,25 +5,36 @@ import { FRONTEND_URL } from "@/config/config";
 
 const ProtectedRoutes = () => {
   const token = localStorage.getItem("token");
+  const verified = localStorage.getItem("verified") === "1";
 
   const { data, isLoading } = useUser();
 
   useEffect(() => {
     if (!token) {
       window.location.href = FRONTEND_URL;
+      return;
+    }
+
+    if (!verified) {
+      window.location.href = `${FRONTEND_URL}/verify-account`;
+      return;
+    }
+
+    if (isLoading) {
+      return;
     }
 
     if (!isLoading && !data) {
       localStorage.removeItem("token");
       window.location.href = FRONTEND_URL;
     }
-  }, [token, isLoading, data]);
+  }, [token, verified, isLoading, data]);
 
-  if (!token) {
+  if (!token || !data) {
     return null;
   }
 
-  if (!data) {
+  if (!verified) {
     return null;
   }
 

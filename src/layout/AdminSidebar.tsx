@@ -34,6 +34,7 @@ import {
   GalleryVerticalEndIcon,
 } from "lucide-react";
 import { isRouteActive } from "@/utils/helpers";
+import { NavUser } from "@/components/nav-user";
 
 type NavItem = {
   title: string;
@@ -217,8 +218,7 @@ export function AdminSidebar({
       </SidebarContent>
 
       <SidebarFooter>
-        {/* <NavUser /> */}
-        User
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

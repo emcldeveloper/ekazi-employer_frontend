@@ -15,23 +15,11 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import type { JobsByMonth } from "@/@types/admin-dashboard";
 
-export const description = "A bar chart with a label";
-
-const chartData = [
-  { month: "January", jobs: 186 },
-  { month: "February", jobs: 305 },
-  { month: "March", jobs: 237 },
-  { month: "April", jobs: 73 },
-  { month: "May", jobs: 209 },
-  { month: "June", jobs: 214 },
-  { month: "July", jobs: 186 },
-  { month: "August", jobs: 305 },
-  { month: "September", jobs: 237 },
-  { month: "October", jobs: 73 },
-  { month: "November", jobs: 209 },
-  { month: "December", jobs: 214 },
-];
+interface JobsChartProps {
+  monthlyJobs: JobsByMonth[];
+}
 
 const chartConfig = {
   jobs: {
@@ -40,7 +28,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function JobsChart() {
+export function JobsChart({ monthlyJobs = [] }: JobsChartProps) {
+  const chartData = monthlyJobs.map((item) => ({
+    month: item.period,
+    jobs: Number(item.count),
+  }));
+
   return (
     <Card>
       <CardHeader>

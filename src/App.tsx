@@ -6,33 +6,38 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { ThemeProvider } from "./components/theme-provider";
 import ScrollToTop from "./components/scroll-top";
 
-import AppLayout from "./layout/AppLayout";
-import Dashboard from "./pages/dashboard/Dashboard";
-import JobsPage from "./pages/jobs/JobsPage";
-import JobDetails from "./pages/jobs/JobDetails";
-import CreateJob from "./pages/jobs/CreateJob";
-import JobApplications from "./pages/applications/JobApplications";
-import ClientsPage from "./pages/clients/ClientsPage";
-import ClientDetails from "./pages/clients/components/ClientDetails";
-import TasksPage from "./pages/tasks/TasksPage";
-import AccountProfile from "./pages/account/AccountProfile";
-import CreateProfile from "./pages/account/components/CreateProfile";
-import ProtectedRoutes from "./routes/ProtectedRoutes";
-import SubscriptionPage from "./pages/subscriptions/SubscriptionPage";
-import SettingsPage from "./pages/settings/SettingsPage";
-import JobseekersPage from "./pages/jobseekers/JobseekersPage";
-import ApplicantsPage from "./pages/applicants/ApplicantsPage";
 import LandingPage from "./pages/landing/LandingPage";
+import ContactPage from "./pages/landing/ContactPage";
+import AboutPage from "./pages/landing/AboutPage";
+import PricingPage from "./pages/landing/PricingPage";
+
 import RegisterPage from "./pages/auth/RegisterPage";
+import VerifyPage from "./pages/auth/VerifyPage";
 import SigninPage from "./pages/auth/SigninPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPassword from "./pages/auth/ResetPassword";
-import VerifyPage from "./pages/auth/VerifyPage";
-import ContactPage from "./pages/landing/ContactPage";
-import AboutPage from "./pages/landing/AboutPage";
-import PotentialCandidates from "./pages/jobs/actions/PotentialCandidates";
-import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";
+
+import ProtectedRoutes from "./routes/ProtectedRoutes";
+import AppLayout from "./layout/AppLayout";
+import Dashboard from "./pages/app/dashboard/Dashboard";
+import JobsPage from "./pages/app/jobs/JobsPage";
+import JobDetails from "./pages/app/jobs/JobDetails";
+import CreateJob from "./pages/app/jobs/CreateJob";
+import JobApplications from "./pages/app/applications/JobApplications";
+import ClientsPage from "./pages/app/clients/ClientsPage";
+import ClientDetails from "./pages/app/clients/components/ClientDetails";
+import TasksPage from "./pages/app/tasks/TasksPage";
+import AccountProfile from "./pages/app/profile/AccountProfile";
+import CreateProfile from "./pages/app/profile/components/CreateProfile";
+import SubscriptionPage from "./pages/app/subscriptions/SubscriptionPage";
+import SettingsPage from "./pages/app/settings/SettingsPage";
+import JobseekersPage from "./pages/app/jobseekers/JobseekersPage";
+import ApplicantsPage from "./pages/app/applicants/ApplicantsPage";
+import PotentialCandidates from "./pages/app/jobs/actions/PotentialCandidates";
+import StaffPage from "./pages/app/staff/StaffPage";
+
 import AdminLayout from "./layout/AdminLayout";
+import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";
 import AdminEmployersPage from "./pages/admin/employers/AdminEmployersPage";
 import AdminRecruitersPage from "./pages/admin/recruiters/AdminRecruitersPage";
 import AdminJobseekersPage from "./pages/admin/jobseekers/AdminJobseekersPage";
@@ -67,8 +72,6 @@ import PositionLevels from "./pages/admin/universals/position-levels/PositionLev
 import JobTypes from "./pages/admin/universals/job-types/JobTypes";
 import ExperienceLevels from "./pages/admin/universals/experience-levels/ExperienceLevels";
 import SalaryRanges from "./pages/admin/universals/salary-ranges/SalaryRanges";
-import PricingPage from "./pages/landing/PricingPage";
-import StaffPage from "./pages/staff/StaffPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -105,106 +108,112 @@ const App = () => {
 
               <Route element={<ProtectedRoutes />}>
                 <Route element={<AppLayout />}>
-                  <Route path="/dashboard" element={<Dashboard />} />
-
-                  <Route path="/profile" element={<AccountProfile />} />
-                  <Route path="/profile/create" element={<CreateProfile />} />
-                  <Route path="/profile/edit" element={<CreateProfile />} />
-
-                  <Route path="/jobs" element={<JobsPage />} />
-                  <Route path="/jobs/create" element={<CreateJob />} />
-                  <Route path="/jobs/:id" element={<JobDetails />} />
-                  <Route
-                    path="/jobs/:id/applications"
-                    element={<JobApplications />}
-                  />
-                  <Route
-                    path="/jobs/:id/applications/:stage"
-                    element={<JobApplications />}
-                  />
-                  <Route
-                    path="/jobs/:id/potential-candidates"
-                    element={<PotentialCandidates />}
-                  />
-
-                  <Route path="/job-seekers" element={<JobseekersPage />} />
-
-                  <Route path="/applicants" element={<ApplicantsPage />} />
-
-                  <Route path="/clients" element={<ClientsPage />} />
-                  <Route path="/clients/:id" element={<ClientDetails />} />
-
-                  <Route path="/tasks" element={<TasksPage />} />
-
-                  <Route path="/staff" element={<StaffPage />} />
-
-                  <Route path="/subscription" element={<SubscriptionPage />} />
-
-                  <Route path="/reports" element={<Dashboard />} />
-
-                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/app">
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="profile" element={<AccountProfile />} />
+                    <Route path="profile/create" element={<CreateProfile />} />
+                    <Route path="profile/edit" element={<CreateProfile />} />
+                    <Route path="jobs" element={<JobsPage />} />
+                    <Route path="jobs/create" element={<CreateJob />} />
+                    <Route path="jobs/:id" element={<JobDetails />} />
+                    <Route
+                      path="jobs/:id/applications"
+                      element={<JobApplications />}
+                    />
+                    <Route
+                      path="jobs/:id/applications/:stage"
+                      element={<JobApplications />}
+                    />
+                    <Route
+                      path="jobs/:id/potential-candidates"
+                      element={<PotentialCandidates />}
+                    />
+                    <Route path="job-seekers" element={<JobseekersPage />} />
+                    <Route path="applicants" element={<ApplicantsPage />} />
+                    <Route path="clients" element={<ClientsPage />} />
+                    <Route path="clients/:id" element={<ClientDetails />} />
+                    <Route path="tasks" element={<TasksPage />} />
+                    <Route path="staff" element={<StaffPage />} />
+                    <Route path="subscription" element={<SubscriptionPage />} />
+                    <Route path="reports" element={<Dashboard />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                  </Route>
                 </Route>
-              </Route>
 
-              {/* Admin routes */}
-              {/* <Route element={<AdminRoutes />}>
-                
-              </Route> */}
+                {/* Admin routes */}
+                <Route element={<AdminLayout />}>
+                  <Route path="/admin">
+                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route path="employers" element={<AdminEmployersPage />} />
+                    <Route
+                      path="recruiters"
+                      element={<AdminRecruitersPage />}
+                    />
+                    <Route
+                      path="jobseekers"
+                      element={<AdminJobseekersPage />}
+                    />
+                    <Route
+                      path="freelancers"
+                      element={<AdminFreelancersPage />}
+                    />
+                    <Route
+                      path="applicants"
+                      element={<AdminApplicantsPage />}
+                    />
+                    <Route path="jobs" element={<AdminJobsPage />} />
+                    <Route path="articles" element={<AdminArticlesPage />} />
+                    <Route
+                      path="subscriptions"
+                      element={<AdminSubscriptionsPage />}
+                    />
+                    <Route path="reports" element={<AdminReportsPage />} />
 
-              <Route element={<AdminLayout />}>
-                <Route path="/admin">
-                  <Route path="dashboard" element={<AdminDashboard />} />
-                  <Route path="employers" element={<AdminEmployersPage />} />
-                  <Route path="recruiters" element={<AdminRecruitersPage />} />
-                  <Route path="jobseekers" element={<AdminJobseekersPage />} />
-                  <Route
-                    path="freelancers"
-                    element={<AdminFreelancersPage />}
-                  />
-                  <Route path="applicants" element={<AdminApplicantsPage />} />
-                  <Route path="jobs" element={<AdminJobsPage />} />
-                  <Route path="articles" element={<AdminArticlesPage />} />
-                  <Route
-                    path="subscriptions"
-                    element={<AdminSubscriptionsPage />}
-                  />
-                  <Route path="reports" element={<AdminReportsPage />} />
-
-                  <Route path="settings" element={<AdminSettingsPage />}>
-                    <Route index element={<Countries />} />
-                    <Route path="countries" element={<Countries />} />
-                    <Route path="regions" element={<Regions />} />
-                    <Route path="industries" element={<Industries />} />
-                    <Route path="languages" element={<Languages />} />
-                    <Route path="language-read" element={<LanguageRead />} />
-                    <Route path="language-speak" element={<LanguageSpeak />} />
-                    <Route path="language-write" element={<LanguageWrite />} />
-                    <Route
-                      path="language-understand"
-                      element={<LanguageUnderstand />}
-                    />
-                    <Route path="institutions" element={<Institutions />} />
-                    <Route
-                      path="education-level"
-                      element={<EducationLevels />}
-                    />
-                    <Route path="courses" element={<Courses />} />
-                    <Route path="majors" element={<Majors />} />
-                    <Route path="skills" element={<Skills />} />
-                    <Route path="softwares" element={<Softwares />} />
-                    <Route path="tools" element={<Tools />} />
-                    <Route path="cultures" element={<Cultures />} />
-                    <Route path="personalities" element={<Personalities />} />
-                    <Route path="proficiencies" element={<Proficiencies />} />
-                    <Route path="genders" element={<Genders />} />
-                    <Route path="positions" element={<Positions />} />
-                    <Route path="position-level" element={<PositionLevels />} />
-                    <Route path="job-types" element={<JobTypes />} />
-                    <Route
-                      path="experience-levels"
-                      element={<ExperienceLevels />}
-                    />
-                    <Route path="salary-ranges" element={<SalaryRanges />} />
+                    <Route path="settings" element={<AdminSettingsPage />}>
+                      <Route index element={<Countries />} />
+                      <Route path="countries" element={<Countries />} />
+                      <Route path="regions" element={<Regions />} />
+                      <Route path="industries" element={<Industries />} />
+                      <Route path="languages" element={<Languages />} />
+                      <Route path="language-read" element={<LanguageRead />} />
+                      <Route
+                        path="language-speak"
+                        element={<LanguageSpeak />}
+                      />
+                      <Route
+                        path="language-write"
+                        element={<LanguageWrite />}
+                      />
+                      <Route
+                        path="language-understand"
+                        element={<LanguageUnderstand />}
+                      />
+                      <Route path="institutions" element={<Institutions />} />
+                      <Route
+                        path="education-level"
+                        element={<EducationLevels />}
+                      />
+                      <Route path="courses" element={<Courses />} />
+                      <Route path="majors" element={<Majors />} />
+                      <Route path="skills" element={<Skills />} />
+                      <Route path="softwares" element={<Softwares />} />
+                      <Route path="tools" element={<Tools />} />
+                      <Route path="cultures" element={<Cultures />} />
+                      <Route path="personalities" element={<Personalities />} />
+                      <Route path="proficiencies" element={<Proficiencies />} />
+                      <Route path="genders" element={<Genders />} />
+                      <Route path="positions" element={<Positions />} />
+                      <Route
+                        path="position-level"
+                        element={<PositionLevels />}
+                      />
+                      <Route path="job-types" element={<JobTypes />} />
+                      <Route
+                        path="experience-levels"
+                        element={<ExperienceLevels />}
+                      />
+                      <Route path="salary-ranges" element={<SalaryRanges />} />
+                    </Route>
                   </Route>
                 </Route>
               </Route>
