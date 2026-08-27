@@ -33,11 +33,11 @@ const StaffPage = () => {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data: staffData, isLoading } = useStaffs({
+  const { data: staffData, isLoading } = useStaffs(
+    debouncedSearch,
     page,
-    limit: perPage,
-    search: debouncedSearch,
-  });
+    perPage,
+  );
 
   const staffs = staffData?.data ?? [];
   const totalStaffs = staffData?.total;
