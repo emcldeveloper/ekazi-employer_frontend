@@ -23,11 +23,11 @@ const JobActions = ({ job }: JobActionsProps) => {
   const navigate = useNavigate();
 
   const handleViewApplications = () => {
-    navigate(`/jobs/${jobId}/applications/applied`);
+    navigate(`/app/jobs/${jobId}/applications/applied`);
   };
 
   const handlePotentialCandidates = () => {
-    navigate(`/jobs/${jobId}/potential-candidates`);
+    navigate(`/app/jobs/${jobId}/potential-candidates`);
   };
 
   return (

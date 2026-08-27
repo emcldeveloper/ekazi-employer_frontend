@@ -41,7 +41,7 @@ const ApplicationStages = ({
             className="w-full justify-between"
             onClick={() =>
               navigate(
-                `/jobs/${jobId}/applications/${stage.stage_name.toLowerCase()}`,
+                `/app/jobs/${jobId}/applications/${stage.stage_name.toLowerCase()}`,
               )
             }
           >

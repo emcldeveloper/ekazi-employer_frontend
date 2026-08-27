@@ -69,7 +69,7 @@ const JobsPage = () => {
 
   // Handlers
   const handleView = (id: number) => {
-    navigate(`/jobs/${id}`);
+    navigate(`/app/jobs/${id}`);
   };
 
   return (

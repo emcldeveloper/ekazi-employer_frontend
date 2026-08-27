@@ -60,17 +60,17 @@ const InterviewForm = ({
     label: staff.first_name,
   }));
 
-  const { data: countries = [] } = useCountries();
-  const countryOptions = countries?.map((country: Country) => ({
+  const { data: countries } = useCountries();
+  const countryOptions = countries?.data?.map((country: Country) => ({
     value: country.id,
     label: country.name,
   }));
 
-  const { data: regions = [] } = useRegions();
+  const { data: regions } = useRegions();
 
   const selectedCountry = watch("country_id");
 
-  const filteredRegions = regions
+  const filteredRegions = regions?.data
     ?.filter((region: Region) => region.country?.id === selectedCountry)
     .map((region: Region) => ({
       value: region.id,
