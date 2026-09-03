@@ -15,12 +15,14 @@ const CreatePlan = () => {
       <DialogTrigger asChild>
         <Button>Add Plan</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Create Subscription Plan</DialogTitle>
         </DialogHeader>
 
-        <PlanForm />
+        <div className="-mx-4 scrollbar max-h-[70vh] overflow-y-auto px-4">
+          <PlanForm />
+        </div>
       </DialogContent>
     </Dialog>
   );

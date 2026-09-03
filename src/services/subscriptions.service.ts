@@ -5,12 +5,6 @@ import type {
 } from "@/@types/subscriptions";
 import api from "@/lib/axios";
 
-export const createSubscription = async (payload: PaymentPayload) => {
-  const res = await api.post("/payment/initiate", payload);
-
-  return res.data;
-};
-
 /**
  * Plans API
  */
@@ -96,5 +90,76 @@ export const updateFeature = async ({
 
 export const deleteFeature = async (id: number) => {
   const res = await api.delete(`/subscription-features/${id}`);
+  return res.data;
+};
+
+/**
+ * Client Subscriptions API
+ */
+export const createSubscription = async (payload: PaymentPayload) => {
+  const res = await api.post("/payment/initiate", payload);
+  return res.data;
+};
+
+export const clientSubscriptions = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
+  const res = await api.get("/payment/current-subscriptions", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data;
+};
+
+export const clientPayments = async (
+  search: string,
+  page: number,
+  limit: number,
+) => {
+  const res = await api.get("/payment/subscription-payments", {
+    params: {
+      search,
+      page,
+      limit,
+    },
+  });
+  return res.data;
+};
+
+/**
+ * Admin Subscriptions & Payments API
+ */
+export const fetchPayments = async (limit: number, offset: number) => {
+  const res = await api.get("/payment/snippe-list", {
+    params: {
+      limit,
+      offset,
+    },
+  });
+  return res.data;
+};
+
+export const searchPayment = async () => {
+  const res = await api.get("/payment/snippe-search");
+  return res.data;
+};
+
+export const fetchPayment = async (reference: string) => {
+  const res = await api.get(`/payment/snippe-payment/${reference}`);
+  return res.data;
+};
+
+export const fetchBalance = async () => {
+  const res = await api.get("/payment/snippe-balance");
+  return res.data;
+};
+
+export const pushUssd = async (reference: string) => {
+  const res = await api.post(`/payment/snippe/ussd-push/${reference}`);
   return res.data;
 };

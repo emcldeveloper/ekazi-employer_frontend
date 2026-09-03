@@ -23,12 +23,14 @@ const UpdatePlan = ({ plan }: UpdateplanProps) => {
           <PencilLine />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Update Subscription Plan</DialogTitle>
         </DialogHeader>
 
-        <PlanForm plan={plan} />
+        <div className="-mx-4 scrollbar max-h-[70vh] overflow-y-auto px-4">
+          <PlanForm plan={plan} />
+        </div>
       </DialogContent>
     </Dialog>
   );

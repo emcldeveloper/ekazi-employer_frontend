@@ -28,6 +28,7 @@ import type { Country, Region } from "@/@types/universals";
 import type { OptionType } from "@/@types/jobs";
 import { Textarea } from "@/components/ui/textarea";
 import { useStaffs } from "@/hooks/staff";
+import type { ClientStaff } from "@/@types/staff";
 
 interface InterviewFormProps {
   jobId: number;
@@ -55,7 +56,7 @@ const InterviewForm = ({
   const interviewType = watch("interview_type");
 
   const { data: staffs } = useStaffs();
-  const staffOptions = staffs?.data?.map((staff: any) => ({
+  const staffOptions = staffs?.data?.map((staff: ClientStaff) => ({
     value: staff.id,
     label: staff.first_name,
   }));

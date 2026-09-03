@@ -58,3 +58,10 @@ export const formatMoney = (
 
   return new Intl.NumberFormat("en-US").format(number);
 };
+
+export const formatCurrency = (amount: number) =>
+  new Intl.NumberFormat("en-TZ", {
+    style: "currency",
+    currency: "TZS",
+    maximumFractionDigits: 0,
+  }).format(amount);

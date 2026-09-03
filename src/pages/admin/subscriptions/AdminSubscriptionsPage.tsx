@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PlansList from "./components/PlansList";
 import FeaturesList from "./components/FeaturesList";
 import SubscriptionsList from "./components/SubscriptionsList";
+import PaymentsList from "./payments/PaymentsList";
 
 const AdminSubscriptionsPage = () => {
   return (
@@ -13,12 +14,16 @@ const AdminSubscriptionsPage = () => {
       <Tabs defaultValue="subscriptions">
         <TabsList variant="line">
           <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
           <TabsTrigger value="plans">Plans</TabsTrigger>
           <TabsTrigger value="features">Features</TabsTrigger>
         </TabsList>
 
         <TabsContent value="subscriptions">
           <SubscriptionsList />
+        </TabsContent>
+        <TabsContent value="payments">
+          <PaymentsList />
         </TabsContent>
         <TabsContent value="plans">
           <PlansList />

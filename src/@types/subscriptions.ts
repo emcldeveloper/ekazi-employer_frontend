@@ -23,7 +23,7 @@ export type Feature = {
 export type PlanPayload = {
   name: string;
   price: number;
-  role: "applicant" | string;
+  role: "applicant" | "employer" | string;
   current_type: "monthly" | "yearly" | string;
   duration_days: number;
   job_post_limit: number;
@@ -31,7 +31,7 @@ export type PlanPayload = {
   cv_builder_limit: number;
   popular: boolean;
   is_active: boolean;
-  features: Feature[];
+  features: number[];
 };
 
 export type FeaturePayload = {

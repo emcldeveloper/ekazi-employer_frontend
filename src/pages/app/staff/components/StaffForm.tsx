@@ -121,14 +121,6 @@ const StaffForm = ({ staff }: UserFormProps) => {
       user_permissions: data.user_permissions,
     };
 
-    console.log(
-      data.user_permissions,
-      data.user_permissions.map((p) => ({
-        value: p.permission_id,
-        type: typeof p.permission_id,
-      })),
-    );
-
     if (staff) {
       updateUser(
         {
