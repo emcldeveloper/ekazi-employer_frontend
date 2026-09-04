@@ -205,7 +205,7 @@ const AccountProfile = () => {
                 </div>
               </div>
 
-              {profile.fax && (
+              {profile?.fax && (
                 <div className="flex items-center gap-3">
                   <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
                     <PrinterIcon size={16} />

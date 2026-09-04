@@ -33,6 +33,11 @@ const calculateDuration = (positions: Experience[] = []) => {
 };
 
 const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
+  const totalExperience = useMemo(
+    () => calculateDuration(experiences),
+    [experiences],
+  );
+
   const groupedExperience = useMemo(() => {
     if (!experiences?.length) return [];
 
@@ -70,7 +75,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
           <div className="bg-blue-100 text-primary p-2 rounded-md">
             <Building2 size={16} />
           </div>
-          Experience
+          Experience ({totalExperience.text})
         </CardTitle>
       </CardHeader>
 

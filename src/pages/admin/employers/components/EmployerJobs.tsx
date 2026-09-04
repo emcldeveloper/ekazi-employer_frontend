@@ -1,5 +1,3 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 
 import {
@@ -15,206 +13,134 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Button } from "@/components/ui/button";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Card, CardContent } from "@/components/ui/card";
+import type { Job } from "@/@types/job";
+import { capitalizeText, formatDate } from "@/utils/helpers";
+import ViewAdminJob from "../../jobs/components/ViewAdminJob";
+import { DataPagination } from "@/components/data-pagination";
+import type { Dispatch, SetStateAction } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import { Badge } from "@/components/ui/badge";
 
-const jobs = [
-  {
-    id: 1,
-    title: "Frontend Developer",
-    date: "2026-05-18",
-    status: "Open",
-    featured: true,
-    applications: 24,
-  },
-  {
-    id: 2,
-    title: "Backend Engineer",
-    date: "2026-05-16",
-    status: "Closed",
-    featured: false,
-    applications: 58,
-  },
-  {
-    id: 3,
-    title: "UI/UX Designer",
-    date: "2026-05-14",
-    status: "Open",
-    featured: true,
-    applications: 12,
-  },
-  {
-    id: 4,
-    title: "Mobile App Developer",
-    date: "2026-05-12",
-    status: "Draft",
-    featured: false,
-    applications: 7,
-  },
-  {
-    id: 5,
-    title: "DevOps Engineer",
-    date: "2026-05-10",
-    status: "Open",
-    featured: true,
-    applications: 31,
-  },
-];
+interface EmployerJobsProps {
+  jobs: Job[];
+  isLoading: boolean;
 
-const EmployerJobs = () => {
-  const navigate = useNavigate();
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
 
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [featuredFilter, setFeaturedFilter] = useState("All");
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
 
-  const filteredJobs = useMemo(() => {
-    return jobs.filter((job) => {
-      const matchesSearch = job.title
-        .toLowerCase()
-        .includes(search.toLowerCase());
+  perPage: number;
+  setPerPage: Dispatch<SetStateAction<number>>;
 
-      const matchesStatus =
-        statusFilter === "All" || job.status === statusFilter;
-
-      const matchesFeatured =
-        featuredFilter === "All" ||
-        (featuredFilter === "Featured" && job.featured) ||
-        (featuredFilter === "Not Featured" && !job.featured);
-
-      return matchesSearch && matchesStatus && matchesFeatured;
-    });
-  }, [search, statusFilter, featuredFilter]);
-
-  const handleView = (id: number) => {
-    navigate(`/jobs/${id}`);
+  jobsData: {
+    page: number;
+    limit: number;
+    totalPages: number;
   };
+}
 
+const EmployerJobs = ({
+  jobs,
+  isLoading,
+  search,
+  setSearch,
+  setPage,
+  setPerPage,
+  jobsData,
+}: EmployerJobsProps) => {
   return (
     <Card>
       <CardContent>
-        <div className="flex flex-col gap-2 lg:flex-row mb-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:justify-between mb-4">
+          {/* Search */}
           <InputGroup className="max-w-md">
             <InputGroupInput
               placeholder="Search company or title..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
             />
             <InputGroupAddon>
               <Search />
             </InputGroupAddon>
           </InputGroup>
-
-          {/* filters */}
-          <div className="flex gap-2">
-            <Select
-              value={statusFilter}
-              onValueChange={(value) => setStatusFilter(value)}
-            >
-              <SelectTrigger className="w-full max-w-48">
-                <SelectValue placeholder="Select a fruit" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Status</SelectLabel>
-                  <SelectItem value="All">All status</SelectItem>
-                  <SelectItem value="Open">Open</SelectItem>
-                  <SelectItem value="Closed">Closed</SelectItem>
-                  <SelectItem value="Draft">Draft</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={featuredFilter}
-              onValueChange={(value) => setFeaturedFilter(value)}
-            >
-              <SelectTrigger className="w-full max-w-48">
-                <SelectValue placeholder="Select a fruit" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Featured</SelectLabel>
-                  <SelectItem value="All">All Jobs</SelectItem>
-                  <SelectItem value="Featured">Featured</SelectItem>
-                  <SelectItem value="Not Featured">Not Featured</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
         </div>
-
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
-              <TableHead>Date</TableHead>
+              <TableHead>Created At</TableHead>
+              <TableHead>Deadline</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Featured</TableHead>
               <TableHead>Applications</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody>
-            {filteredJobs.map((job) => (
-              <TableRow key={job.id}>
-                <TableCell>{job.title}</TableCell>
-                <TableCell>{job.date}</TableCell>
-                <TableCell>{job.status}</TableCell>
-                <TableCell>{job.featured ? "Yes" : "No"}</TableCell>
-                <TableCell>{job.applications}</TableCell>
-                <TableCell className="text-right">
-                  <Button variant="link" onClick={() => handleView(job.id)}>
-                    View
-                  </Button>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={6} className="h-40">
+                  <div className="flex items-center justify-center">
+                    <Spinner className="size-6" />
+                  </div>
                 </TableCell>
               </TableRow>
-            ))}
+            ) : jobs.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="h-40 text-center text-muted-foreground"
+                >
+                  No jobs found
+                </TableCell>
+              </TableRow>
+            ) : (
+              jobs.map((job: Job) => (
+                <TableRow key={job.id}>
+                  <TableCell>
+                    {capitalizeText(job.position?.position_name)}
+                  </TableCell>
+                  <TableCell>{formatDate(job?.created_at)}</TableCell>
+                  <TableCell>{formatDate(job?.dead_line)}</TableCell>
+                  <TableCell>
+                    {Number(job?.published) === 1 ? (
+                      <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                        Published
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                        Unpublished
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {job.total_applicants}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <ViewAdminJob jobId={job.id} />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
-
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        .
+        {jobs.length > 0 && (
+          <DataPagination
+            page={jobsData?.page}
+            perPage={jobsData?.limit}
+            totalPages={jobsData?.totalPages}
+            onPageChange={setPage}
+            onPerPageChange={setPerPage}
+          />
+        )}
       </CardContent>
     </Card>
   );

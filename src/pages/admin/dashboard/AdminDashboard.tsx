@@ -25,14 +25,14 @@ const AdminDashboard = () => {
 
   // statistics cards data
   const employers =
-    Number(statistics?.nonVerifiedEmployerCount) +
-    Number(statistics?.verifiedEmployerCount);
+    Number(statistics?.nonVerifiedEmployerCount ?? 0) +
+    Number(statistics?.verifiedEmployerCount ?? 0);
 
   const jobseekers =
-    Number(statistics?.verifiedJobSeekerCount) +
-    Number(statistics?.nonVerifiedJobSeekerCount);
+    Number(statistics?.verifiedJobSeekerCount ?? 0) +
+    Number(statistics?.nonVerifiedJobSeekerCount ?? 0);
 
-  const admins = statistics?.adminCount;
+  const admins = Number(statistics?.adminCount ?? 0);
 
   return (
     <div className="space-y-4">
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Employers</h3>
-              <p className="mt-1 text-3xl font-bold">
+              <p className="mt-1 text-2xl font-bold">
                 {formatNumber(employers)}
               </p>
             </div>
@@ -57,7 +57,7 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Recruiters</h3>
-              <p className="mt-1 text-3xl font-bold">{formatNumber(0)}</p>
+              <p className="mt-1 text-2xl font-bold">{formatNumber(0)}</p>
             </div>
 
             <div className="rounded-lg bg-green-100 p-3 text-green-600">
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">JobSeekers</h3>
-              <p className="mt-1 text-3xl font-bold">
+              <p className="mt-1 text-2xl font-bold">
                 {formatNumber(jobseekers)}
               </p>
             </div>
@@ -85,7 +85,7 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Freelancers</h3>
-              <p className="mt-1 text-3xl font-bold">{formatNumber(0)}</p>
+              <p className="mt-1 text-2xl font-bold">{formatNumber(0)}</p>
             </div>
 
             <div className="rounded-lg bg-yellow-100 p-3 text-yellow-600">
@@ -98,7 +98,7 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Jobs</h3>
-              <p className="mt-1 text-3xl font-bold">{formatNumber(0)}</p>
+              <p className="mt-1 text-2xl font-bold">{formatNumber(0)}</p>
             </div>
 
             <div className="rounded-lg bg-yellow-100 p-3 text-yellow-600">
@@ -111,7 +111,7 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Applications</h3>
-              <p className="mt-1 text-3xl font-bold">{formatNumber(0)}</p>
+              <p className="mt-1 text-2xl font-bold">{formatNumber(0)}</p>
             </div>
 
             <div className="rounded-lg bg-orange-100 p-3 text-orange-600">
@@ -124,7 +124,7 @@ const AdminDashboard = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Admins</h3>
-              <p className="mt-1 text-3xl font-bold">{admins}</p>
+              <p className="mt-1 text-2xl font-bold">{admins}</p>
             </div>
 
             <div className="rounded-lg bg-orange-100 p-3 text-orange-600">

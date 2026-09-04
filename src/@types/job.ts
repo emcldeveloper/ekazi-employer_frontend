@@ -87,6 +87,7 @@ export interface JobExternalUrl {
 export interface Client {
   id: number;
   name: string;
+  client_name?: string;
   logo: string;
 }
 

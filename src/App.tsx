@@ -72,6 +72,7 @@ import PositionLevels from "./pages/admin/universals/position-levels/PositionLev
 import JobTypes from "./pages/admin/universals/job-types/JobTypes";
 import ExperienceLevels from "./pages/admin/universals/experience-levels/ExperienceLevels";
 import SalaryRanges from "./pages/admin/universals/salary-ranges/SalaryRanges";
+import EmployerDetails from "./pages/admin/employers/components/EmployerDetails";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -144,11 +145,19 @@ const App = () => {
                 <Route element={<AdminLayout />}>
                   <Route path="/admin">
                     <Route path="dashboard" element={<AdminDashboard />} />
+
                     <Route path="employers" element={<AdminEmployersPage />} />
+                    <Route path="employers/:id" element={<EmployerDetails />} />
+
                     <Route
                       path="recruiters"
                       element={<AdminRecruitersPage />}
                     />
+                    <Route
+                      path="recruiters/:id"
+                      element={<EmployerDetails />}
+                    />
+
                     <Route
                       path="jobseekers"
                       element={<AdminJobseekersPage />}
@@ -161,7 +170,9 @@ const App = () => {
                       path="applicants"
                       element={<AdminApplicantsPage />}
                     />
+
                     <Route path="jobs" element={<AdminJobsPage />} />
+
                     <Route path="articles" element={<AdminArticlesPage />} />
                     <Route
                       path="subscriptions"

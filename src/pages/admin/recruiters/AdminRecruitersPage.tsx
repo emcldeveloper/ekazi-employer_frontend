@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   BriefcaseBusiness,
   CircleCheck,
@@ -15,11 +14,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+
+import { Button } from "@/components/ui/button";
+
 import {
   Select,
   SelectContent,
@@ -29,23 +32,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
-interface Recruiter {
-  id: string;
-  company: string;
-  activeJobs: number;
-  status: string;
-  featured: boolean;
-}
+import { useState } from "react";
+import { useEmployers } from "@/hooks/employers/useEmployers";
+import type { Employer } from "@/@types/employers";
+import { Spinner } from "@/components/ui/spinner";
+import { DataPagination } from "@/components/data-pagination";
+import { useDebounce } from "@/hooks/useDebounce";
+import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const AdminRecruitersPage = () => {
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [featuredFilter, setFeaturedFilter] = useState("All");
+  const navigate = useNavigate();
 
-  const recruiters: Recruiter[] = [];
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(25);
+  const [featuredFilter, setFeaturedFilter] = useState("");
+
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { data: employersData, isLoading } = useEmployers(
+    debouncedSearch,
+    page,
+    perPage,
+    featuredFilter,
+  );
+
+  const employers = employersData?.data ?? [];
+  const statistics = employersData?.statistics;
+
   return (
     <div className="space-y-4">
       <div className="sm:w-2/3">
@@ -53,12 +69,14 @@ const AdminRecruitersPage = () => {
       </div>
 
       {/* stats */}
-      <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
         <Card>
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">All</h3>
-              <p className="mt-1 text-3xl font-bold">0</p>
+              <p className="mt-1 text-2xl font-bold">
+                {statistics?.total_clients}
+              </p>
             </div>
 
             <div className="rounded-lg bg-blue-100 p-3 text-blue-600">
@@ -70,11 +88,11 @@ const AdminRecruitersPage = () => {
         <Card>
           <CardContent className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm text-muted-foreground">Active</h3>
-              <p className="mt-1 text-3xl font-bold">0</p>
+              <h3 className="text-sm text-muted-foreground">Featured</h3>
+              <p className="mt-1 text-2xl font-bold">{0}</p>
             </div>
 
-            <div className="rounded-lg bg-green-100 p-3 text-green-600">
+            <div className="rounded-lg bg-yellow-100 p-3 text-yellow-600">
               <CircleCheckBig size={16} />
             </div>
           </CardContent>
@@ -84,10 +102,12 @@ const AdminRecruitersPage = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Verified</h3>
-              <p className="mt-1 text-3xl font-bold">0</p>
+              <p className="mt-1 text-2xl font-bold">
+                {statistics?.verified_clients}
+              </p>
             </div>
 
-            <div className="rounded-lg bg-red-100 p-3 text-red-600">
+            <div className="rounded-lg bg-green-100 p-3 text-green-600">
               <CircleCheck size={16} />
             </div>
           </CardContent>
@@ -97,10 +117,12 @@ const AdminRecruitersPage = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Non Verified</h3>
-              <p className="mt-1 text-3xl font-bold">0</p>
+              <p className="mt-1 text-2xl font-bold">
+                {statistics?.unverified_clients}
+              </p>
             </div>
 
-            <div className="rounded-lg bg-yellow-100 p-3 text-yellow-600">
+            <div className="rounded-lg bg-red-100 p-3 text-red-600">
               <CircleX size={16} />
             </div>
           </CardContent>
@@ -113,9 +135,12 @@ const AdminRecruitersPage = () => {
           <div className="mb-4 flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
             <InputGroup className="max-w-md">
               <InputGroupInput
-                placeholder="Search recruiter..."
+                placeholder="Search employer..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
               />
 
               <InputGroupAddon>
@@ -124,30 +149,13 @@ const AdminRecruitersPage = () => {
             </InputGroup>
 
             <div className="flex flex-col gap-2 sm:flex-row">
-              {/* Status Filter */}
-              <Select
-                value={statusFilter}
-                onValueChange={(value) => setStatusFilter(value)}
-              >
-                <SelectTrigger className="w-full sm:w-48">
-                  <SelectValue placeholder="Filter status" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Status</SelectLabel>
-
-                    <SelectItem value="All">All Status</SelectItem>
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="Not Active">Not Active</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
               {/* Featured Filter */}
               <Select
                 value={featuredFilter}
-                onValueChange={(value) => setFeaturedFilter(value)}
+                onValueChange={(value) => {
+                  setFeaturedFilter(value === "all" ? "" : value);
+                  setPage(1);
+                }}
               >
                 <SelectTrigger className="w-full sm:w-48">
                   <SelectValue placeholder="Featured" />
@@ -157,9 +165,9 @@ const AdminRecruitersPage = () => {
                   <SelectGroup>
                     <SelectLabel>Featured</SelectLabel>
 
-                    <SelectItem value="All">All</SelectItem>
-                    <SelectItem value="Yes">Yes</SelectItem>
-                    <SelectItem value="No">No</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="true">Yes</SelectItem>
+                    <SelectItem value="false">No</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -169,42 +177,91 @@ const AdminRecruitersPage = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Recruiter</TableHead>
-                <TableHead>Active Jobs</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Business</TableHead>
+                <TableHead>Verified</TableHead>
                 <TableHead>Featured</TableHead>
+                <TableHead>No. of jobs</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
 
             <TableBody>
-              {recruiters.length > 0 ? (
-                recruiters.map((employer) => (
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center h-30">
+                    <Spinner className="size-8" />
+                  </TableCell>
+                </TableRow>
+              ) : employers.length > 0 ? (
+                employers.map((employer: Employer) => (
                   <TableRow key={employer.id}>
-                    <TableCell className="font-medium">
-                      {employer.company}
+                    <TableCell className="max-w-50 truncate">
+                      {employer.name}
                     </TableCell>
 
-                    <TableCell>{employer.activeJobs}</TableCell>
+                    <TableCell className="max-w-50 truncate">
+                      {employer.business}
+                    </TableCell>
 
-                    <TableCell>{employer.status}</TableCell>
+                    <TableCell>
+                      {employer.is_verified ? (
+                        <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+                          Verified
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+                          Not Verified
+                        </Badge>
+                      )}
+                    </TableCell>
 
-                    <TableCell>{employer.featured ? "Yes" : "No"}</TableCell>
+                    <TableCell>
+                      {employer.featured ? (
+                        <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+                          Featured
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100">
+                          Not Featured
+                        </Badge>
+                      )}
+                    </TableCell>
+
+                    <TableCell>{employer.total_jobs}</TableCell>
 
                     <TableCell className="text-right">
-                      <Button variant="link">View</Button>
+                      <Button
+                        variant="link"
+                        onClick={() =>
+                          navigate(`/admin/recruiters/${employer.id}`)
+                        }
+                      >
+                        View
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center h-30">
-                    No recruiters found.
+                  <TableCell colSpan={6} className="text-center h-30">
+                    No employers found.
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
+
+          {/* pagination */}
+          {employers.length > 0 && (
+            <DataPagination
+              page={employersData?.page}
+              perPage={employersData?.limit}
+              totalPages={employersData?.totalPages}
+              onPageChange={setPage}
+              onPerPageChange={setPerPage}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

@@ -1,12 +1,11 @@
 import { useState } from "react";
-import {
-  BriefcaseBusiness,
-  CircleCheck,
-  CircleCheckBig,
-  CircleX,
-  Search,
-} from "lucide-react";
+import { SearchIcon } from "lucide-react";
 
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import {
   Table,
   TableBody,
@@ -15,196 +14,140 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 
-interface Recruiter {
-  id: string;
-  company: string;
-  activeJobs: number;
-  status: string;
-  featured: boolean;
-}
+import type { Jobseeker, JobseekerFilters } from "@/@types/jobseekers";
+import { useDebounce } from "@/hooks/useDebounce";
+import { DataPagination } from "@/components/data-pagination";
+import { Button } from "@/components/ui/button";
+import { capitalizeText } from "@/utils/helpers";
+import { useAdminApplicants } from "@/hooks/admin/useAdminApplicants";
+import ViewAdminApplicant from "./components/ViewAdminApplicant";
 
 const AdminApplicantsPage = () => {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [featuredFilter, setFeaturedFilter] = useState("All");
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(25);
+  const [filters, setFilters] = useState<JobseekerFilters>({});
 
-  const recruiters: Recruiter[] = [];
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { data: applicantsData, isLoading } = useAdminApplicants(
+    debouncedSearch,
+    page,
+    perPage,
+  );
+  const applicants = applicantsData?.data ?? [];
+
+  const hasFilters =
+    !!filters.position ||
+    !!filters.positionLevelId ||
+    !!filters.industryId ||
+    !!filters.educationLevelId;
+
+  const clearFilters = () => {
+    setFilters({});
+    setPage(1);
+  };
+
   return (
     <div className="space-y-4">
-      <div className="sm:w-2/3">
+      <div>
         <h2 className="text-2xl font-bold">Applicants</h2>
-      </div>
-
-      {/* stats */}
-      <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
-        <Card>
-          <CardContent className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm text-muted-foreground">All</h3>
-              <p className="mt-1 text-3xl font-bold">0</p>
-            </div>
-
-            <div className="rounded-lg bg-blue-100 p-3 text-blue-600">
-              <BriefcaseBusiness size={16} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm text-muted-foreground">Active</h3>
-              <p className="mt-1 text-3xl font-bold">0</p>
-            </div>
-
-            <div className="rounded-lg bg-green-100 p-3 text-green-600">
-              <CircleCheckBig size={16} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm text-muted-foreground">Verified</h3>
-              <p className="mt-1 text-3xl font-bold">0</p>
-            </div>
-
-            <div className="rounded-lg bg-red-100 p-3 text-red-600">
-              <CircleCheck size={16} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm text-muted-foreground">Non Verified</h3>
-              <p className="mt-1 text-3xl font-bold">0</p>
-            </div>
-
-            <div className="rounded-lg bg-yellow-100 p-3 text-yellow-600">
-              <CircleX size={16} />
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       <Card>
         <CardContent className="space-y-4">
-          {/* Search & Filters */}
-          <div className="mb-4 flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <InputGroup className="max-w-md">
               <InputGroupInput
-                placeholder="Search recruiter..."
+                placeholder="Search company or title..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
               />
-
               <InputGroupAddon>
-                <Search className="h-4 w-4" />
+                <SearchIcon />
               </InputGroupAddon>
             </InputGroup>
 
-            <div className="flex flex-col gap-2 sm:flex-row">
-              {/* Status Filter */}
-              <Select
-                value={statusFilter}
-                onValueChange={(value) => setStatusFilter(value)}
-              >
-                <SelectTrigger className="w-full sm:w-48">
-                  <SelectValue placeholder="Filter status" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Status</SelectLabel>
-
-                    <SelectItem value="All">All Status</SelectItem>
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="Not Active">Not Active</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-              {/* Featured Filter */}
-              <Select
-                value={featuredFilter}
-                onValueChange={(value) => setFeaturedFilter(value)}
-              >
-                <SelectTrigger className="w-full sm:w-48">
-                  <SelectValue placeholder="Featured" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Featured</SelectLabel>
-
-                    <SelectItem value="All">All</SelectItem>
-                    <SelectItem value="Yes">Yes</SelectItem>
-                    <SelectItem value="No">No</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            {/* Advanced Search */}
+            <div className="flex gap-2">
+              {hasFilters && (
+                <Button variant="ghost" onClick={clearFilters}>
+                  Clear filters
+                </Button>
+              )}
             </div>
           </div>
 
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
+                <TableHead>Full Name</TableHead>
                 <TableHead>Latest Position</TableHead>
-                <TableHead>Profile</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Profile (%)</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
-
             <TableBody>
-              {recruiters.length > 0 ? (
-                recruiters.map((employer) => (
-                  <TableRow key={employer.id}>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-32">
+                    <div className="flex items-center justify-center">
+                      <Spinner className="size-8" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : applicants.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="h-24 text-center text-muted-foreground"
+                  >
+                    No job seekers found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                applicants.map((applicant: Jobseeker) => (
+                  <TableRow key={applicant.id}>
                     <TableCell className="font-medium">
-                      {employer.company}
+                      {capitalizeText(
+                        `${applicant.first_name} ${applicant.last_name}`,
+                      )}
                     </TableCell>
 
-                    <TableCell>{employer.activeJobs}</TableCell>
+                    <TableCell>
+                      {capitalizeText(applicant.applicant_position) ||
+                        "No Experience"}
+                    </TableCell>
 
-                    <TableCell>{employer.status}</TableCell>
-
-                    <TableCell>{employer.featured ? "Yes" : "No"}</TableCell>
+                    <TableCell>
+                      {applicant.profile_completion?.total_percentage ?? "-"}
+                    </TableCell>
 
                     <TableCell className="text-right">
-                      <Button variant="link">View</Button>
+                      <ViewAdminApplicant applicantId={applicant.id} />
                     </TableCell>
                   </TableRow>
                 ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center h-30">
-                    No applicants found.
-                  </TableCell>
-                </TableRow>
               )}
             </TableBody>
           </Table>
+
+          {/* pagination */}
+          {applicants.length > 0 && (
+            <DataPagination
+              page={applicantsData?.page}
+              perPage={applicantsData?.limit}
+              totalPages={applicantsData?.totalPages}
+              onPageChange={setPage}
+              onPerPageChange={setPerPage}
+            />
+          )}
         </CardContent>
       </Card>
     </div>
