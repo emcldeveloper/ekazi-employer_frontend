@@ -27,6 +27,8 @@ interface ViewBillingProps {
 const ViewBilling = ({ payment }: ViewBillingProps) => {
   const isMobile = useIsMobile();
 
+  console.log(payment);
+
   return (
     <>
       {isMobile ? (
