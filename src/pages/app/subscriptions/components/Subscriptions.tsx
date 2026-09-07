@@ -68,7 +68,7 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
             <div className="min-w-0 flex-1">
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <h2 className="text-lg font-semibold">
-                  {subscription?.plan.name}
+                  {subscription?.plan?.name}
                 </h2>
 
                 {subscription?.is_active && (
@@ -163,7 +163,7 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
 
                     <span className="text-sm font-semibold">
                       {subscription?.job_post_remaining}/
-                      {subscription?.plan.job_post_limit}
+                      {subscription?.plan?.job_post_limit}
                     </span>
                   </div>
 
@@ -196,7 +196,7 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
 
                     <span className="text-sm font-semibold">
                       {subscription?.cv_download_remaining}/
-                      {subscription?.plan.cv_download_limit}
+                      {subscription?.plan?.cv_download_limit}
                     </span>
                   </div>
 
