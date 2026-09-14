@@ -26,6 +26,7 @@ import { useCompanyTypes } from "@/hooks/universals";
 import { useRegister } from "@/hooks/auth";
 import type { RegisterForm } from "@/@types/auth";
 import type { CompanyType } from "@/@types/universals";
+import { getErrorMessage } from "@/utils/axios-helpers";
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -69,9 +70,8 @@ const RegisterPage = () => {
         reset();
       },
 
-      onError: (err: any) => {
-        const message = err.response?.data?.message;
-        toast.error(message || "Registration Failed");
+      onError: (err) => {
+        toast.error(getErrorMessage(err));
       },
     });
   };

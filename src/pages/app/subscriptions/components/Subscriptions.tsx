@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { useClientSubscriptions } from "@/hooks/subscriptions";
 import { formatCurrency, formatDate } from "@/utils/helpers";
+import Transactions from "./Transactions";
 
 interface SubscriptionsProps {
   onUpgrade: () => void;
@@ -21,23 +22,7 @@ interface SubscriptionsProps {
 
 const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
   const { data: subscriptionsData, isLoading } = useClientSubscriptions();
-  const subscription = subscriptionsData?.data;
-
-  // Replace this with your API data
-  // const subscription = {
-  //   plan: {
-  //     name: "Employer Basic",
-  //     price: 1000,
-  //     current_type: "monthly",
-  //     job_post_limit: 5,
-  //     cv_download_limit: 10,
-  //   },
-  //   end_date: "2026-09-27T07:54:48.000Z",
-  //   remaining_days: 26,
-  //   job_post_remaining: 2,
-  //   cv_download_remaining: 5,
-  //   is_active: true,
-  // };
+  const subscription = subscriptionsData?.data?.[0];
 
   const jobPostUsed =
     subscription?.plan?.job_post_limit - subscription?.job_post_remaining;
@@ -60,14 +45,15 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Card>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4">
           {/* Header */}
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="min-w-0 flex-1">
-              <div className="mb-2 flex flex-wrap items-center gap-2">
-                <h2 className="text-lg font-semibold">
+              <p className="text-sm text-muted-foreground">Current plan</p>
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-2xl font-semibold">
                   {subscription?.plan?.name}
                 </h2>
 
@@ -76,36 +62,29 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
                     variant="outline"
                     className="border-green-200 bg-green-50 text-green-700"
                   >
-                    <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
+                    <CheckCircle2 />
                     Active
                   </Badge>
                 )}
               </div>
 
               {/* Subscription info */}
-              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
+              <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1.5">
-                  <CreditCard className="h-4 w-4" />
-                  {formatCurrency(subscription?.plan?.price)} /{" "}
+                  <CreditCard size={14} />
+                  {formatCurrency(subscription?.plan?.price)} /
                   {subscription?.plan?.current_type}
                 </span>
 
                 <span className="flex items-center gap-1.5">
-                  <CalendarDays className="h-4 w-4" />
-                  Renews {formatDate(subscription?.end_date)}
+                  <CalendarDays size={14} />
+                  renews {formatDate(subscription?.end_date)}
                 </span>
               </div>
             </div>
 
             {/* Price + CTA */}
             <div className="flex flex-col items-start gap-3 md:items-end">
-              <div className="text-left md:text-right">
-                <p className="text-xs text-muted-foreground">Current plan</p>
-                <p className="text-2xl font-bold tracking-tight">
-                  {formatCurrency(subscription?.plan?.price)}
-                </p>
-              </div>
-
               <Button onClick={onUpgrade}>Upgrade Plan</Button>
             </div>
           </div>
@@ -127,7 +106,7 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
               <p className="text-2xl font-bold">
                 {subscription?.remaining_days}
               </p>
-              <p className="text-muted-foreground">days remaining</p>
+              <p className="text-muted-foreground">Days remaining</p>
             </div>
           </div>
 
@@ -149,13 +128,13 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
                 <CardContent>
                   <div className="mb-3 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
+                      <div className="rounded-lg bg-orange-100 p-3 text-orange-600">
                         <BriefcaseBusiness className="h-4 w-4" />
                       </div>
 
                       <div>
-                        <p className="text-sm font-medium">Job posts</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-base font-medium">Job posts</p>
+                        <p className="text-sm text-muted-foreground">
                           {jobPostUsed} used
                         </p>
                       </div>
@@ -182,7 +161,7 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
                 <CardContent>
                   <div className="mb-3 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted">
+                      <div className="rounded-lg bg-yellow-100 p-3 text-yellow-600">
                         <FileText className="h-4 w-4" />
                       </div>
 
@@ -211,6 +190,8 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
           </div>
         </CardContent>
       </Card>
+
+      <Transactions />
     </div>
   );
 };

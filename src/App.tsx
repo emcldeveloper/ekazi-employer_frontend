@@ -11,7 +11,6 @@ import ContactPage from "./pages/landing/ContactPage";
 import AboutPage from "./pages/landing/AboutPage";
 import PricingPage from "./pages/landing/PricingPage";
 
-import RegisterPage from "./pages/auth/RegisterPage";
 import VerifyPage from "./pages/auth/VerifyPage";
 import SigninPage from "./pages/auth/SigninPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
@@ -73,6 +72,7 @@ import JobTypes from "./pages/admin/universals/job-types/JobTypes";
 import ExperienceLevels from "./pages/admin/universals/experience-levels/ExperienceLevels";
 import SalaryRanges from "./pages/admin/universals/salary-ranges/SalaryRanges";
 import EmployerDetails from "./pages/admin/employers/components/EmployerDetails";
+import { Onboarding } from "./pages/auth/Onboarding";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -101,7 +101,7 @@ const App = () => {
               <Route path="/contact" element={<ContactPage />} />
 
               {/* Auth */}
-              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/register" element={<Onboarding />} />
               <Route path="/verification" element={<VerifyPage />} />
               <Route path="/login" element={<SigninPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />

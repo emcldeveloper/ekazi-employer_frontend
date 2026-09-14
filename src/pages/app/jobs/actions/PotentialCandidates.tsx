@@ -122,13 +122,15 @@ const PotentialCandidates = () => {
           </Table>
 
           {/* Pagination */}
-          <DataPagination
-            page={potentialData?.page}
-            perPage={potentialData?.limit}
-            totalPages={potentialData?.totalPages}
-            onPageChange={setPage}
-            onPerPageChange={setPerPage}
-          />
+          {potentialCandidates.length > 0 && (
+            <DataPagination
+              page={potentialData?.page}
+              perPage={potentialData?.limit}
+              totalPages={potentialData?.totalPages}
+              onPageChange={setPage}
+              onPerPageChange={setPerPage}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

@@ -61,11 +61,11 @@ const JobsPage = () => {
   });
 
   const jobs = jobsData?.data ?? [];
-  const totalJobs = jobsData?.total;
-  const activeJobs = jobsData?.stats?.active_jobs;
-  const expiredJobs = jobsData?.stats?.expired_jobs;
-  const publishedJobs = jobsData?.stats?.published_jobs;
-  const unpublishedJobs = jobsData?.stats?.unpublished_jobs;
+  const totalJobs = jobsData?.total ?? 0;
+  const activeJobs = jobsData?.stats?.active_jobs ?? 0;
+  const expiredJobs = jobsData?.stats?.expired_jobs ?? 0;
+  const publishedJobs = jobsData?.stats?.published_jobs ?? 0;
+  const unpublishedJobs = jobsData?.stats?.unpublished_jobs ?? 0;
 
   // Handlers
   const handleView = (id: number) => {
@@ -83,12 +83,12 @@ const JobsPage = () => {
       </div>
 
       {/* stats */}
-      <div className="grid gap-2 grid-cols-2 md:grid-cols-5">
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-5">
         <Card>
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">All Jobs</h3>
-              <p className="mt-1 text-3xl font-bold">{totalJobs}</p>
+              <p className="mt-1 text-2xl font-bold">{totalJobs}</p>
             </div>
 
             <div className="rounded-lg bg-blue-100 p-3 text-blue-600">
@@ -101,7 +101,7 @@ const JobsPage = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Active</h3>
-              <p className="mt-1 text-3xl font-bold">{activeJobs}</p>
+              <p className="mt-1 text-2xl font-bold">{activeJobs}</p>
             </div>
 
             <div className="rounded-lg bg-green-100 p-3 text-green-600">
@@ -114,7 +114,7 @@ const JobsPage = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Expired</h3>
-              <p className="mt-1 text-3xl font-bold">{expiredJobs}</p>
+              <p className="mt-1 text-2xl font-bold">{expiredJobs}</p>
             </div>
 
             <div className="rounded-lg bg-red-100 p-3 text-red-600">
@@ -127,7 +127,7 @@ const JobsPage = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Published</h3>
-              <p className="mt-1 text-3xl font-bold">{publishedJobs}</p>
+              <p className="mt-1 text-2xl font-bold">{publishedJobs}</p>
             </div>
 
             <div className="rounded-lg bg-yellow-100 p-3 text-yellow-600">
@@ -140,7 +140,7 @@ const JobsPage = () => {
           <CardContent className="flex items-center justify-between">
             <div>
               <h3 className="text-sm text-muted-foreground">Unpublished</h3>
-              <p className="mt-1 text-3xl font-bold">{unpublishedJobs}</p>
+              <p className="mt-1 text-2xl font-bold">{unpublishedJobs}</p>
             </div>
 
             <div className="rounded-lg bg-orange-100 p-3 text-orange-600">

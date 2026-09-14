@@ -41,7 +41,7 @@ export default function JobsPostedChart({ data }: { data: any }) {
     },
     safari: {
       label: "Expired",
-      color: "var(--chart-2)",
+      color: "var(--chart-4)",
     },
   } satisfies ChartConfig;
 

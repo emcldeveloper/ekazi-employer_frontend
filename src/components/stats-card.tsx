@@ -19,16 +19,7 @@ export function StatsCard({
   onClick,
 }: StatsCardProps) {
   return (
-    <Card
-      onClick={onClick}
-      className={`
-        transition-all duration-200 ease-out
-        hover:scale-[1.02]
-        hover:-translate-y-1
-        hover:shadow-lg
-        ${onClick ? "cursor-pointer" : ""}
-      `}
-    >
+    <Card onClick={onClick}>
       <CardContent className="flex items-center justify-between">
         <div>
           <h3 className="text-sm text-muted-foreground font-medium">{title}</h3>

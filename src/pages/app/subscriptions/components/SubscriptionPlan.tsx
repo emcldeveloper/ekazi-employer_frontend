@@ -6,7 +6,7 @@ const SubscriptionPlan = () => {
     {
       title: "Basic Plan",
       type: "basic",
-      price: "100,000",
+      price: 100000,
       subtitle: "Small Businesses and Startups",
       button: "Upgrade to Basic",
       features: [
@@ -19,7 +19,7 @@ const SubscriptionPlan = () => {
     {
       title: "Standard Plan",
       type: "standard",
-      price: "150,000",
+      price: 150000,
       subtitle: "Medium-sized businesses",
       button: "Upgrade to Standard",
       features: [
@@ -33,7 +33,7 @@ const SubscriptionPlan = () => {
     {
       title: "Premium Plan",
       type: "premium",
-      price: "300,000",
+      price: 300000,
       subtitle: "Large corporations",
       button: "Upgrade to Premium",
       features: [
@@ -50,7 +50,7 @@ const SubscriptionPlan = () => {
     {
       title: "Enterprise Plan",
       type: "enterprise",
-      price: "500,000",
+      price: 500000,
       subtitle: "Enterprise companies",
       button: "Upgrade to Enterprise",
       features: [
@@ -69,7 +69,7 @@ const SubscriptionPlan = () => {
       {plans.map((plan, i) => (
         <div
           key={i}
-          className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-col
+          className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col
             hover:shadow-xl transition duration-300 space-y-4"
         >
           {/* Title */}
@@ -86,9 +86,7 @@ const SubscriptionPlan = () => {
             <span className="text-3xl font-bold text-gray-900">
               {plan.price}
             </span>
-            {plan.price !== "Free" && (
-              <span className="text-gray-500 text-sm"> /mo</span>
-            )}
+            {plan.price && <span className="text-gray-500 text-sm"> /mo</span>}
           </div>
 
           {/* Subtitle */}
@@ -108,7 +106,7 @@ const SubscriptionPlan = () => {
           </ul>
 
           {/* Button */}
-          <UpgradePlan />
+          <UpgradePlan plan={plan} />
         </div>
       ))}
     </div>

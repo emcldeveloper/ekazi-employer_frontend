@@ -1,6 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SubscriptionPlan from "./components/SubscriptionPlan";
-import Billing from "./components/Billing";
 import Subscriptions from "./components/Subscriptions";
 import { useState } from "react";
 
@@ -20,9 +19,8 @@ const SubscriptionPage = () => {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList variant="line">
-          <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
-          <TabsTrigger value="billing">Billing</TabsTrigger>
-          <TabsTrigger value="plans">Upgrade plan</TabsTrigger>
+          <TabsTrigger value="subscriptions">Subscription</TabsTrigger>
+          <TabsTrigger value="plans">plans</TabsTrigger>
         </TabsList>
 
         <TabsContent value="subscriptions">
@@ -30,9 +28,6 @@ const SubscriptionPage = () => {
         </TabsContent>
         <TabsContent value="plans">
           <SubscriptionPlan />
-        </TabsContent>
-        <TabsContent value="billing">
-          <Billing />
         </TabsContent>
       </Tabs>
     </div>

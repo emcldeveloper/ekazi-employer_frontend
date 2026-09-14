@@ -9,6 +9,10 @@ export type RegisterPayload = {
   phone: string;
   password: string;
   type: number;
+
+  first_name?: string;
+  last_name?: string;
+  client_type?: string;
 };
 
 export type RegisterForm = {
@@ -53,4 +57,18 @@ export type ChangePasswordForm = {
   password: string;
   newPassword: string;
   confirmNewPassword: string;
+};
+
+export type OnboardingPayload = {
+  plan_id: number;
+
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  type: number;
+  account_type: string;
+
+  phone_number: number;
 };
