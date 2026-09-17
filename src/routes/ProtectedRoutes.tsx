@@ -5,7 +5,7 @@ import { FRONTEND_URL } from "@/config/config";
 
 const ProtectedRoutes = () => {
   const token = localStorage.getItem("token");
-  const verified = localStorage.getItem("verified") === "1";
+  const verified = localStorage.getItem("verified") === "true";
 
   const { data, isLoading } = useUser();
 
@@ -16,7 +16,7 @@ const ProtectedRoutes = () => {
     }
 
     if (!verified) {
-      window.location.href = `${FRONTEND_URL}/verify-account`;
+      window.location.href = `${FRONTEND_URL}/not-verified`;
       return;
     }
 

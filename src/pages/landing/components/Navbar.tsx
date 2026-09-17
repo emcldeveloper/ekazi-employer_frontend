@@ -40,12 +40,7 @@ export default function Navbar() {
             Login
           </Button>
 
-          <Button
-            onClick={() => navigate("/register")}
-            className=" bg-Blue hover:bg-blue-600"
-          >
-            Get Started
-          </Button>
+          <Button onClick={() => navigate("/register")}>Get Started</Button>
         </div>
 
         <button className="md:hidden" onClick={() => setOpen(!open)}>

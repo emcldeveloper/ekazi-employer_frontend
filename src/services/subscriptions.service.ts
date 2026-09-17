@@ -96,6 +96,11 @@ export const deleteFeature = async (id: number) => {
 /**
  * Client Subscriptions API
  */
+export const initiateRegistrationPayment = async (payload: PaymentPayload) => {
+  const res = await api.post("/payment/initiate-registration", payload);
+  return res.data;
+};
+
 export const createSubscription = async (payload: PaymentPayload) => {
   const res = await api.post("/payment/initiate", payload);
   return res.data;

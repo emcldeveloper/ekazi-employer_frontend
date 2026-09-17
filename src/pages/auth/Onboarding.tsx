@@ -141,18 +141,29 @@ export function Onboarding() {
     setIsRegistering(true);
 
     try {
-      const response = await registerEmployer({
-        name: data.companyName,
-        email: data.email,
-        phone: data.phone,
-        password: data.password,
-        type: Number(data.companyType),
-        client_type: data.accountType,
+      const response = await registerEmployer(
+        {
+          name: data.companyName,
+          email: data.email,
+          phone: data.phone,
+          password: data.password,
+          type: Number(data.companyType),
+          client_type: data.accountType,
 
-        // Include these if your backend accepts them
-        first_name: data.firstName,
-        last_name: data.lastName,
-      });
+          // Include these if your backend accepts them
+          first_name: data.firstName,
+          last_name: data.lastName,
+        },
+        {
+          onSuccess: (res) => {
+            const paymentToken = res.data?.payment_token;
+
+            if (paymentToken) {
+              localStorage.setItem("token", paymentToken);
+            }
+          },
+        },
+      );
 
       setRegistration(response as RegistrationResponse);
 
@@ -234,22 +245,10 @@ export function Onboarding() {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 0:
-        return (
-          <Card>
-            <CardContent>
-              <PlansForm />
-            </CardContent>
-          </Card>
-        );
+        return <PlansForm />;
 
       case 1:
-        return (
-          <Card>
-            <CardContent>
-              <AccountForm />
-            </CardContent>
-          </Card>
-        );
+        return <AccountForm />;
 
       case 2:
         return (
@@ -301,8 +300,8 @@ export function Onboarding() {
 
   return (
     <FormProvider {...form}>
-      <div className="min-h-screen bg-[#fafafa] px-4 py-10">
-        <div className="mx-auto w-full max-w-190 space-y-5">
+      <div className="min-h-screen px-4 py-8">
+        <div className="mx-auto w-full max-w-190 space-y-4">
           {/* Progress */}
           <StepIndicator
             currentStep={currentStep}
@@ -311,19 +310,21 @@ export function Onboarding() {
             onNext={nextStep}
           />
 
-          {/* Step label */}
-          <div className="text-center">
-            <p className="text-xs text-muted-foreground">
-              Step {currentStep + 1} of {steps.length}:{" "}
-              {steps[currentStep].title}
-            </p>
-          </div>
+          <div className="flex flex-col sm:flex-row gap-4 items-center sm:justify-between">
+            {/* Step label */}
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground">
+                Step {currentStep + 1} of {steps.length}:{" "}
+                {steps[currentStep].title}
+              </p>
+            </div>
 
-          {/* Heading */}
-          <div className="text-center">
-            <h1 className="text-base font-semibold tracking-tight">
-              {steps[currentStep].heading}
-            </h1>
+            {/* Heading */}
+            <div className="text-center">
+              <h1 className="text-base font-semibold tracking-tight">
+                {steps[currentStep].heading}
+              </h1>
+            </div>
           </div>
 
           {/* Form */}
@@ -338,7 +339,6 @@ export function Onboarding() {
                   variant="outline"
                   onClick={previousStep}
                   disabled={currentStep === 0 || isRegistering}
-                  className="rounded-xl"
                 >
                   <ChevronLeft className="mr-2 h-4 w-4" />
                   Back
@@ -346,10 +346,7 @@ export function Onboarding() {
 
                 {/* Continue */}
                 {isLastStep ? (
-                  <Button
-                    type="button"
-                    className="rounded-xl bg-blue-600 hover:bg-blue-700"
-                  >
+                  <Button type="button" className=" bg-Blue hover:bg-blue-600">
                     Complete
                     <Check className="ml-2 h-4 w-4" />
                   </Button>
@@ -358,7 +355,7 @@ export function Onboarding() {
                     type="button"
                     onClick={nextStep}
                     disabled={isRegistering}
-                    className="rounded-xl bg-blue-600 hover:bg-blue-700"
+                    className=" bg-Blue hover:bg-blue-600"
                   >
                     {isRegistering ? (
                       <>

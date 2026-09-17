@@ -12,7 +12,6 @@ import AboutPage from "./pages/landing/AboutPage";
 import PricingPage from "./pages/landing/PricingPage";
 
 import VerifyPage from "./pages/auth/VerifyPage";
-import SigninPage from "./pages/auth/SigninPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPassword from "./pages/auth/ResetPassword";
 
@@ -72,7 +71,11 @@ import JobTypes from "./pages/admin/universals/job-types/JobTypes";
 import ExperienceLevels from "./pages/admin/universals/experience-levels/ExperienceLevels";
 import SalaryRanges from "./pages/admin/universals/salary-ranges/SalaryRanges";
 import EmployerDetails from "./pages/admin/employers/components/EmployerDetails";
-import { Onboarding } from "./pages/auth/Onboarding";
+
+import RequestDemoPage from "./pages/landing/RequestDemoPage";
+import NotVerifiedPage from "./pages/auth/NotVerifiedPage";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,13 +102,15 @@ const App = () => {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/request-demo" element={<RequestDemoPage />} />
 
               {/* Auth */}
-              <Route path="/register" element={<Onboarding />} />
+              <Route path="/register" element={<RegisterPage />} />
               <Route path="/verification" element={<VerifyPage />} />
-              <Route path="/login" element={<SigninPage />} />
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/not-verified" element={<NotVerifiedPage />} />
 
               <Route element={<ProtectedRoutes />}>
                 <Route element={<AppLayout />}>

@@ -161,13 +161,7 @@ const AccountForm = () => {
       <FieldGroup className="grid gap-4 md:grid-cols-2">
         <Field>
           <FieldLabel>First Name *</FieldLabel>
-
-          <Input
-            type="text"
-            {...register("firstName")}
-            placeholder="First name"
-          />
-
+          <Input type="text" {...register("firstName")} />
           {errors.firstName && (
             <FieldError>{errors.firstName.message}</FieldError>
           )}
@@ -175,13 +169,7 @@ const AccountForm = () => {
 
         <Field>
           <FieldLabel>Last Name *</FieldLabel>
-
-          <Input
-            type="text"
-            {...register("lastName")}
-            placeholder="Last name"
-          />
-
+          <Input type="text" {...register("lastName")} />
           {errors.lastName && (
             <FieldError>{errors.lastName.message}</FieldError>
           )}
@@ -189,25 +177,13 @@ const AccountForm = () => {
 
         <Field>
           <FieldLabel>Phone Number *</FieldLabel>
-
-          <Input
-            type="tel"
-            {...register("phone")}
-            placeholder="+255 712 345 678"
-          />
-
+          <Input type="tel" {...register("phone")} />
           {errors.phone && <FieldError>{errors.phone.message}</FieldError>}
         </Field>
 
         <Field>
           <FieldLabel>Email *</FieldLabel>
-
-          <Input
-            type="email"
-            {...register("email")}
-            placeholder="you@company.com"
-          />
-
+          <Input type="email" {...register("email")} />
           {errors.email && <FieldError>{errors.email.message}</FieldError>}
         </Field>
 
@@ -226,7 +202,7 @@ const AccountForm = () => {
               onClick={() => setShowPassword((previous) => !previous)}
               className="absolute right-3 top-1/2 -translate-y-1/2"
             >
-              {showPassword ? <EyeIcon size={16} /> : <EyeOffIcon size={16} />}
+              {showPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
             </button>
           </div>
 
@@ -251,9 +227,9 @@ const AccountForm = () => {
               className="absolute right-3 top-1/2 -translate-y-1/2"
             >
               {showConfirmPassword ? (
-                <EyeIcon size={16} />
-              ) : (
                 <EyeOffIcon size={16} />
+              ) : (
+                <EyeIcon size={16} />
               )}
             </button>
           </div>

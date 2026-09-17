@@ -3,8 +3,6 @@ import {
   CheckCircle2,
   ChevronRight,
   CreditCard,
-  Mail,
-  Phone,
   User,
   Building2,
   BriefcaseBusiness,
@@ -14,7 +12,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 
@@ -63,39 +60,39 @@ const ReviewForm = ({ onEditPlan, onEditAccount }: ReviewFormProps) => {
   const selectedPlan = plans[values.planId as keyof typeof plans];
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-5">
+    <div className="mx-auto w-full max-w-3xl my-6 space-y-8">
       {/* Subscription */}
-      <Card>
-        <CardHeader className="border-b bg-muted/20">
+      <div className="space-y-4">
+        <div>
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <CreditCard size={20} className="text-primary" />
+              <div className="p-2 rounded-lg text-primary bg-primary/10">
+                <CreditCard />
               </div>
 
               <div>
-                <CardTitle className="text-base">Subscription</CardTitle>
-                <CardDescription>
+                <p className="text-base font-bold">Subscription</p>
+                <p className="text-sm text-muted-foreground">
                   Your selected subscription plan
-                </CardDescription>
+                </p>
               </div>
             </div>
 
             {onEditPlan && (
               <Button
                 type="button"
-                variant="ghost"
+                variant="link"
                 size="sm"
                 onClick={onEditPlan}
               >
                 Edit
-                <ChevronRight className="ml-1 h-4 w-4" />
+                <ChevronRight />
               </Button>
             )}
           </div>
-        </CardHeader>
-
-        <CardContent>
+        </div>
+        <Separator />
+        <div>
           {selectedPlan ? (
             <Card>
               <CardContent>
@@ -148,42 +145,41 @@ const ReviewForm = ({ onEditPlan, onEditAccount }: ReviewFormProps) => {
               No subscription plan selected.
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Company */}
-      <Card className="overflow-hidden">
-        <CardHeader className="border-b bg-muted/20">
+      <div className="space-y-4">
+        <div>
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                <Building2 className="h-4 w-4 text-primary" />
+            <div className="flex items-center gap-4">
+              <div className="p-2 rounded-lg text-primary bg-primary/10">
+                <Building2 />
               </div>
 
               <div>
                 <CardTitle className="text-base">Company Information</CardTitle>
-
-                <p className="text-xs text-muted-foreground">
+                <CardDescription className="text-sm text-muted-foreground">
                   Your company details
-                </p>
+                </CardDescription>
               </div>
             </div>
 
             {onEditAccount && (
               <Button
                 type="button"
-                variant="ghost"
+                variant="link"
                 size="sm"
                 onClick={onEditAccount}
               >
                 Edit
-                <ChevronRight className="ml-1 h-4 w-4" />
+                <ChevronRight />
               </Button>
             )}
           </div>
-        </CardHeader>
-
-        <CardContent className="pt-5">
+        </div>
+        <Separator />
+        <div>
           <div className="grid gap-5 sm:grid-cols-2">
             <ReviewItem label="Company Name" value={values.companyName} />
 
@@ -191,22 +187,21 @@ const ReviewForm = ({ onEditPlan, onEditAccount }: ReviewFormProps) => {
 
             <ReviewItem label="Account Type" value={values.accountType} />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Administrator */}
-      <Card className="overflow-hidden">
-        <CardHeader className="border-b bg-muted/20">
+      <div className="space-y-4">
+        <div>
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                <User className="h-4 w-4 text-primary" />
+            <div className="flex items-center gap-4">
+              <div className="p-2 rounded-lg text-primary bg-primary/10">
+                <User />
               </div>
 
               <div>
-                <CardTitle className="text-base">Administrator</CardTitle>
-
-                <p className="text-xs text-muted-foreground">
+                <p className="text-base font-bold">Administrator</p>
+                <p className="text-sm text-muted-foreground">
                   Primary account administrator
                 </p>
               </div>
@@ -215,59 +210,50 @@ const ReviewForm = ({ onEditPlan, onEditAccount }: ReviewFormProps) => {
             {onEditAccount && (
               <Button
                 type="button"
-                variant="ghost"
+                variant="link"
                 size="sm"
                 onClick={onEditAccount}
               >
                 Edit
-                <ChevronRight className="ml-1 h-4 w-4" />
+                <ChevronRight />
               </Button>
             )}
           </div>
-        </CardHeader>
-
-        <CardContent className="pt-5">
+        </div>
+        <Separator />
+        <div>
           <div className="grid gap-5 sm:grid-cols-2">
             <ReviewItem label="First Name" value={values.firstName} />
 
             <ReviewItem label="Last Name" value={values.lastName} />
 
-            <ReviewItem
-              label="Phone Number"
-              value={values.phone}
-              icon={<Phone className="h-3.5 w-3.5" />}
-            />
+            <ReviewItem label="Phone Number" value={values.phone} />
 
-            <ReviewItem
-              label="Email Address"
-              value={values.email}
-              icon={<Mail className="h-3.5 w-3.5" />}
-            />
+            <ReviewItem label="Email Address" value={values.email} />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Payment Summary */}
-      <Card className="overflow-hidden">
-        <CardHeader className="border-b bg-muted/20">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-              <BriefcaseBusiness className="h-4 w-4 text-primary" />
+      <div className="space-y-4">
+        <div>
+          <div className="flex items-center gap-4">
+            <div className="p-2 rounded-lg text-primary bg-primary/10">
+              <BriefcaseBusiness />
             </div>
 
             <div>
-              <CardTitle className="text-base">Payment Summary</CardTitle>
-
-              <p className="text-xs text-muted-foreground">
+              <p className="text-base font-bold">Payment Summary</p>
+              <p className="text-sm text-muted-foreground">
                 Review your subscription charges
               </p>
             </div>
           </div>
-        </CardHeader>
-
-        <CardContent className="pt-5">
+        </div>
+        <Separator />
+        <div>
           <div className="space-y-3">
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">
                 {selectedPlan?.name ?? "Subscription"} Plan
               </span>
@@ -282,39 +268,6 @@ const ReviewForm = ({ onEditPlan, onEditAccount }: ReviewFormProps) => {
 
               <span className="font-medium">Monthly</span>
             </div>
-
-            <Separator />
-
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-semibold">Total due today</p>
-
-                <p className="text-xs text-muted-foreground">
-                  Your subscription will renew monthly.
-                </p>
-              </div>
-
-              <p className="text-xl font-bold">
-                TZS {selectedPlan ? formatCurrency(selectedPlan.price) : "0"}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Security / confirmation notice */}
-      <div className="rounded-xl border bg-muted/30 p-4">
-        <div className="flex gap-3">
-          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-
-          <div className="space-y-1">
-            <p className="text-sm font-medium">Almost there</p>
-
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              By continuing, your account will be created and you will proceed
-              to the payment step. Make sure the information above is correct
-              before continuing.
-            </p>
           </div>
         </div>
       </div>
@@ -331,7 +284,7 @@ type ReviewItemProps = {
 const ReviewItem = ({ label, value, icon }: ReviewItemProps) => {
   return (
     <div className="space-y-1">
-      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="text-sm text-muted-foreground">{label}</p>
 
       <div className="flex items-center gap-2">
         {icon && <span className="text-muted-foreground">{icon}</span>}
