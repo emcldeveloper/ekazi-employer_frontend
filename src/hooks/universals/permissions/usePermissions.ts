@@ -1,4 +1,4 @@
-import { getPermissions } from "@/services/universal.service";
+import { getPermissions } from "@/services/universals/permissions.service";
 import { useQuery } from "@tanstack/react-query";
 
 export const usePermissions = (search = "", page = 1, limit = 25) => {

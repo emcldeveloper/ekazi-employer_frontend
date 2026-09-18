@@ -26,8 +26,10 @@ export type ClientStaff = {
 export type ClientStaffUser = {
   id: number;
   username: string;
-  client_id: number | null;
-  role: ClientStaffRole | null;
+  email: string;
+  client_id: number;
+  position: ClientStaffPosition;
+  role: ClientStaffRole;
   userPermissions: UserPermission[];
 };
 
@@ -47,11 +49,13 @@ export type UserPermission = {
   id?: string;
   name?: string;
   type: "allow" | "deny";
+  permission_id: number;
+  permission: Permission;
 };
 
 export type ClientStaffPosition = {
-  id?: number;
-  name?: string;
+  id: number;
+  position_name: string;
 };
 
 //
@@ -63,7 +67,7 @@ export type StaffPayload = {
   phone_number: string;
   username: string;
   email: string;
-  password: string;
+  password?: string;
   user_permissions: UserPermissionPayload[];
 };
 

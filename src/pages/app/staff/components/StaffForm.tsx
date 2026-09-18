@@ -15,7 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { getErrorMessage } from "@/utils/axios-helpers";
 import { useCreateStaff, useUpdateStaff } from "@/hooks/staff";
 import type { ClientStaff, Permission, StaffPayload } from "@/@types/staff";
-import { usePermissions } from "@/hooks/universals";
+import { usePermissions } from "@/hooks/universals/permissions";
 
 type UserFormProps = {
   staff?: ClientStaff;
@@ -96,11 +96,11 @@ const StaffForm = ({ staff }: UserFormProps) => {
         middle_name: staff.middle_name,
         last_name: staff.last_name,
         phone_number: staff.phone_number,
-        email: staff.user?.username,
+        email: staff.user?.email,
         username: staff.user?.username,
         user_permissions:
           staff.user?.userPermissions?.map((permission) => ({
-            permission_id: Number(permission.id),
+            permission_id: Number(permission.permission_id),
             type: permission.type,
           })) ?? [],
       });
@@ -116,9 +116,9 @@ const StaffForm = ({ staff }: UserFormProps) => {
       last_name: data.last_name,
       phone_number: data.phone_number,
       email: data.email,
-      password: data.password,
       username: data.username,
       user_permissions: data.user_permissions,
+      ...(data.password ? { password: data.password } : {}),
     };
 
     if (staff) {
@@ -129,21 +129,21 @@ const StaffForm = ({ staff }: UserFormProps) => {
         },
         {
           onSuccess: (res) => {
-            toast.success(res?.message || "User updated successfully");
+            toast.success(res?.message || "Staff updated");
           },
-          onError: (error) => {
-            getErrorMessage(error || "Failed to update user");
+          onError: (err) => {
+            toast.error(getErrorMessage(err));
           },
         },
       );
     } else {
       createUser(payload, {
-        onSuccess: () => {
-          toast.success("User created successfully");
+        onSuccess: (res) => {
+          toast.success(res?.message || "Staff created");
           reset();
         },
-        onError: (error) => {
-          getErrorMessage(error || "Failed to create user");
+        onError: (err) => {
+          toast.error(getErrorMessage(err));
         },
       });
     }

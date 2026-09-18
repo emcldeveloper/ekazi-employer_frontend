@@ -15,6 +15,7 @@ import {
   ListChecks,
   MapPin,
   NotebookPen,
+  Settings2,
   UserCheck,
   VenusAndMars,
   Volume1,
@@ -72,6 +73,7 @@ const data = {
     { name: "Job Types", path: "job-types", icon: Briefcase },
     // { name: "Experience Levels", path: "experience-levels", icon: Briefcase },
     { name: "Salary Ranges", path: "salary-ranges", icon: Briefcase },
+    { name: "Permissions", path: "permissions", icon: Settings2 },
   ],
 };
 

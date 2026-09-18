@@ -35,14 +35,18 @@ import { isRouteActive } from "@/utils/helpers";
 import { NavUser } from "@/components/nav-user";
 import { useProfile } from "@/hooks/profile";
 import { BASE_URL } from "@/config/config";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 type NavItem = {
   title: string;
   url: string;
   icon: LucideIcon;
+  permission?: string;
   items?: {
     title: string;
     url: string;
+    permission?: string;
   }[];
 };
 
@@ -51,56 +55,68 @@ const navItems: NavItem[] = [
     title: "Dashboard",
     url: "/app/dashboard",
     icon: LayoutDashboard,
+    // permission: PERMISSIONS.VIEW_DAHSBOARD,
   },
   {
     title: "Profile",
     url: "/app/profile",
     icon: SquareUser,
+    permission: PERMISSIONS.VIEW_PROFILE,
   },
   {
     title: "Jobs",
     url: "/app/jobs",
     icon: Briefcase,
+    permission: PERMISSIONS.VIEW_JOBS,
   },
   {
     title: "Job Seekers",
     url: "/app/job-seekers",
     icon: UserSearchIcon,
+    permission: PERMISSIONS.VIEW_JOBSEEKERS,
   },
   {
     title: "Applicants",
     url: "/app/applicants",
     icon: UserCheckIcon,
+    permission: PERMISSIONS.VIEW_APPLICANTS,
   },
   // {
   //   title: "Clients",
   //   url: "/clients",
   //   icon: BriefcaseBusiness,
+  //  permission: PERMISSIONS.VIEW_CLIENT,
   // },
   {
     title: "Tasks",
     url: "/app/tasks",
     icon: LayoutList,
+    permission: PERMISSIONS.VIEW_TASKS,
   },
   {
     title: "Staff",
     url: "/app/staff",
     icon: Users,
+    permission: PERMISSIONS.VIEW_STAFF,
   },
   {
     title: "Subscription",
     url: "/app/subscription",
     icon: WalletCardsIcon,
+    permission: PERMISSIONS.VIEW_SUBSCRIPTION,
   },
   {
     title: "Settings",
     url: "/app/settings",
     icon: SettingsIcon,
+    permission: PERMISSIONS.VIEW_SETTINGS,
   },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
+
+  const { hasPermission } = useRolePermissions();
 
   // Custom Logo for each company
   const { data: companyProfile } = useProfile();
@@ -142,9 +158,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   />
                 </div>
 
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{profile?.name}</span>
-                </div>
+                {hasPermission(PERMISSIONS.VIEW_TASKS) && (
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium">
+                      {profile?.name}
+                    </span>
+                  </div>
+                )}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -155,72 +175,76 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => {
-                const Icon = item.icon;
+              {navItems
+                .filter(
+                  (item) => !item.permission || hasPermission(item.permission),
+                )
+                .map((item) => {
+                  const Icon = item.icon;
 
-                const isParentActive =
-                  isRouteActive(item.url) ||
-                  item.items?.some((subItem) => isRouteActive(subItem.url));
+                  const isParentActive =
+                    isRouteActive(item.url) ||
+                    item.items?.some((subItem) => isRouteActive(subItem.url));
 
-                // ITEMS WITH CHILDREN
-                if (item.items) {
-                  const isOpen = openMenus.includes(item.title);
+                  // ITEMS WITH CHILDREN
+                  if (item.items) {
+                    const isOpen = openMenus.includes(item.title);
 
+                    return (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton
+                          onClick={() => toggleMenu(item.title)}
+                          isActive={isParentActive}
+                          className="cursor-pointer"
+                        >
+                          <Icon />
+
+                          <span className="flex-1">{item.title}</span>
+
+                          <ChevronDown
+                            className={`h-4 w-4 transition-transform ${
+                              isOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                        </SidebarMenuButton>
+
+                        {isOpen && (
+                          <SidebarMenuSub>
+                            {item.items.map((subItem) => {
+                              const isSubActive =
+                                location.pathname === subItem.url;
+
+                              return (
+                                <SidebarMenuSubItem key={subItem.title}>
+                                  <SidebarMenuSubButton
+                                    asChild
+                                    isActive={isSubActive}
+                                  >
+                                    <Link to={subItem.url}>
+                                      <span>{subItem.title}</span>
+                                    </Link>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                              );
+                            })}
+                          </SidebarMenuSub>
+                        )}
+                      </SidebarMenuItem>
+                    );
+                  }
+
+                  // NORMAL NAV ITEM
                   return (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        onClick={() => toggleMenu(item.title)}
-                        isActive={isParentActive}
-                        className="cursor-pointer"
-                      >
-                        <Icon />
-
-                        <span className="flex-1">{item.title}</span>
-
-                        <ChevronDown
-                          className={`h-4 w-4 transition-transform ${
-                            isOpen ? "rotate-180" : ""
-                          }`}
-                        />
+                      <SidebarMenuButton asChild isActive={isParentActive}>
+                        <Link to={item.url}>
+                          <Icon />
+                          <span>{item.title}</span>
+                        </Link>
                       </SidebarMenuButton>
-
-                      {isOpen && (
-                        <SidebarMenuSub>
-                          {item.items.map((subItem) => {
-                            const isSubActive =
-                              location.pathname === subItem.url;
-
-                            return (
-                              <SidebarMenuSubItem key={subItem.title}>
-                                <SidebarMenuSubButton
-                                  asChild
-                                  isActive={isSubActive}
-                                >
-                                  <Link to={subItem.url}>
-                                    <span>{subItem.title}</span>
-                                  </Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            );
-                          })}
-                        </SidebarMenuSub>
-                      )}
                     </SidebarMenuItem>
                   );
-                }
-
-                // NORMAL NAV ITEM
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isParentActive}>
-                      <Link to={item.url}>
-                        <Icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
+                })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

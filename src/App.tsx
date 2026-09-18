@@ -76,6 +76,7 @@ import RequestDemoPage from "./pages/landing/RequestDemoPage";
 import NotVerifiedPage from "./pages/auth/NotVerifiedPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import Permissions from "./pages/admin/universals/permissions/Permissions";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -229,6 +230,7 @@ const App = () => {
                         element={<ExperienceLevels />}
                       />
                       <Route path="salary-ranges" element={<SalaryRanges />} />
+                      <Route path="permissions" element={<Permissions />} />
                     </Route>
                   </Route>
                 </Route>

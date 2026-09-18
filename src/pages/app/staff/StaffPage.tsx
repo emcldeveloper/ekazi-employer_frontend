@@ -152,8 +152,8 @@ const StaffPage = () => {
                           `${staff?.first_name} ${staff.middle_name} ${staff.last_name}`,
                         )}
                       </TableCell>
-                      <TableCell>-</TableCell>
-                      <TableCell>-</TableCell>
+                      <TableCell>{staff?.position?.position_name}</TableCell>
+                      <TableCell>{staff?.user?.email}</TableCell>
                       <TableCell>{staff?.phone_number}</TableCell>
 
                       <TableCell className="text-right">
