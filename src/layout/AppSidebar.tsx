@@ -145,7 +145,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link to="/dashboard">
+              <Link to="/app/dashboard">
                 <div className="flex size-12 items-center justify-center overflow-hidden rounded-lg ">
                   <img
                     src={
@@ -158,13 +158,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   />
                 </div>
 
-                {hasPermission(PERMISSIONS.VIEW_TASKS) && (
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">
-                      {profile?.name}
-                    </span>
-                  </div>
-                )}
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{profile?.name}</span>
+                </div>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

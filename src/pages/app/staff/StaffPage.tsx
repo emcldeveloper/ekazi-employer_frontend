@@ -25,6 +25,8 @@ import CreateStaff from "./components/CreateStaff";
 import UpdateStaff from "./components/UpdateStaff";
 import DeleteStaff from "./components/DeleteStaff";
 import { useStaffs } from "@/hooks/staff";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 const StaffPage = () => {
   const [page, setPage] = useState(1);
@@ -32,6 +34,8 @@ const StaffPage = () => {
   const [search, setSearch] = useState("");
 
   const debouncedSearch = useDebounce(search, 500);
+
+  const { hasPermission } = useRolePermissions();
 
   const { data: staffData, isLoading } = useStaffs(
     debouncedSearch,
@@ -113,7 +117,7 @@ const StaffPage = () => {
               </InputGroup>
 
               {/* Create staff button */}
-              <CreateStaff />
+              {hasPermission(PERMISSIONS.CREATE_STAFF) && <CreateStaff />}
             </div>
 
             <Table>
@@ -158,8 +162,13 @@ const StaffPage = () => {
 
                       <TableCell className="text-right">
                         <div>
-                          <UpdateStaff staff={staff} />
-                          <DeleteStaff staffId={staff.id} />
+                          {hasPermission(PERMISSIONS.EDIT_STAFF) && (
+                            <UpdateStaff staff={staff} />
+                          )}
+
+                          {hasPermission(PERMISSIONS.DELETE_STAFF) && (
+                            <DeleteStaff staffId={staff.id} />
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>

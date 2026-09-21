@@ -11,6 +11,8 @@ import { ListPlusIcon, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
 import OtherRequirementsForm from "../forms/OtherRequirementsForm";
 import type { Job } from "@/@types/job";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface OtherRequirementsDetailsProps {
   job: Job;
@@ -18,6 +20,8 @@ interface OtherRequirementsDetailsProps {
 
 const OtherRequirementsDetails = ({ job }: OtherRequirementsDetailsProps) => {
   const [open, setOpen] = useState(false);
+
+  const { hasPermission } = useRolePermissions();
 
   const otherRequirement = job?.other_requirements?.[0]?.other_requirement
     ?.replace(/<[^>]*>/g, "")
@@ -33,29 +37,31 @@ const OtherRequirementsDetails = ({ job }: OtherRequirementsDetailsProps) => {
           <h2 className="text-lg font-semibold">Other Requirements</h2>
         </div>
 
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline">
-              <PencilLineIcon className="mr-2 size-4" />
-              {otherRequirement ? "Edit" : "Add"}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Other Requirements</DialogTitle>
-              <DialogDescription>
-                {otherRequirement ? "Edit" : "Add"} other requirements
-                information.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              <OtherRequirementsForm
-                job={job}
-                onSuccess={() => setOpen(false)}
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
+        {hasPermission(PERMISSIONS.EDIT_JOB) && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline">
+                <PencilLineIcon className="mr-2 size-4" />
+                {otherRequirement ? "Edit" : "Add"}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Other Requirements</DialogTitle>
+                <DialogDescription>
+                  {otherRequirement ? "Edit" : "Add"} other requirements
+                  information.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                <OtherRequirementsForm
+                  job={job}
+                  onSuccess={() => setOpen(false)}
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {otherRequirement ? (

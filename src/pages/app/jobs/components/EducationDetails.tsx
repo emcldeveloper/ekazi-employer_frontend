@@ -26,6 +26,8 @@ import { useState } from "react";
 import type { Education, Job } from "@/@types/job";
 import { useDeleteEducation } from "@/hooks/jobs";
 import { toast } from "sonner";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface EducationDetailsProps {
   job: Job;
@@ -33,6 +35,8 @@ interface EducationDetailsProps {
 
 const EducationDetails = ({ job }: EducationDetailsProps) => {
   const jobId = job?.id;
+
+  const { hasPermission } = useRolePermissions();
 
   const [open, setOpen] = useState(false);
   const [editingEducation, setEditingEducation] = useState<Education | null>(
@@ -67,25 +71,27 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
           <h2 className="text-lg font-semibold">Job Education</h2>
         </div>
 
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline">
-              <PencilLineIcon className="mr-2 size-4" />
-              Add
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Job Education</DialogTitle>
-              <DialogDescription>
-                Add job education information.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="-mx-4 max-h-[70vh] overflow-y-visible px-4">
-              <EducationForm jobId={jobId} onSuccess={() => setOpen(false)} />
-            </div>
-          </DialogContent>
-        </Dialog>
+        {hasPermission(PERMISSIONS.EDIT_JOB) && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline">
+                <PencilLineIcon className="mr-2 size-4" />
+                Add
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Job Education</DialogTitle>
+                <DialogDescription>
+                  Add job education information.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="-mx-4 max-h-[70vh] overflow-y-visible px-4">
+                <EducationForm jobId={jobId} onSuccess={() => setOpen(false)} />
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       <Table>
@@ -94,7 +100,10 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
             <TableHead>Education Level</TableHead>
             <TableHead>Programme Name</TableHead>
             <TableHead>Specialized/Major</TableHead>
-            <TableHead>Actions</TableHead>
+
+            {hasPermission(PERMISSIONS.EDIT_JOB) && (
+              <TableHead>Actions</TableHead>
+            )}
           </TableRow>
         </TableHeader>
 
@@ -105,19 +114,21 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
                 <TableCell>{item?.education_level?.name}</TableCell>
                 <TableCell>{item?.course?.name}</TableCell>
                 <TableCell>{item?.major?.name}</TableCell>
-                <TableCell className="flex items-center gap-2">
-                  <PencilIcon
-                    size={16}
-                    onClick={() => setEditingEducation(item)}
-                    className="text-orange-500 cursor-pointer"
-                  />
+                {hasPermission(PERMISSIONS.EDIT_JOB) && (
+                  <TableCell className="flex items-center gap-2">
+                    <PencilIcon
+                      size={16}
+                      onClick={() => setEditingEducation(item)}
+                      className="text-orange-500 cursor-pointer"
+                    />
 
-                  <Trash2Icon
-                    size={16}
-                    onClick={() => handleDelete(item.id)}
-                    className="text-red-500 cursor-pointer"
-                  />
-                </TableCell>
+                    <Trash2Icon
+                      size={16}
+                      onClick={() => handleDelete(item.id)}
+                      className="text-red-500 cursor-pointer"
+                    />
+                  </TableCell>
+                )}
               </TableRow>
             ))
           ) : (

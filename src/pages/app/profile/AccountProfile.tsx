@@ -21,9 +21,14 @@ import { useNavigate } from "react-router-dom";
 import { formatDate } from "@/utils/helpers";
 import { Badge } from "@/components/ui/badge";
 import { BASE_URL } from "@/config/config";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 const AccountProfile = () => {
   const navigate = useNavigate();
+
+  const { hasPermission } = useRolePermissions();
+
   const { data: companyProfile, isLoading } = useProfile();
   const profile = companyProfile?.data;
 
@@ -70,10 +75,12 @@ const AccountProfile = () => {
             </div>
           </div>
 
-          <Button onClick={handleEditProfile}>
-            <PencilLineIcon size={16} />
-            Update Profile
-          </Button>
+          {hasPermission(PERMISSIONS.UPDATE_PROFILE) && (
+            <Button onClick={handleEditProfile}>
+              <PencilLineIcon size={16} />
+              Update Profile
+            </Button>
+          )}
         </CardContent>
       </Card>
 
@@ -250,71 +257,6 @@ const AccountProfile = () => {
               </div>
             </CardContent>
           </Card>
-
-          {/* Team */}
-
-          {/* <Card>
-            <CardHeader>
-              <CardTitle>Team Members</CardTitle>
-
-              <CardDescription>Users added to this account</CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-4">
-              {company.team.map((member) => (
-                <div
-                  key={member.name}
-                  className="flex items-center justify-between rounded-lg border p-3"
-                >
-                  <div>
-                    <h4 className="font-medium">{member.name}</h4>
-
-                    <p className="text-sm text-muted-foreground">
-                      {member.role}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card> */}
-
-          {/* Verification */}
-
-          {/* <Card>
-            <CardHeader>
-              <CardTitle>Verification Status</CardTitle>
-            </CardHeader>
-
-            <CardContent className="space-y-3">
-              <Badge className="w-full justify-center py-2">
-                Company Verified
-              </Badge>
-
-              <p className="text-sm text-muted-foreground">
-                Your company documents have been reviewed and approved.
-              </p>
-            </CardContent>
-          </Card> */}
-
-          {/* Subscription */}
-
-          {/* <Card>
-            <CardHeader>
-              <CardTitle>Subscription</CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              <p className="font-semibold">Professional Plan</p>
-
-              <p className="mt-1 text-sm text-muted-foreground">
-                Expires: 30 June 2026
-              </p>
-
-              <Button variant="outline" className="mt-4 w-full">
-                Manage Subscription
-              </Button>
-            </CardContent>
-          </Card> */}
         </div>
       </div>
     </div>

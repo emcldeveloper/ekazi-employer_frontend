@@ -11,6 +11,8 @@ import { PencilLineIcon, UsersIcon } from "lucide-react";
 import ReportingForm from "../forms/ReportingForm";
 import { useState } from "react";
 import type { Job } from "@/@types/job";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface ReportingDetailsProps {
   job: Job;
@@ -18,6 +20,8 @@ interface ReportingDetailsProps {
 
 const ReportingDetails = ({ job }: ReportingDetailsProps) => {
   const [open, setOpen] = useState(false);
+
+  const { hasPermission } = useRolePermissions();
 
   return (
     <div className="flex justify-between gap-4">
@@ -42,23 +46,25 @@ const ReportingDetails = ({ job }: ReportingDetailsProps) => {
         </div>
       </div>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button size="sm" variant="outline">
-            <PencilLineIcon className="mr-2 size-4" />
-            Edit
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Reporting Structure</DialogTitle>
-            <DialogDescription>Edit reporting structure.</DialogDescription>
-          </DialogHeader>
-          <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-            <ReportingForm job={job} onSuccess={() => setOpen(false)} />
-          </div>
-        </DialogContent>
-      </Dialog>
+      {hasPermission(PERMISSIONS.EDIT_JOB) && (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" variant="outline">
+              <PencilLineIcon className="mr-2 size-4" />
+              Edit
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Reporting Structure</DialogTitle>
+              <DialogDescription>Edit reporting structure.</DialogDescription>
+            </DialogHeader>
+            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+              <ReportingForm job={job} onSuccess={() => setOpen(false)} />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };

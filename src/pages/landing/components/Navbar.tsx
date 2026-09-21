@@ -14,9 +14,9 @@ export default function Navbar() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl ">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
         <div className="w-20">
-          <Link to="/">
+          <a href="https://ekazi.co.tz/">
             <img src="/images/logo.png" alt="logo" />
-          </Link>
+          </a>
         </div>
 
         <nav className="hidden gap-10 md:flex">

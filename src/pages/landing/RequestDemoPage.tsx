@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
 
 interface DemoForm {
   firstName: string;
@@ -73,34 +74,41 @@ const RequestDemoPage = () => {
     <main className="min-h-screen font-sen bg-white overflow-x-hidden">
       <Navbar />
 
-      <div className="py-20 mx-auto max-w-7xl flex">
+      <div className="pt-20 mx-auto max-w-7xl flex">
         {/* Left side */}
         <section className="flex-1 flex flex-col px-6 py-16 sm:px-10 lg:px-12 xl:px-16">
           <div className="max-w-135">
             <h1 className="font-serif text-3xl md:text-4xl font-semibold">
-              See ekazi in your recruitment workflow.
+              Request Ekazi Demo.
             </h1>
 
-            <p className="mt-10 text-base">
-              Bring a real recruitment workflow question. We’ll show how Ekazi
-              helps your team move from opportunity and candidate sourcing into
-              collaboration, hiring, and reusable recruitment knowledge.
+            <p className="mt-10 text-sm">
+              See how Ekazi can simplify the way your team recruits. From
+              publishing opportunities and managing applications to evaluating
+              candidates and collaborating on hiring decisions, Ekazi brings
+              your recruitment workflow together in one platform.
             </p>
 
             <div className="mt-10 space-y-5">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm">
                 <CircleCheck />
-                Source-backed candidate and recruitment insights
+                Manage jobs, applications, and candidates from one place
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm">
                 <CircleCheck />
-                Candidate evidence matched without invented claims
+                Streamline candidate screening and evaluation
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm">
                 <CircleCheck />
-                Reviewable AI recommendations and hiring history
+                Collaborate with your hiring team with greater clarity
+              </div>
+
+              <div className="flex items-center gap-2 text-sm">
+                <CircleCheck />
+                Make informed hiring decisions with organized candidate
+                information
               </div>
             </div>
           </div>
@@ -123,7 +131,7 @@ const RequestDemoPage = () => {
                 <form onSubmit={handleSubmit} className="space-y-4 w-full">
                   <FieldGroup>
                     <Field>
-                      <FieldLabel>Company Name</FieldLabel>
+                      <FieldLabel>Company name</FieldLabel>
                       <Input
                         id="company"
                         value={form.company}
@@ -131,12 +139,11 @@ const RequestDemoPage = () => {
                           handleChange("company", e.target.value)
                         }
                         required
-                        className="h-12"
                       />
                     </Field>
 
                     <Field>
-                      <FieldLabel>Industry</FieldLabel>
+                      <FieldLabel>Full name</FieldLabel>
                       <Input
                         id="company"
                         value={form.company}
@@ -144,7 +151,6 @@ const RequestDemoPage = () => {
                           handleChange("company", e.target.value)
                         }
                         required
-                        className="h-12"
                       />
                     </Field>
 
@@ -157,18 +163,25 @@ const RequestDemoPage = () => {
                         value={form.email}
                         onChange={(e) => handleChange("email", e.target.value)}
                         required
-                        className="h-12"
                       />
                     </Field>
 
                     <Field>
-                      <FieldLabel>WhatsApp Number</FieldLabel>
+                      <FieldLabel>Phone number</FieldLabel>
                       <Input
                         id="phone"
                         type="tel"
                         value={form.phone}
                         onChange={(e) => handleChange("phone", e.target.value)}
-                        className="h-12 "
+                      />
+                    </Field>
+
+                    <Field>
+                      <FieldLabel>Message(optional)</FieldLabel>
+                      <Textarea
+                        id="phone"
+                        value={form.phone}
+                        onChange={(e) => handleChange("phone", e.target.value)}
                       />
                     </Field>
 
@@ -176,7 +189,7 @@ const RequestDemoPage = () => {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="mt-1 h-12 w-full text-base"
+                      className="mt-1  w-full text-base"
                     >
                       {isSubmitting ? (
                         <>

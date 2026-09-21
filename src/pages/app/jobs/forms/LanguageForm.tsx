@@ -47,7 +47,8 @@ const LanguageForm = ({
   const { mutate: editJobLanguage, isPending: isEditing } = useEditLanguage();
 
   // Fetch Languages
-  const { data: languages } = useLanguage();
+  const { data: languagesData } = useLanguage();
+  const languages = languagesData?.data ?? [];
   const languageOptions: OptionType[] =
     languages?.map((language: Language) => ({
       value: language.id,

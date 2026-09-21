@@ -1,68 +1,72 @@
 import { CheckIcon } from "lucide-react";
 import UpgradePlan from "./UpgradePlan";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
+
+const plans = [
+  {
+    title: "Basic Plan",
+    type: "basic",
+    price: 100000,
+    subtitle: "Small Businesses and Startups",
+    button: "Upgrade to Basic",
+    features: [
+      "Access to job seeker resumes",
+      "Basic employer dashboard",
+      "Job post analytics (views, applications)",
+      "Post up to 10 job listings per month",
+    ],
+  },
+  {
+    title: "Standard Plan",
+    type: "standard",
+    price: 150000,
+    subtitle: "Medium-sized businesses",
+    button: "Upgrade to Standard",
+    features: [
+      "Post up to 50 job listings per month",
+      "Advanced resume search & filters",
+      "Applicant tracking system (ATS)",
+      "Email alerts for applicants",
+      "Job post analytics",
+    ],
+  },
+  {
+    title: "Premium Plan",
+    type: "premium",
+    price: 300000,
+    subtitle: "Large corporations",
+    button: "Upgrade to Premium",
+    features: [
+      "Top-tier resume database",
+      "Advanced candidate matching",
+      "Comprehensive analytics",
+      "Custom recruitment tools",
+      "Dedicated account manager",
+      "Email alerts for applicants",
+      "Premium job listing placement",
+      "Unlimited job postings",
+    ],
+  },
+  {
+    title: "Enterprise Plan",
+    type: "enterprise",
+    price: 500000,
+    subtitle: "Enterprise companies",
+    button: "Upgrade to Enterprise",
+    features: [
+      "Advanced analytics & reporting",
+      "API access & integrations",
+      "Custom branding & white-label",
+      "Dedicated support team",
+      "Tailored recruitment solutions",
+      "Full job portal feature access",
+    ],
+  },
+];
 
 const SubscriptionPlan = () => {
-  const plans = [
-    {
-      title: "Basic Plan",
-      type: "basic",
-      price: 100000,
-      subtitle: "Small Businesses and Startups",
-      button: "Upgrade to Basic",
-      features: [
-        "Access to job seeker resumes",
-        "Basic employer dashboard",
-        "Job post analytics (views, applications)",
-        "Post up to 10 job listings per month",
-      ],
-    },
-    {
-      title: "Standard Plan",
-      type: "standard",
-      price: 150000,
-      subtitle: "Medium-sized businesses",
-      button: "Upgrade to Standard",
-      features: [
-        "Post up to 50 job listings per month",
-        "Advanced resume search & filters",
-        "Applicant tracking system (ATS)",
-        "Email alerts for applicants",
-        "Job post analytics",
-      ],
-    },
-    {
-      title: "Premium Plan",
-      type: "premium",
-      price: 300000,
-      subtitle: "Large corporations",
-      button: "Upgrade to Premium",
-      features: [
-        "Top-tier resume database",
-        "Advanced candidate matching",
-        "Comprehensive analytics",
-        "Custom recruitment tools",
-        "Dedicated account manager",
-        "Email alerts for applicants",
-        "Premium job listing placement",
-        "Unlimited job postings",
-      ],
-    },
-    {
-      title: "Enterprise Plan",
-      type: "enterprise",
-      price: 500000,
-      subtitle: "Enterprise companies",
-      button: "Upgrade to Enterprise",
-      features: [
-        "Advanced analytics & reporting",
-        "API access & integrations",
-        "Custom branding & white-label",
-        "Dedicated support team",
-        "Tailored recruitment solutions",
-        "Full job portal feature access",
-      ],
-    },
-  ];
+  const { hasPermission } = useRolePermissions();
 
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -106,7 +110,9 @@ const SubscriptionPlan = () => {
           </ul>
 
           {/* Button */}
-          <UpgradePlan plan={plan} />
+          {hasPermission(PERMISSIONS.UPGRADE_PLAN) && (
+            <UpgradePlan plan={plan} />
+          )}
         </div>
       ))}
     </div>

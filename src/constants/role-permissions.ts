@@ -11,7 +11,10 @@ export const PERMISSIONS = {
   POST_JOB: "post-job",
   EDIT_JOB: "edit-job",
   PUBLISH_JOB: "publish-job",
-  JOB_SETTINGS: "job-settings",
+  VIEW_JOB_APPLICATIONS: "view-job-applications",
+  VIEW_POTENTIAL_CANDIDATES: "view-potential-candidates",
+  VIEW_SELECTED_CANDIDATES: "view-selected-candidates",
+  VIEW_JOB_SETTINGS: "job-settings",
   DELETE_JOB: "delete-job",
 
   // Job seekers
@@ -24,12 +27,15 @@ export const PERMISSIONS = {
   VIEW_APPLICANTS: "view-applicants",
   VIEW_APPLICANT_DETAILS: "view-applicant-details",
   SHORTLIST_APPLICANTS: "shortlist-applicant",
+  COLLECT_APPLICANTS_CV: "collect-applicant-cv",
 
   // Tasks
   VIEW_TASKS: "view-tasks",
   CREATE_TASK: "create-task",
   EDIT_TASK: "edit-task",
   DELETE_TASK: "delete-task",
+  COMMENT_TASK: "comment-task",
+  UPLOAD_TASK_FILES: "upload-task-files",
 
   // Clients
   VIEW_CLIENT: "view-clients",

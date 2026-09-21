@@ -20,6 +20,8 @@ import type {
   SoftwareItem,
   ToolItem,
 } from "@/@types/job";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface SpecificationDetailsProps {
   job: Job;
@@ -27,6 +29,8 @@ interface SpecificationDetailsProps {
 
 const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
   const [open, setOpen] = useState(false);
+
+  const { hasPermission } = useRolePermissions();
 
   return (
     <div className="flex justify-between gap-4">
@@ -134,25 +138,27 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
         </div>
       </div>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button size="sm" variant="outline">
-            <PencilLineIcon className="mr-2 size-4" />
-            Edit
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Candidate Specification</DialogTitle>
-            <DialogDescription>
-              Edit candidate specification information.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-            <RequirementsForm job={job} onSuccess={() => setOpen(false)} />
-          </div>
-        </DialogContent>
-      </Dialog>
+      {hasPermission(PERMISSIONS.EDIT_JOB) && (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" variant="outline">
+              <PencilLineIcon className="mr-2 size-4" />
+              Edit
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>Candidate Specification</DialogTitle>
+              <DialogDescription>
+                Edit candidate specification information.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+              <RequirementsForm job={job} onSuccess={() => setOpen(false)} />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };

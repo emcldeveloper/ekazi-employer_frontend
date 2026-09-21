@@ -23,6 +23,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import JobseekerDetails from "./JobseekerDetails";
 import ShortlistJobseeker from "./ShortlistJobseeker";
 import CollectJobseeker from "./CollectJobseeker";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface ViewJobseekerProps {
   jobseekerId: number;
@@ -30,6 +32,8 @@ interface ViewJobseekerProps {
 
 const ViewJobseeker = ({ jobseekerId }: ViewJobseekerProps) => {
   const isMobile = useIsMobile();
+
+  const { hasPermission } = useRolePermissions();
 
   return (
     <>
@@ -56,8 +60,13 @@ const ViewJobseeker = ({ jobseekerId }: ViewJobseekerProps) => {
 
             <DrawerFooter>
               <div className="flex items-center gap-2">
-                <ShortlistJobseeker jobseekerId={jobseekerId} />
-                <CollectJobseeker />
+                {hasPermission(PERMISSIONS.SHORTLIST_JOBSEEKER) && (
+                  <ShortlistJobseeker jobseekerId={jobseekerId} />
+                )}
+
+                {hasPermission(PERMISSIONS.COLLECT_JOBSEEKER_CV) && (
+                  <CollectJobseeker />
+                )}
               </div>
             </DrawerFooter>
           </DrawerContent>
@@ -85,8 +94,13 @@ const ViewJobseeker = ({ jobseekerId }: ViewJobseekerProps) => {
 
             <SheetFooter>
               <div className="flex items-center gap-4">
-                <ShortlistJobseeker jobseekerId={jobseekerId} />
-                <CollectJobseeker />
+                {hasPermission(PERMISSIONS.SHORTLIST_JOBSEEKER) && (
+                  <ShortlistJobseeker jobseekerId={jobseekerId} />
+                )}
+
+                {hasPermission(PERMISSIONS.COLLECT_JOBSEEKER_CV) && (
+                  <CollectJobseeker />
+                )}
               </div>
             </SheetFooter>
           </SheetContent>

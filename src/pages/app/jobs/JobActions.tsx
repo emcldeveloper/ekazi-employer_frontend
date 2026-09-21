@@ -9,6 +9,8 @@ import JobSettings from "./actions/JobSettings";
 import type { Job } from "@/@types/job";
 import PublishJob from "./actions/PublishJob";
 import DeleteJob from "./actions/DeleteJob";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface JobActionsProps {
   job: Job;
@@ -21,6 +23,8 @@ const JobActions = ({ job }: JobActionsProps) => {
   const published = publishedStatus === 1;
 
   const navigate = useNavigate();
+
+  const { hasPermission } = useRolePermissions();
 
   const handleViewApplications = () => {
     navigate(`/app/jobs/${jobId}/applications/applied`);
@@ -38,34 +42,42 @@ const JobActions = ({ job }: JobActionsProps) => {
           <Separator />
         </CardHeader>
         <CardContent className="space-y-3">
-          <PublishJob jobId={jobId} published={published} />
+          {hasPermission(PERMISSIONS.PUBLISH_JOB) && (
+            <PublishJob jobId={jobId} published={published} />
+          )}
 
-          <Button
-            variant="outline"
-            onClick={handleViewApplications}
-            className="w-full justify-between"
-          >
-            View Applications
-            <FileStack size={16} />
-          </Button>
+          {hasPermission(PERMISSIONS.VIEW_JOB_APPLICATIONS) && (
+            <Button
+              variant="outline"
+              onClick={handleViewApplications}
+              className="w-full justify-between"
+            >
+              View Applications
+              <FileStack size={16} />
+            </Button>
+          )}
 
-          <Button
-            variant="outline"
-            onClick={handlePotentialCandidates}
-            className="w-full justify-between"
-          >
-            Potential Candidates
-            <Users size={16} />
-          </Button>
+          {hasPermission(PERMISSIONS.VIEW_POTENTIAL_CANDIDATES) && (
+            <Button
+              variant="outline"
+              onClick={handlePotentialCandidates}
+              className="w-full justify-between"
+            >
+              Potential Candidates
+              <Users size={16} />
+            </Button>
+          )}
 
-          <Button
-            variant="outline"
-            onClick={() => {}}
-            className="w-full justify-between"
-          >
-            Selected Applicants
-            <UserCheck size={16} />
-          </Button>
+          {hasPermission(PERMISSIONS.VIEW_SELECTED_CANDIDATES) && (
+            <Button
+              variant="outline"
+              onClick={() => {}}
+              className="w-full justify-between"
+            >
+              Selected Applicants
+              <UserCheck size={16} />
+            </Button>
+          )}
           {/* 
           <Button
             variant="outline"
@@ -76,11 +88,11 @@ const JobActions = ({ job }: JobActionsProps) => {
             <Plus size={16} />
           </Button> */}
 
-          {/* Job settings  */}
-          <JobSettings job={job} />
+          {hasPermission(PERMISSIONS.VIEW_JOB_SETTINGS) && (
+            <JobSettings job={job} />
+          )}
 
-          {/* Delete job */}
-          <DeleteJob jobId={jobId} />
+          {hasPermission(PERMISSIONS.DELETE_JOB) && <DeleteJob jobId={jobId} />}
         </CardContent>
       </Card>
     </>

@@ -77,6 +77,7 @@ import NotVerifiedPage from "./pages/auth/NotVerifiedPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import Permissions from "./pages/admin/universals/permissions/Permissions";
+import PreviewJobs from "./pages/app/jobs/preview-ekazi/PreviewJobs";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -121,6 +122,10 @@ const App = () => {
                     <Route path="profile/create" element={<CreateProfile />} />
                     <Route path="profile/edit" element={<CreateProfile />} />
                     <Route path="jobs" element={<JobsPage />} />
+                    <Route
+                      path="jobs/preview-on-ekazi"
+                      element={<PreviewJobs />}
+                    />
                     <Route path="jobs/create" element={<CreateJob />} />
                     <Route path="jobs/:id" element={<JobDetails />} />
                     <Route

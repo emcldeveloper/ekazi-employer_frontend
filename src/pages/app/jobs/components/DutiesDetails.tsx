@@ -11,6 +11,8 @@ import { ListIcon, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
 import MainDutiesForm from "../forms/MainDutiesForm";
 import type { Job } from "@/@types/job";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface DutiesDetailsProps {
   job: Job;
@@ -18,6 +20,8 @@ interface DutiesDetailsProps {
 
 const DutiesDetails = ({ job }: DutiesDetailsProps) => {
   const [open, setOpen] = useState(false);
+
+  const { hasPermission } = useRolePermissions();
 
   const mainDuties = job?.requirements?.[0]?.main_duties
     ?.replace(/<[^>]*>/g, "")
@@ -33,25 +37,27 @@ const DutiesDetails = ({ job }: DutiesDetailsProps) => {
           <h2 className="text-lg font-semibold">Main Duties</h2>
         </div>
 
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline">
-              <PencilLineIcon className="mr-2 size-4" />
-              {mainDuties ? "Edit" : "Add"}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Main Duties</DialogTitle>
-              <DialogDescription>
-                {mainDuties ? "Edit" : "Add"} main duties information.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              <MainDutiesForm job={job} onSuccess={() => setOpen(false)} />
-            </div>
-          </DialogContent>
-        </Dialog>
+        {hasPermission(PERMISSIONS.EDIT_JOB) && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline">
+                <PencilLineIcon className="mr-2 size-4" />
+                {mainDuties ? "Edit" : "Add"}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Main Duties</DialogTitle>
+                <DialogDescription>
+                  {mainDuties ? "Edit" : "Add"} main duties information.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                <MainDutiesForm job={job} onSuccess={() => setOpen(false)} />
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {mainDuties ? (

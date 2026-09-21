@@ -11,6 +11,8 @@ import { PencilLineIcon, ShieldCheckIcon } from "lucide-react";
 import MetaForm from "../forms/MetaForm";
 import { useState } from "react";
 import type { Job } from "@/@types/job";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface KeywordsDetailsProps {
   job: Job;
@@ -18,6 +20,8 @@ interface KeywordsDetailsProps {
 
 const KeywordsDetails = ({ job }: KeywordsDetailsProps) => {
   const [open, setOpen] = useState(false);
+
+  const { hasPermission } = useRolePermissions();
 
   const metaData = job?.meta_keywords?.[0]?.keyword?.name
     ?.replace(/<[^>]*>/g, "")
@@ -33,24 +37,26 @@ const KeywordsDetails = ({ job }: KeywordsDetailsProps) => {
           <h2 className="text-lg font-semibold">Meta Keywords (SEO)</h2>
         </div>
 
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline">
-              <PencilLineIcon className="mr-2 size-4" />
-              {metaData ? "Edit" : "Add"}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl overflow-visible">
-            <DialogHeader>
-              <DialogTitle>Meta Keywords (SEO)</DialogTitle>
-              <DialogDescription>Edit job meta keywords.</DialogDescription>
-            </DialogHeader>
-            <div className="-mx-4 max-h-[70vh] px-4">
-              {/* <MetaForm /> */}
-              <MetaForm job={job} onSuccess={() => setOpen(false)} />
-            </div>
-          </DialogContent>
-        </Dialog>
+        {hasPermission(PERMISSIONS.EDIT_JOB) && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline">
+                <PencilLineIcon className="mr-2 size-4" />
+                {metaData ? "Edit" : "Add"}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl overflow-visible">
+              <DialogHeader>
+                <DialogTitle>Meta Keywords (SEO)</DialogTitle>
+                <DialogDescription>Edit job meta keywords.</DialogDescription>
+              </DialogHeader>
+              <div className="-mx-4 max-h-[70vh] px-4">
+                {/* <MetaForm /> */}
+                <MetaForm job={job} onSuccess={() => setOpen(false)} />
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       <p className="leading-7 text-muted-foreground">

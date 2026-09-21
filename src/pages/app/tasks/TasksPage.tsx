@@ -33,6 +33,8 @@ import DeleteTask from "./components/DeleteTask";
 import UpdateTask from "./components/UpdateTask";
 import { DataPagination } from "@/components/data-pagination";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 const TasksPage = () => {
   const [page, setPage] = useState(1);
@@ -40,6 +42,8 @@ const TasksPage = () => {
   const [search, setSearch] = useState("");
 
   const debouncedSearch = useDebounce(search, 500);
+
+  const { hasPermission } = useRolePermissions();
 
   const { data: tasksData, isLoading } = useTasks({
     page,
@@ -138,7 +142,7 @@ const TasksPage = () => {
               </InputGroupAddon>
             </InputGroup>
 
-            <CreateTask />
+            {hasPermission(PERMISSIONS.CREATE_TASK) && <CreateTask />}
           </div>
 
           <Table>
@@ -200,8 +204,13 @@ const TasksPage = () => {
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
                         <ViewTask />
-                        <UpdateTask task={task} />
-                        <DeleteTask taskId={task.id} />
+
+                        {hasPermission(PERMISSIONS.EDIT_TASK) && (
+                          <UpdateTask task={task} />
+                        )}
+                        {hasPermission(PERMISSIONS.DELETE_TASK) && (
+                          <DeleteTask taskId={task.id} />
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

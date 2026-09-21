@@ -22,6 +22,8 @@ import BasicInfoForm from "../forms/BasicInfoForm";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import type { Job } from "@/@types/job";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface BasicDetailsProps {
   job: Job;
@@ -29,6 +31,8 @@ interface BasicDetailsProps {
 
 const BasicDetails = ({ job }: BasicDetailsProps) => {
   const [open, setOpen] = useState(false);
+
+  const { hasPermission } = useRolePermissions();
 
   // job published status, 1 === true or 0 === false
   const publishedStatus = Number(job?.published);
@@ -104,23 +108,27 @@ const BasicDetails = ({ job }: BasicDetailsProps) => {
           </div>
         </div>
 
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline">
-              <PencilLineIcon className="mr-2 size-4" />
-              Edit
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-3xl">
-            <DialogHeader>
-              <DialogTitle>Update Job</DialogTitle>
-              <DialogDescription>Edit job basic information.</DialogDescription>
-            </DialogHeader>
-            <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              <BasicInfoForm job={job} onSuccess={() => setOpen(false)} />
-            </div>
-          </DialogContent>
-        </Dialog>
+        {hasPermission(PERMISSIONS.EDIT_JOB) && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="outline">
+                <PencilLineIcon className="mr-2 size-4" />
+                Edit
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-3xl">
+              <DialogHeader>
+                <DialogTitle>Update Job</DialogTitle>
+                <DialogDescription>
+                  Edit job basic information.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
+                <BasicInfoForm job={job} onSuccess={() => setOpen(false)} />
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     </div>
   );

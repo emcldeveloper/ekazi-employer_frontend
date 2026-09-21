@@ -15,12 +15,16 @@ import { Spinner } from "@/components/ui/spinner";
 import { useClientSubscriptions } from "@/hooks/subscriptions";
 import { formatCurrency, formatDate } from "@/utils/helpers";
 import Transactions from "./Transactions";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 interface SubscriptionsProps {
   onUpgrade: () => void;
 }
 
 const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
+  const { hasPermission } = useRolePermissions();
+
   const { data: subscriptionsData, isLoading } = useClientSubscriptions();
   const subscription = subscriptionsData?.data?.[0];
 
@@ -84,9 +88,11 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
             </div>
 
             {/* Price + CTA */}
-            <div className="flex flex-col items-start gap-3 md:items-end">
-              <Button onClick={onUpgrade}>Upgrade Plan</Button>
-            </div>
+            {hasPermission(PERMISSIONS.UPGRADE_PLAN) && (
+              <div className="flex flex-col items-start gap-3 md:items-end">
+                <Button onClick={onUpgrade}>Upgrade Plan</Button>
+              </div>
+            )}
           </div>
 
           {/* Divider */}

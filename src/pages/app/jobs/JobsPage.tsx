@@ -42,9 +42,13 @@ import { useDebounce } from "@/hooks/useDebounce";
 import type { Job } from "@/@types/job";
 import { DataPagination } from "@/components/data-pagination";
 import CreateJob from "./CreateJob";
+import { useRolePermissions } from "@/hooks/useRolePermissions";
+import { PERMISSIONS } from "@/constants/role-permissions";
 
 const JobsPage = () => {
   const navigate = useNavigate();
+
+  const { hasPermission } = useRolePermissions();
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(25);
@@ -191,8 +195,18 @@ const JobsPage = () => {
                 </SelectContent>
               </Select>
 
+              {/* preview jobs on ekazi */}
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  navigate("/app/jobs/preview-on-ekazi");
+                }}
+              >
+                Preview on ekazi
+              </Button>
+
               {/* create job */}
-              <CreateJob />
+              {hasPermission(PERMISSIONS.POST_JOB) && <CreateJob />}
             </div>
           </div>
 

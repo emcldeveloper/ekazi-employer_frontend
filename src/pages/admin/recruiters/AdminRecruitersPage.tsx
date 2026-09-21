@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   BriefcaseBusiness,
   CircleCheck,
@@ -14,15 +16,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-
 import { Button } from "@/components/ui/button";
-
 import {
   Select,
   SelectContent,
@@ -33,14 +32,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { useState } from "react";
-import { useEmployers } from "@/hooks/employers/useEmployers";
-import type { Employer } from "@/@types/employers";
 import { Spinner } from "@/components/ui/spinner";
+import { Badge } from "@/components/ui/badge";
+
+import type { Employer } from "@/@types/employers";
 import { DataPagination } from "@/components/data-pagination";
 import { useDebounce } from "@/hooks/useDebounce";
-import { Badge } from "@/components/ui/badge";
-import { useNavigate } from "react-router-dom";
+import { useRecruiters } from "@/hooks/recruiters";
 
 const AdminRecruitersPage = () => {
   const navigate = useNavigate();
@@ -52,15 +50,15 @@ const AdminRecruitersPage = () => {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data: employersData, isLoading } = useEmployers(
+  const { data: recruitersData, isLoading } = useRecruiters(
     debouncedSearch,
     page,
     perPage,
     featuredFilter,
   );
 
-  const employers = employersData?.data ?? [];
-  const statistics = employersData?.statistics;
+  const employers = recruitersData?.data ?? [];
+  const statistics = recruitersData?.statistics;
 
   return (
     <div className="space-y-4">
@@ -255,9 +253,9 @@ const AdminRecruitersPage = () => {
           {/* pagination */}
           {employers.length > 0 && (
             <DataPagination
-              page={employersData?.page}
-              perPage={employersData?.limit}
-              totalPages={employersData?.totalPages}
+              page={recruitersData?.page}
+              perPage={recruitersData?.limit}
+              totalPages={recruitersData?.totalPages}
               onPageChange={setPage}
               onPerPageChange={setPerPage}
             />
