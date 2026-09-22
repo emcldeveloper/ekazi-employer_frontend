@@ -28,6 +28,7 @@ import {
 import { useRegister } from "@/hooks/auth";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/axios-helpers";
+import { useSearchParams } from "react-router-dom";
 
 const steps = [
   {
@@ -89,8 +90,11 @@ const STEP_FIELDS: Record<number, (keyof OnboardingFormData)[]> = {
 };
 
 export function Onboarding() {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [searchParams] = useSearchParams();
 
+  const planFromUrl = searchParams.get("plan");
+
+  const [currentStep, setCurrentStep] = useState(0);
   const [registration, setRegistration] = useState<RegistrationResponse | null>(
     null,
   );
@@ -101,7 +105,7 @@ export function Onboarding() {
     resolver: zodResolver(onboardingSchema),
 
     defaultValues: {
-      planId: "",
+      planId: planFromUrl || "",
 
       companyName: "",
       companyType: "",

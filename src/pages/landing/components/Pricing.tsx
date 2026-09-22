@@ -2,8 +2,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 const plans = [
   {
+    id: 1,
     title: "Basic Plan",
     type: "basic",
     popular: false,
@@ -18,6 +20,7 @@ const plans = [
     ],
   },
   {
+    id: 2,
     title: "Standard Plan",
     type: "standard",
     popular: true,
@@ -33,6 +36,7 @@ const plans = [
     ],
   },
   {
+    id: 3,
     title: "Premium Plan",
     type: "premium",
     popular: false,
@@ -51,6 +55,7 @@ const plans = [
     ],
   },
   {
+    id: 4,
     title: "Enterprise Plan",
     type: "enterprise",
     popular: false,
@@ -108,7 +113,7 @@ export default function Pricing() {
               </div>
 
               <Button
-                onClick={() => navigate("/register")}
+                onClick={() => navigate(`/register?plan=${plan.id}`)}
                 variant={plan.popular ? "default" : "outline"}
                 className="mt-auto w-full"
               >

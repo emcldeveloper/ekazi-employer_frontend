@@ -56,7 +56,7 @@ const RequestDemoPage = () => {
         <section className="flex-1 flex flex-col px-6 py-16 sm:px-10 lg:px-12 xl:px-16">
           <div className="max-w-135">
             <h1 className="font-serif text-3xl md:text-4xl font-semibold">
-              Request Ekazi Demo.
+              Request a Demo.
             </h1>
 
             <p className="mt-10 text-sm">

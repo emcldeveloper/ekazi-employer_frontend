@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Loader2, Smartphone, CheckCircle2 } from "lucide-react";
+import { Smartphone, CheckCircle2, Loader } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,9 +8,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 import type { OnboardingFormData } from "@/schema/auth.schema";
-import { useRegistrationPayment } from "@/hooks/payments";
-
-type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed";
+import { usePaymentStatus, useRegistrationPayment } from "@/hooks/payments";
 
 interface PaymentFormProps {
   onPaymentSuccess?: () => void;
@@ -24,9 +22,13 @@ export default function PaymentForm({ onPaymentSuccess }: PaymentFormProps) {
     formState: { errors },
   } = useFormContext<OnboardingFormData>();
 
-  const { mutateAsync: initiatePayment } = useRegistrationPayment();
+  const [paymentReference, setPaymentReference] = useState<string>();
 
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("idle");
+  const { mutateAsync: initiatePayment, isPending } = useRegistrationPayment();
+
+  const { data: statusPayment, isLoading: isCheckingPayment } =
+    usePaymentStatus(paymentReference);
+  const paymentStatus = statusPayment?.data;
 
   const handleInitiatePayment = async () => {
     // Validate payment phone before calling the API
@@ -45,30 +47,28 @@ export default function PaymentForm({ onPaymentSuccess }: PaymentFormProps) {
     }
 
     try {
-      setPaymentStatus("initiating");
-
       const response = await initiatePayment({
         plan_id: Number(planId),
         phone: paymentPhone,
       });
 
-      console.log("Payment initiated:", response);
+      const reference = response.data.reference;
 
-      // At this point the backend has accepted the
-      // payment request and the USSD prompt should be sent.
-      setPaymentStatus("pending");
+      if (!reference) {
+        throw new Error("Payment reference was not returned");
+      }
+
+      setPaymentReference(reference);
 
       toast.success("Payment request sent. Please check your phone.");
     } catch (error) {
       console.error("Payment initiation failed:", error);
 
-      setPaymentStatus("failed");
-
       toast.error("Unable to initiate payment. Please try again.");
     }
   };
 
-  if (paymentStatus === "pending") {
+  if (isCheckingPayment) {
     return (
       <div className="flex flex-col items-center justify-center py-10 space-y-4 text-center">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
@@ -145,12 +145,12 @@ export default function PaymentForm({ onPaymentSuccess }: PaymentFormProps) {
       <Button
         type="button"
         onClick={handleInitiatePayment}
-        disabled={paymentStatus === "initiating"}
+        disabled={isPending}
         className="w-full rounded-xl bg-blue-600 hover:bg-blue-700"
       >
-        {paymentStatus === "initiating" ? (
+        {isPending ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Loader className="animate-spin" />
             Initiating payment...
           </>
         ) : (
