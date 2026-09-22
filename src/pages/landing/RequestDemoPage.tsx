@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 import { CircleCheck, Loader2 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,69 +9,46 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Textarea } from "@/components/ui/textarea";
-
-interface DemoForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  company: string;
-  jobTitle: string;
-  phone: string;
-  companyType: string;
-  message: string;
-}
-
-const initialForm: DemoForm = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  company: "",
-  jobTitle: "",
-  phone: "",
-  companyType: "",
-  message: "",
-};
+import type { DemoForm } from "@/@types/request-demo";
+import { useRequestDemo } from "@/hooks/demo";
+import { getErrorMessage } from "@/utils/axios-helpers";
 
 const RequestDemoPage = () => {
-  const [form, setForm] = useState<DemoForm>(initialForm);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<DemoForm>();
 
-  const handleChange = (field: keyof DemoForm, value: string) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  const { mutate: requestDemo, isPending } = useRequestDemo();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    setIsSubmitting(true);
-
-    try {
-      // Replace this with your API request
-      //
-      // await api.post("/demo-requests", form);
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      console.log("Demo request:", form);
-
-      setForm(initialForm);
-    } catch (error) {
-      console.error("Failed to submit demo request:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit = (data: DemoForm) => {
+    requestDemo(data, {
+      onSuccess: (res) => {
+        toast.success(res?.message || "Request sent successfully");
+        reset();
+      },
+      onError: (err) => {
+        toast.error(getErrorMessage(err));
+      },
+    });
   };
 
   return (
-    <main className="min-h-screen font-sen bg-white overflow-x-hidden">
+    <div className="min-h-screen font-sen bg-white overflow-x-hidden">
       <Navbar />
 
       <div className="pt-20 mx-auto max-w-7xl flex">
@@ -128,42 +105,45 @@ const RequestDemoPage = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <form onSubmit={handleSubmit} className="space-y-4 w-full">
+                <form onSubmit={handleSubmit(onSubmit)}>
                   <FieldGroup>
                     <Field>
                       <FieldLabel>Company name</FieldLabel>
                       <Input
                         id="company"
-                        value={form.company}
-                        onChange={(e) =>
-                          handleChange("company", e.target.value)
-                        }
-                        required
+                        {...register("company", {
+                          required: "Company name is required",
+                        })}
                       />
+                      {errors.company && (
+                        <FieldError>{errors.company.message}</FieldError>
+                      )}
                     </Field>
 
                     <Field>
                       <FieldLabel>Full name</FieldLabel>
                       <Input
-                        id="company"
-                        value={form.company}
-                        onChange={(e) =>
-                          handleChange("company", e.target.value)
-                        }
-                        required
+                        id="fullName"
+                        {...register("fullName", {
+                          required: "Name is required",
+                        })}
                       />
+                      {errors.fullName && (
+                        <FieldError>{errors.fullName.message}</FieldError>
+                      )}
                     </Field>
 
-                    {/* Email */}
                     <Field>
                       <FieldLabel>Email</FieldLabel>
                       <Input
-                        id="email"
                         type="email"
-                        value={form.email}
-                        onChange={(e) => handleChange("email", e.target.value)}
-                        required
+                        {...register("email", {
+                          required: "Email is required",
+                        })}
                       />
+                      {errors.email && (
+                        <FieldError>{errors.email.message}</FieldError>
+                      )}
                     </Field>
 
                     <Field>
@@ -171,27 +151,23 @@ const RequestDemoPage = () => {
                       <Input
                         id="phone"
                         type="tel"
-                        value={form.phone}
-                        onChange={(e) => handleChange("phone", e.target.value)}
+                        {...register("phone", {
+                          required: "Phone number is required",
+                        })}
                       />
+                      {errors.phone && (
+                        <FieldError>{errors.phone.message}</FieldError>
+                      )}
                     </Field>
 
                     <Field>
                       <FieldLabel>Message(optional)</FieldLabel>
-                      <Textarea
-                        id="phone"
-                        value={form.phone}
-                        onChange={(e) => handleChange("phone", e.target.value)}
-                      />
+                      <Textarea id="message" {...register("message")} />
                     </Field>
 
                     {/* Submit */}
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="mt-1  w-full text-base"
-                    >
-                      {isSubmitting ? (
+                    <Button type="submit" disabled={isPending}>
+                      {isPending ? (
                         <>
                           <Loader2 className="mr-2 size-4 animate-spin" />
                           Sending request...
@@ -209,7 +185,7 @@ const RequestDemoPage = () => {
       </div>
 
       <Footer />
-    </main>
+    </div>
   );
 };
 
