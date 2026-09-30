@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { CircleCheck, Loader2 } from "lucide-react";
 
 import {
@@ -9,6 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Field,
   FieldError,
@@ -25,10 +33,17 @@ import type { DemoForm } from "@/@types/request-demo";
 import { useRequestDemo } from "@/hooks/demo";
 import { getErrorMessage } from "@/utils/axios-helpers";
 
+const sessions = [
+  { label: "Morning", value: "morning" },
+  { label: "Afternoon", value: "afternoon" },
+  { label: "Evening", value: "evening" },
+];
+
 const RequestDemoPage = () => {
   const {
     register,
     handleSubmit,
+    control,
     reset,
     formState: { errors },
   } = useForm<DemoForm>();
@@ -51,48 +66,62 @@ const RequestDemoPage = () => {
     <div className="min-h-screen font-sen bg-white overflow-x-hidden">
       <Navbar />
 
-      <div className="pt-20 mx-auto max-w-7xl flex">
+      <div className="mt-30 mb-10 mx-auto max-w-7xl flex flex-col gap-8 md:flex-row">
         {/* Left side */}
-        <section className="flex-1 flex flex-col px-6 py-16 sm:px-10 lg:px-12 xl:px-16">
+        <section className="flex-1 flex flex-col px-6 sm:px-10 lg:px-12 xl:px-16">
           <div className="max-w-135">
             <h1 className="font-serif text-3xl md:text-4xl font-semibold">
               Request a Demo.
             </h1>
 
-            <p className="mt-10 text-sm">
+            <p className="mt-8 text-sm">
               See how Ekazi can simplify the way your team recruits. From
               publishing opportunities and managing applications to evaluating
               candidates and collaborating on hiring decisions, Ekazi brings
               your recruitment workflow together in one platform.
             </p>
 
-            <div className="mt-10 space-y-5">
+            <div className="mt-8 space-y-5">
               <div className="flex items-center gap-2 text-sm">
-                <CircleCheck />
-                Manage jobs, applications, and candidates from one place
+                <div>
+                  <CircleCheck size={16} />
+                </div>
+                <div>
+                  Manage jobs, applications, and candidates from one place
+                </div>
               </div>
 
               <div className="flex items-center gap-2 text-sm">
-                <CircleCheck />
-                Streamline candidate screening and evaluation
+                <div>
+                  <CircleCheck size={16} />
+                </div>
+                <div>Streamline candidate screening and evaluation</div>
               </div>
 
               <div className="flex items-center gap-2 text-sm">
-                <CircleCheck />
-                Collaborate with your hiring team with greater clarity
+                <div>
+                  <CircleCheck size={16} />
+                </div>
+                <div>
+                  Collaborate with your hiring team with greater clarity
+                </div>
               </div>
 
               <div className="flex items-center gap-2 text-sm">
-                <CircleCheck />
-                Make informed hiring decisions with organized candidate
-                information
+                <div>
+                  <CircleCheck size={16} />
+                </div>
+                <div>
+                  Make informed hiring decisions with organized candidate
+                  information
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Right side */}
-        <section className="flex-1 flex items-center justify-center px-5 py-10 sm:px-8 lg:px-10">
+        <section className="flex-1 flex items-center justify-center px-5 sm:px-8 lg:px-10">
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-xl">
@@ -159,6 +188,72 @@ const RequestDemoPage = () => {
                         <FieldError>{errors.phone.message}</FieldError>
                       )}
                     </Field>
+
+                    <Field>
+                      <FieldLabel>When are you available?</FieldLabel>
+                      <Controller
+                        name="session"
+                        control={control}
+                        rules={{
+                          required: "Select a session",
+                        }}
+                        render={({ field }) => (
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Session" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {sessions.map((item) => (
+                                  <SelectItem
+                                    key={item.value}
+                                    value={item.value}
+                                  >
+                                    {item.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.session && (
+                        <FieldError>{errors.session.message}</FieldError>
+                      )}
+                    </Field>
+
+                    <div className="flex items-center gap-4">
+                      <Field>
+                        <FieldLabel>Available from</FieldLabel>
+                        <Input
+                          id="startDate"
+                          type="date"
+                          {...register("startDate", {
+                            required: "Date is required",
+                          })}
+                        />
+                        {errors.startDate && (
+                          <FieldError>{errors.startDate.message}</FieldError>
+                        )}
+                      </Field>
+
+                      <Field>
+                        <FieldLabel>Available until</FieldLabel>
+                        <Input
+                          id="endDate"
+                          type="date"
+                          {...register("endDate", {
+                            required: "Date is required",
+                          })}
+                        />
+                        {errors.endDate && (
+                          <FieldError>{errors.endDate.message}</FieldError>
+                        )}
+                      </Field>
+                    </div>
 
                     <Field>
                       <FieldLabel>Message(optional)</FieldLabel>

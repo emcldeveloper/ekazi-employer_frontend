@@ -78,11 +78,11 @@ const JobsPage = () => {
 
   return (
     <div className="space-y-4">
-      <div className="sm:w-2/3">
+      <div className="sm:w-1/2">
         <h2 className="text-2xl font-bold">Job Management</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Create, manage, and monitor job postings, track applications, and
-          oversee the hiring process across your organization.
+          Manage, and monitor job postings, track applications, and oversee the
+          hiring process across your organization.
         </p>
       </div>
 
@@ -173,7 +173,17 @@ const JobsPage = () => {
             </InputGroup>
 
             {/* filters */}
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
+              {/* preview jobs on ekazi */}
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  navigate("/app/jobs/preview-on-ekazi");
+                }}
+              >
+                Preview on ekazi
+              </Button>
+
               <Select
                 value={statusFilter}
                 onValueChange={(value) => {
@@ -194,16 +204,6 @@ const JobsPage = () => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-
-              {/* preview jobs on ekazi */}
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  navigate("/app/jobs/preview-on-ekazi");
-                }}
-              >
-                Preview on ekazi
-              </Button>
 
               {/* create job */}
               {hasPermission(PERMISSIONS.POST_JOB) && <CreateJob />}

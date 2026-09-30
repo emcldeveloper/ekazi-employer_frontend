@@ -89,6 +89,9 @@ const AccountForm = () => {
           <Controller
             name="companyType"
             control={control}
+            rules={{
+              required: "Company type is required",
+            }}
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger className="w-full">
@@ -119,6 +122,9 @@ const AccountForm = () => {
           <Controller
             name="accountType"
             control={control}
+            rules={{
+              required: "Account type is required",
+            }}
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger className="w-full">

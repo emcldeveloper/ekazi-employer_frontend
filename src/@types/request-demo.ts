@@ -4,4 +4,7 @@ export interface DemoForm {
   email: string;
   phone: string;
   message: string;
+  session: string;
+  startDate: Date;
+  endDate: Date;
 }

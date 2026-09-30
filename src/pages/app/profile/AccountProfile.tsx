@@ -8,7 +8,7 @@ import {
   MapPinPenIcon,
   PencilLineIcon,
   Phone,
-  PrinterIcon,
+  PhoneCall,
   Sparkle,
   Users,
 } from "lucide-react";
@@ -33,7 +33,7 @@ const AccountProfile = () => {
   const profile = companyProfile?.data;
 
   const handleEditProfile = () => {
-    navigate("/profile/edit");
+    navigate("/app/profile/edit");
   };
 
   if (isLoading) {
@@ -215,12 +215,12 @@ const AccountProfile = () => {
               {profile?.fax && (
                 <div className="flex items-center gap-3">
                   <div className="bg-blue-100 text-blue-500 rounded-lg p-2">
-                    <PrinterIcon size={16} />
+                    <PhoneCall size={16} />
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Fax</p>
+                    <p className="text-xs text-muted-foreground">Phone 2</p>
                     <a
-                      href={`fax:${profile?.fax}`}
+                      href={`tel:${profile?.fax}`}
                       className="text-primary hover:underline"
                     >
                       {profile?.fax}

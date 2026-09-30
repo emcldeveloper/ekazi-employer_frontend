@@ -29,6 +29,7 @@ export interface Job {
   show_client_name: boolean;
   applicant_min_age: number;
   applicant_max_age: number;
+  featured: boolean;
   hide: boolean;
   quantity: number;
   years_experience: string;
@@ -52,7 +53,7 @@ export interface Job {
   currency: Currency;
 
   addresses: Address[];
-  statistics: Statistic[];
+  jobStatistics: Statistic[];
 
   job_type: JobTypeData;
   gender: Gender;

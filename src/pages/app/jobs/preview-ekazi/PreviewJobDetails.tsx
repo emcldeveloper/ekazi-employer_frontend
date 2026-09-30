@@ -3,31 +3,37 @@ import { Eye, Users, Briefcase, Banknote, Calendar } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { IMG_BASE } from "@/constants";
 import type { ReactNode } from "react";
+import { useJob } from "@/hooks/jobs";
+import { Spinner } from "@/components/ui/spinner";
 
 interface PreviewJobDetailsProps {
-  job: any;
+  jobId: number;
 }
 
-const PreviewJobDetails = ({ job }: PreviewJobDetailsProps) => {
-  const j = job;
+const PreviewJobDetails = ({ jobId }: PreviewJobDetailsProps) => {
+  const { data: job, isLoading } = useJob(jobId);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center">
+        <Spinner className="size-8" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 my-5">
       {/* Header */}
       <div className="flex gap-4 items-center">
         <img
-          src={`${IMG_BASE}${job.client?.logo || ""}`}
-          alt={job.client?.client_name || "Company Logo"}
+          src={`${IMG_BASE}${job?.client?.logo}`}
+          alt={job?.client?.name || "Company Logo"}
           className="object-contain max-w-30 max-h-18.75"
         />
 
         <div className="text-start">
-          <h2 className="font-semibold text-lg">
-            {job.job_position?.position_name}
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            {job.client?.client_name}
-          </p>
+          <h2 className="font-semibold text-lg">{job?.position?.name}</h2>
+          <p className="text-sm text-muted-foreground">{job?.client?.name}</p>
         </div>
       </div>
 
@@ -37,35 +43,32 @@ const PreviewJobDetails = ({ job }: PreviewJobDetailsProps) => {
       <div className="grid grid-cols-3 text-start gap-4">
         <div className="flex gap-1 items-center text-sm">
           <Eye size={16} className="text-orange-500" />
-          <span>{job.statistic?.job_views ?? 0}</span>
+          <span>{job?.statistics?.[0]?.job_views ?? 0}</span>
           <span>Views</span>
         </div>
 
         <div className="flex gap-1 items-center text-sm">
           <Users size={16} className="text-orange-500" />
-          <span>
-            {job.applied_count ?? job.indirect_applicant?.length ?? 0}
-          </span>
+          <span>{job.total_applicants ?? 0}</span>
           <span>Applicants</span>
         </div>
 
         <div className="flex gap-1 items-center text-sm">
           <Briefcase size={16} className="text-orange-500" />
-          <span>{job.job_type?.type_name}</span>
+          <span>{job?.job_type?.name}</span>
         </div>
 
         <div className="flex gap-1 items-center text-sm">
           <Banknote size={16} className="text-orange-500" />
           <span>
-            {job.entry_salary || job.exit_salary
-              ? `${job.entry_salary ?? 0} - ${job.exit_salary}`
-              : "Negotiable"}
+            {job?.salaries?.[0]?.from_salary?.low.toLocaleString()} -
+            {job?.salaries?.[0]?.to_salary?.low.toLocaleString()}
           </span>
         </div>
 
         <div className="flex gap-1 items-center text-sm">
           <Calendar size={16} className="text-orange-500" />
-          <span>{new Date(job.dead_line).toDateString() ?? "Deadline"}</span>
+          <span>{new Date(job?.dead_line).toDateString() ?? "Deadline"}</span>
         </div>
       </div>
 
@@ -74,29 +77,27 @@ const PreviewJobDetails = ({ job }: PreviewJobDetailsProps) => {
       {/* Details */}
       <div className="space-y-4 text-sm">
         <Section title="Reporting Structure">
-          {j.job_report_to?.report_to && (
-            <Item label="Report To" value={j.job_report_to.report_to} />
+          {job?.report_to?.[0]?.report_to && (
+            <Item label="Report To" value={job?.report_to?.[0]?.report_to} />
           )}
-          {j.job_report_to?.supervises && (
-            <Item label="Supervision" value={j.job_report_to.supervises} />
+          {job?.report_to?.[0]?.supervises && (
+            <Item label="Supervision" value={job?.report_to?.[0]?.supervises} />
           )}
-          {j.job_report_to?.interacts_with && (
+          {job?.report_to?.[0]?.interacts_with && (
             <Item
               label="Interacts With"
-              value={j.job_report_to.interacts_with}
+              value={job?.report_to?.[0]?.interacts_with}
             />
           )}
         </Section>
 
         <Section title="Job Requirements">
-          {j.position_level?.position_name && (
-            <Item label="Job Level" value={j.position_level.position_name} />
+          {job.position_level?.name && (
+            <Item label="Job Level" value={job.position_level?.name} />
           )}
-          {j.job_gender?.gender_name && (
-            <Item label="Gender" value={j.job_gender.gender_name} />
-          )}
-          {j.years_experience && (
-            <Item label="Experience" value={`${j.years_experience} Years`} />
+          {job.gender?.name && <Item label="Gender" value={job.gender?.name} />}
+          {job.years_experience && (
+            <Item label="Experience" value={`${job.years_experience} Years`} />
           )}
         </Section>
       </div>
@@ -112,7 +113,7 @@ const PreviewJobDetails = ({ job }: PreviewJobDetailsProps) => {
                  prose-ul:list-disc
                  prose-ul:pl-6 dark:text-white"
           dangerouslySetInnerHTML={{
-            __html: job.job_duties?.main_duties,
+            __html: job.requirements?.[0]?.main_duties,
           }}
         />
       </div>
@@ -125,7 +126,7 @@ const PreviewJobDetails = ({ job }: PreviewJobDetailsProps) => {
                  prose-ul:list-disc
                  prose-ul:pl-6 dark:text-white"
           dangerouslySetInnerHTML={{
-            __html: job.job_other_requirement?.other_requirement ?? "",
+            __html: job.other_requirements?.[0]?.other_requirement ?? "",
           }}
         />
       </div>

@@ -19,26 +19,27 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import PreviewJobDetails from "./PreviewJobDetails";
 import { DEFAULT_IMG, IMG_BASE } from "@/constants";
 import { capitalizeText } from "@/utils/helpers";
+import type { Job } from "@/@types/job";
 
 interface PreviewJobCardProps {
-  job: any;
+  job: Job;
 }
 
 const PreviewJobCard = ({ job }: PreviewJobCardProps) => {
   const isMobile = useIsMobile();
 
   // Extracting safer values
-  const jobTitle = job.job_position?.position_name || "Job";
-  const region = job.job_addresses?.[0]?.region?.region_name || "";
-  const countryName = job.job_addresses?.[0]?.region?.country?.name || "";
-  const safeCountry = countryName?.toLowerCase() || "";
-  const featuredCompany = job.client?.featured || job?.featured || false;
+  const jobTitle = job.position?.position_name;
+  const region = job.addresses?.[0]?.region?.name;
+  const countryName = job.addresses?.[0]?.region?.country?.name;
+  const safeCountry = countryName?.toLowerCase();
+  const featuredCompany = job.featured;
 
   return (
-    <Card>
+    <Card size="sm">
       <CardContent>
-        <div className="flex justify-between items-center mb-3">
-          <div className="w-30 h-18.75 flex items-center justify-center">
+        <div className="flex justify-between items-center mb-2">
+          <div className="w-20 h-18.75 flex items-center justify-center">
             <img
               src={
                 job.client?.logo
@@ -63,17 +64,17 @@ const PreviewJobCard = ({ job }: PreviewJobCardProps) => {
 
         {/* Details */}
         <div className="text-xs text-muted-foreground space-y-1">
-          <div>Job Type: {job.job_type?.type_name}</div>
+          {/* <div>Job Type: {job.job_type?.type_name}</div> */}
 
           {/* Location */}
           <div>
             {safeCountry === "remote" ? (
               <span>Location: Remote</span>
-            ) : job.job_addresses?.length > 0 ? (
+            ) : job.addresses?.length > 0 ? (
               <span>
                 Location:{" "}
-                {job.job_addresses[0].sub_location
-                  ? `${capitalizeText(job.job_addresses[0].sub_location)}, `
+                {job.addresses[0].sub_location
+                  ? `${capitalizeText(job.addresses[0].sub_location)}, `
                   : ""}
                 {region}
                 {countryName ? `, ${countryName}` : ""}
@@ -95,7 +96,7 @@ const PreviewJobCard = ({ job }: PreviewJobCardProps) => {
               : "N/A"}
           </div>
 
-          <div>Industry: {job.industry?.industry_name || "N/A"}</div>
+          <div>Industry: {job.industry?.name || "N/A"}</div>
         </div>
       </CardContent>
 
@@ -115,7 +116,7 @@ const PreviewJobCard = ({ job }: PreviewJobCardProps) => {
               </VisuallyHidden>
 
               <div className="flex-1 scroll-fade overflow-y-auto p-4">
-                <PreviewJobDetails job={job} />
+                <PreviewJobDetails jobId={job.id} />
               </div>
             </DrawerContent>
           </Drawer>
@@ -128,7 +129,7 @@ const PreviewJobCard = ({ job }: PreviewJobCardProps) => {
             </SheetTrigger>
             <SheetContent className="sm:max-w-3xl!">
               <div className="scrollbar overflow-y-auto px-4">
-                <PreviewJobDetails job={job} />
+                <PreviewJobDetails jobId={job.id} />
               </div>
             </SheetContent>
           </Sheet>
@@ -136,7 +137,7 @@ const PreviewJobCard = ({ job }: PreviewJobCardProps) => {
 
         <div className="flex items-center gap-1 text-sm">
           <Eye size={16} className="text-Orange" />
-          <span>{job.statistic?.job_views ?? 0}</span>
+          <span>{job?.jobStatistics?.[0]?.job_views ?? 0}</span>
         </div>
       </CardFooter>
     </Card>

@@ -171,12 +171,10 @@ const CreateProfile = () => {
       formData.append("attachment", data.attachment[0]);
     }
 
-    console.log([...formData.entries()]);
-
     createProfile(formData, {
       onSuccess: (res) => {
         toast.success(res?.message || "Profile created successfully");
-        navigate("/profile");
+        navigate("/app/profile");
         reset();
       },
       onError: () => {
@@ -562,12 +560,8 @@ const CreateProfile = () => {
               </Field>
 
               <Field>
-                <FieldLabel>Fax</FieldLabel>
-                <Input
-                  type="text"
-                  placeholder="Enter fax number"
-                  {...register("fax")}
-                />
+                <FieldLabel>Phone 2</FieldLabel>
+                <Input type="tel" {...register("fax")} />
               </Field>
 
               <Field>
