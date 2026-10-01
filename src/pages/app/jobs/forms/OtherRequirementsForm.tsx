@@ -3,7 +3,6 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import RichTextEditor from "@/components/RichTextEditor";
-import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
 
 import type { Job } from "@/@types/job";
@@ -11,19 +10,27 @@ import { useAddOtherRequirement, useEditOtherRequirement } from "@/hooks/jobs";
 import type { JobOtherRequirementForm } from "@/@types/job-forms";
 
 interface OtherRequirementsFormProps {
-  job: Job;
+  createdJobId?: number;
+  job?: Job;
   onSuccess?: () => void;
+  onBack?: () => void;
+  onComplete?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 const OtherRequirementsForm = ({
+  createdJobId,
   job,
   onSuccess: closeModal,
+  onComplete,
+  onLoadingChange,
 }: OtherRequirementsFormProps) => {
   // Variables
+  const jobId = job?.id ?? createdJobId;
   const requirementsId = job?.other_requirements?.[0]?.id;
   const otherRequirements = job?.other_requirements?.[0]?.other_requirement;
 
-  const isEditMode = Boolean(requirementsId);
+  // const isEditMode = Boolean(requirementsId);
 
   const { control, handleSubmit, reset } = useForm<JobOtherRequirementForm>();
 
@@ -31,6 +38,12 @@ const OtherRequirementsForm = ({
     useAddOtherRequirement();
   const { mutate: updateOtherRequirement, isPending: isUpdating } =
     useEditOtherRequirement();
+
+  const isPending = isCreating || isUpdating;
+
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   // Pre fill data for editing
   useEffect(() => {
@@ -40,7 +53,11 @@ const OtherRequirementsForm = ({
   }, [otherRequirements, reset]);
 
   const onSubmit = (data: JobOtherRequirementForm) => {
-    const payload = { ...data, job_id: job?.id };
+    if (!jobId) {
+      return;
+    }
+
+    const payload = { ...data, job_id: jobId };
 
     if (requirementsId) {
       updateOtherRequirement(
@@ -61,6 +78,7 @@ const OtherRequirementsForm = ({
           toast.success(res?.message || "Other requirements added succesfully");
           reset();
           closeModal?.();
+          onComplete?.();
         },
         onError: () => {
           toast.error("Failed to add other requirements");
@@ -70,27 +88,26 @@ const OtherRequirementsForm = ({
   };
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FieldGroup className="mt-5">
-          <Field>
-            <Controller
-              name="other_requirement"
-              control={control}
-              rules={{
-                required: "Main duties are required",
-              }}
-              render={({ field }) => (
-                <RichTextEditor
-                  value={field.value || ""}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </Field>
-        </FieldGroup>
+    <form id="other-requirements-form" onSubmit={handleSubmit(onSubmit)}>
+      <FieldGroup className="mt-5">
+        <Field>
+          <Controller
+            name="other_requirement"
+            control={control}
+            rules={{
+              required: "Main duties are required",
+            }}
+            render={({ field }) => (
+              <RichTextEditor
+                value={field.value || ""}
+                onChange={field.onChange}
+              />
+            )}
+          />
+        </Field>
+      </FieldGroup>
 
-        <Button
+      {/* <Button
           type="submit"
           disabled={isCreating || isUpdating}
           className="mt-4"
@@ -102,9 +119,8 @@ const OtherRequirementsForm = ({
             : isEditMode
               ? "Update Requirements"
               : "Add Requirements"}
-        </Button>
-      </form>
-    </div>
+        </Button> */}
+    </form>
   );
 };
 

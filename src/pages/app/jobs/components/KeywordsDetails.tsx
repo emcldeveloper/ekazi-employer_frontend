@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PencilLineIcon, ShieldCheckIcon } from "lucide-react";
+import { Loader, PencilLineIcon, ShieldCheckIcon } from "lucide-react";
 import MetaForm from "../forms/MetaForm";
 import { useState } from "react";
 import type { Job } from "@/@types/job";
@@ -20,6 +22,7 @@ interface KeywordsDetailsProps {
 
 const KeywordsDetails = ({ job }: KeywordsDetailsProps) => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { hasPermission } = useRolePermissions();
 
@@ -50,10 +53,32 @@ const KeywordsDetails = ({ job }: KeywordsDetailsProps) => {
                 <DialogTitle>Meta Keywords (SEO)</DialogTitle>
                 <DialogDescription>Edit job meta keywords.</DialogDescription>
               </DialogHeader>
+
               <div className="-mx-4 max-h-[70vh] px-4">
-                {/* <MetaForm /> */}
-                <MetaForm job={job} onSuccess={() => setOpen(false)} />
+                <MetaForm
+                  job={job}
+                  onSuccess={() => setOpen(false)}
+                  onLoadingChange={setIsSubmitting}
+                />
               </div>
+
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline" disabled={isSubmitting}>
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button type="submit" form="meta-form" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    "Update"
+                  )}
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         )}

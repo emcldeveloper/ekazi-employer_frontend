@@ -2,7 +2,6 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import SearchSelect from "react-select";
 
-import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
 
 import { useAddMetaData } from "@/hooks/jobs";
@@ -14,20 +13,33 @@ import type { JobMetaForm } from "@/@types/job-forms";
 import type { MetaKeywordData } from "@/@types/universals";
 
 interface MetaFormProps {
-  job: Job;
+  createdJobId?: number;
+  job?: Job;
   onSuccess?: () => void;
+  onBack?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
-const MetaForm = ({ job, onSuccess: closeModal }: MetaFormProps) => {
+const MetaForm = ({
+  createdJobId,
+  job,
+  onSuccess: closeModal,
+  onLoadingChange,
+}: MetaFormProps) => {
+  const jobId = job?.id ?? createdJobId;
   const keyword_id = job?.meta_keywords?.[0]?.keyword?.id;
 
   const [keywordSearch, setKeywordSearch] = useState("");
 
   const { control, reset, handleSubmit } = useForm<JobMetaForm>();
 
+  const { data: keywords } = useMetaKeywords(keywordSearch);
+
   const { mutate: createMetaData, isPending } = useAddMetaData();
 
-  const { data: keywords } = useMetaKeywords(keywordSearch);
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   const keywordOptions: OptionType[] =
     keywords?.map((item: MetaKeywordData) => ({
@@ -45,8 +57,12 @@ const MetaForm = ({ job, onSuccess: closeModal }: MetaFormProps) => {
   }, [keyword_id, reset]);
 
   const onSubmit = (data: JobMetaForm) => {
+    if (!jobId) {
+      return;
+    }
+
     createMetaData(
-      { ...data, job_id: job?.id },
+      { ...data, job_id: jobId },
       {
         onSuccess: (res) => {
           toast.success(res?.message || "Metadata Added Succesfully");
@@ -58,7 +74,7 @@ const MetaForm = ({ job, onSuccess: closeModal }: MetaFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form id="meta-form" onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup>
         <Field>
           <Controller
@@ -83,9 +99,9 @@ const MetaForm = ({ job, onSuccess: closeModal }: MetaFormProps) => {
         </Field>
       </FieldGroup>
 
-      <Button type="submit" disabled={isPending} className="mt-4">
+      {/* <Button type="submit" disabled={isPending} className="mt-4">
         {isPending ? "Saving..." : "Save"}
-      </Button>
+      </Button> */}
     </form>
   );
 };

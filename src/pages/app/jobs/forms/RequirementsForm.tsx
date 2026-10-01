@@ -11,7 +11,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 import { useAddRequirement } from "@/hooks/jobs/useAddRequirement";
 import {
@@ -48,15 +47,20 @@ import type {
 } from "@/@types/job-forms";
 
 interface RequirementsFormProps {
-  job: Job;
+  createdJobId?: number;
+  job?: Job;
   onSuccess?: () => void;
+  onBack?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 const RequirementsForm = ({
+  createdJobId,
   job,
   onSuccess: closeModal,
+  onLoadingChange,
 }: RequirementsFormProps) => {
-  const jobId = job?.id;
+  const jobId = job?.id ?? createdJobId;
 
   const [personalitySearch, setPersonalitySearch] = useState("");
   const [skillSearch, setSkillSearch] = useState("");
@@ -74,6 +78,10 @@ const RequirementsForm = ({
 
   const { mutate: createJobRequirement, isPending } = useAddRequirement();
 
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
+
   // fetch genders
   const { data: genders } = useGenders();
   const genderOptions: OptionType[] =
@@ -85,7 +93,7 @@ const RequirementsForm = ({
   // fetch cultures
   const { data: cultures } = useCultures();
   const cultureOptions: OptionType[] =
-    cultures?.map((culture: Culture) => ({
+    cultures?.data?.map((culture: Culture) => ({
       value: culture.id,
       label: culture.culture_name,
     })) ?? [];
@@ -93,7 +101,7 @@ const RequirementsForm = ({
   // fetch personalities
   const { data: personalities } = usePersonalities(personalitySearch);
   const personalityOptions: OptionType[] =
-    personalities?.map((personality_ids: Personality) => ({
+    personalities?.data?.map((personality_ids: Personality) => ({
       value: personality_ids.id,
       label: personality_ids.name,
     })) ?? [];
@@ -101,7 +109,7 @@ const RequirementsForm = ({
   // fetch skills
   const { data: knowledges } = useKnowledges(skillSearch);
   const skillOptions: OptionType[] =
-    knowledges?.map((skill: Knowledge) => ({
+    knowledges?.data?.map((skill: Knowledge) => ({
       value: skill.id,
       label: skill.name,
     })) ?? [];
@@ -109,7 +117,7 @@ const RequirementsForm = ({
   // fetch softwares
   const { data: softwares } = useSoftwares(softwareSearch);
   const softwareOptions: OptionType[] =
-    softwares?.map((software: Software) => ({
+    softwares?.data?.map((software: Software) => ({
       value: software.id,
       label: software.software_name,
     })) ?? [];
@@ -117,7 +125,7 @@ const RequirementsForm = ({
   // fetch tools
   const { data: tools } = useTools(toolsSearch);
   const toolOptions: OptionType[] =
-    tools?.map((tool: Tool) => ({
+    tools?.data?.map((tool: Tool) => ({
       value: tool.id,
       label: tool.tool_name,
     })) ?? [];
@@ -125,7 +133,7 @@ const RequirementsForm = ({
   // fetch proficiencies
   const { data: proficiencies } = useProficiencies(prociencySearch);
   const proficiencyOptions: OptionType[] =
-    proficiencies?.map((proficiency: Proficiency) => ({
+    proficiencies?.data?.map((proficiency: Proficiency) => ({
       value: proficiency.id,
       label: proficiency.name,
     })) ?? [];
@@ -172,6 +180,10 @@ const RequirementsForm = ({
 
   // Handlers
   const onSubmit = (data: JobRequirementForm) => {
+    if (!jobId) {
+      return;
+    }
+
     const payload: JobRequirementPayload = {
       years_experience: data.years_experience,
       applicant_min_age: data.applicant_min_age,
@@ -203,7 +215,7 @@ const RequirementsForm = ({
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form id="requirements-form" onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field>
             <FieldLabel>Experience years</FieldLabel>
@@ -415,9 +427,9 @@ const RequirementsForm = ({
           </Field>
         </FieldGroup>
 
-        <Button type="submit" disabled={isPending} className="mt-4">
+        {/* <Button type="submit" disabled={isPending} className="mt-4">
           {isPending ? "Adding..." : "Add Requirements"}
-        </Button>
+        </Button> */}
       </form>
     </div>
   );

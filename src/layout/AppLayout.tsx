@@ -1,11 +1,5 @@
 import { Bell } from "lucide-react";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-} from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -16,8 +10,13 @@ import { AppSidebar } from "./AppSidebar";
 import { Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useProfile } from "@/hooks/profile";
 
 export default function AppLayout() {
+  // Custom Logo for each company
+  const { data: companyProfile } = useProfile();
+  const profile = companyProfile?.data;
+
   return (
     <SidebarProvider className="font-sen">
       <AppSidebar />
@@ -28,13 +27,11 @@ export default function AppLayout() {
 
             <Separator orientation="vertical" className="mr-2" />
 
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>App</BreadcrumbLink>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="text-base text-muted-foreground font-semibold">
+                {profile?.name}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">

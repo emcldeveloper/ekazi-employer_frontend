@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import RichTextEditor from "@/components/RichTextEditor";
 
@@ -11,18 +10,24 @@ import type { Job } from "@/@types/job";
 import type { JobMainDutiesForm } from "@/@types/job-forms";
 
 interface MainDutiesFormProps {
-  job: Job;
+  createdJobId?: number;
+  job?: Job;
   onSuccess?: () => void;
+  onBack?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 const MainDutiesForm = ({
+  createdJobId,
   job,
   onSuccess: closeModal,
+  onLoadingChange,
 }: MainDutiesFormProps) => {
+  const jobId = job?.id ?? createdJobId;
   const dutiesId = job?.requirements?.[0]?.id;
   const mainDuties = job?.requirements?.[0]?.main_duties;
 
-  const isEditMode = Boolean(dutiesId);
+  // const isEditMode = Boolean(dutiesId);
 
   const {
     control,
@@ -37,8 +42,14 @@ const MainDutiesForm = ({
 
   const { mutate: createMainDuties, isPending: isCreating } =
     useAddMainDuties();
-  const { mutate: updateMainDuties, isPending: isEditing } =
+  const { mutate: updateMainDuties, isPending: isUpdating } =
     useEditMainDuties();
+
+  const isPending = isCreating || isUpdating;
+
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   // Pre fill data for editing
   useEffect(() => {
@@ -48,9 +59,14 @@ const MainDutiesForm = ({
   }, [mainDuties, reset]);
 
   const onSubmit = (data: JobMainDutiesForm) => {
+    if (!jobId) {
+      toast.error("Job ID is missing");
+      return;
+    }
+
     const payload = {
       ...data,
-      job_id: job.id,
+      job_id: jobId,
     };
 
     if (dutiesId) {
@@ -82,7 +98,7 @@ const MainDutiesForm = ({
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form id="main-duties-form" onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup>
           <Field>
             <Controller
@@ -102,19 +118,19 @@ const MainDutiesForm = ({
           </Field>
         </FieldGroup>
 
-        <Button
+        {/* <Button
           type="submit"
-          disabled={isCreating || isEditing}
+          disabled={isCreating || isUpdating}
           className="mt-4"
         >
-          {isCreating || isEditing
+          {isCreating || isUpdating
             ? isEditMode
               ? "Updating..."
               : "Adding..."
             : isEditMode
               ? "Update Duties"
               : "Add Duties"}
-        </Button>
+        </Button> */}
       </form>
     </div>
   );

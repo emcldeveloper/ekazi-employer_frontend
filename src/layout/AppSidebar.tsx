@@ -146,7 +146,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link to="/app/dashboard">
-                <div className="flex size-12 items-center justify-center overflow-hidden rounded-lg ">
+                <div className="flex size-16 items-center justify-center overflow-hidden rounded-lg ">
                   <img
                     src={
                       profile?.logo
@@ -158,9 +158,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   />
                 </div>
 
-                <div className="grid flex-1 text-left text-sm leading-tight">
+                {/* <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{profile?.name}</span>
-                </div>
+                </div> */}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -1,12 +1,26 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   Table,
   TableBody,
@@ -17,6 +31,7 @@ import {
 } from "@/components/ui/table";
 import {
   GraduationCapIcon,
+  Loader,
   PencilIcon,
   PencilLineIcon,
   Trash2Icon,
@@ -42,6 +57,7 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
   const [editingEducation, setEditingEducation] = useState<Education | null>(
     null,
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // deleting job education
   const { mutate: deleteEducation } = useDeleteEducation();
@@ -86,9 +102,36 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
                   Add job education information.
                 </DialogDescription>
               </DialogHeader>
+
               <div className="-mx-4 max-h-[70vh] overflow-y-visible px-4">
-                <EducationForm jobId={jobId} onSuccess={() => setOpen(false)} />
+                <EducationForm
+                  jobId={jobId}
+                  onSuccess={() => setOpen(false)}
+                  onLoadingChange={setIsSubmitting}
+                />
               </div>
+
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline" disabled={isSubmitting}>
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  form="education-form"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         )}
@@ -122,11 +165,36 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
                       className="text-orange-500 cursor-pointer"
                     />
 
-                    <Trash2Icon
-                      size={16}
-                      onClick={() => handleDelete(item.id)}
-                      className="text-red-500 cursor-pointer"
-                    />
+                    <AlertDialog>
+                      <AlertDialogTrigger>
+                        <Button variant="destructive" size="icon-sm">
+                          <Trash2Icon />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent size="sm">
+                        <AlertDialogHeader>
+                          <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                            <Trash2Icon />
+                          </AlertDialogMedia>
+                          <AlertDialogTitle>Delete education?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will permanently delete this education from the
+                            job.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel variant="outline">
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            variant="destructive"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </TableCell>
                 )}
               </TableRow>
@@ -153,7 +221,8 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
       >
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit Education</DialogTitle>
+            <DialogTitle>Education</DialogTitle>
+            <DialogDescription>Update job education details</DialogDescription>
           </DialogHeader>
 
           <div className="-mx-4 max-h-[70vh] overflow-y-visible px-4">
@@ -162,9 +231,28 @@ const EducationDetails = ({ job }: EducationDetailsProps) => {
                 jobId={jobId}
                 education={editingEducation}
                 onSuccess={() => setEditingEducation(null)}
+                onLoadingChange={setIsSubmitting}
               />
             )}
           </div>
+
+          <DialogFooter>
+            <DialogClose>
+              <Button variant="outline" disabled={isSubmitting}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="submit" form="education-form" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader className="animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                "Update"
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

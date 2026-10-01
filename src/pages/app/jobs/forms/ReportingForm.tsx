@@ -12,16 +12,25 @@ import { Input } from "@/components/ui/input";
 
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import type { Job } from "@/@types/job";
 
 interface ReportingFormProps {
-  job: Job;
+  createdJobId?: number;
+  job?: Job;
   onSuccess?: () => void;
+  onBack?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
-const ReportingForm = ({ job, onSuccess: closeModal }: ReportingFormProps) => {
+const ReportingForm = ({
+  createdJobId,
+  job,
+  onSuccess: closeModal,
+  onLoadingChange,
+}: ReportingFormProps) => {
+  const jobId = job?.id ?? createdJobId;
+
   const {
     register,
     handleSubmit,
@@ -32,6 +41,10 @@ const ReportingForm = ({ job, onSuccess: closeModal }: ReportingFormProps) => {
   const { mutate: createMainDuties, isPending } = useAddReporting();
 
   useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
+
+  useEffect(() => {
     reset({
       report_to: job?.report_to?.[0]?.report_to || "",
       supervises: job?.report_to?.[0]?.supervises || "",
@@ -40,8 +53,12 @@ const ReportingForm = ({ job, onSuccess: closeModal }: ReportingFormProps) => {
   }, [job, reset]);
 
   const onSubmit = (data: JobReportingData) => {
+    if (!jobId) {
+      return;
+    }
+
     createMainDuties(
-      { ...data, job_id: job?.id },
+      { ...data, job_id: jobId },
       {
         onSuccess: (res) => {
           toast.success(res?.message || "Requirements Added Succesfully");
@@ -52,54 +69,50 @@ const ReportingForm = ({ job, onSuccess: closeModal }: ReportingFormProps) => {
     );
   };
 
-  //   job_id: number;
-
   return (
-    <div className="space-y-6">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FieldGroup className="grid gap-4 sm:grid-cols-2">
-          <Field>
-            <FieldLabel>Report to</FieldLabel>
-            <Input
-              {...register("report_to", {
-                required: "Report to is required",
-              })}
-            />
-            {errors.report_to && (
-              <FieldError>{errors.report_to.message}</FieldError>
-            )}
-          </Field>
+    <form id="reporting-form" onSubmit={handleSubmit(onSubmit)}>
+      <FieldGroup className="grid gap-4 sm:grid-cols-2">
+        <Field>
+          <FieldLabel>Report to</FieldLabel>
+          <Input
+            {...register("report_to", {
+              required: "Report to is required",
+            })}
+          />
+          {errors.report_to && (
+            <FieldError>{errors.report_to.message}</FieldError>
+          )}
+        </Field>
 
-          <Field>
-            <FieldLabel>Supervises</FieldLabel>
-            <Input
-              {...register("supervises", {
-                required: "Supervise is required",
-              })}
-            />
-            {errors.supervises && (
-              <FieldError>{errors.supervises.message}</FieldError>
-            )}
-          </Field>
+        <Field>
+          <FieldLabel>Supervises</FieldLabel>
+          <Input
+            {...register("supervises", {
+              required: "Supervise is required",
+            })}
+          />
+          {errors.supervises && (
+            <FieldError>{errors.supervises.message}</FieldError>
+          )}
+        </Field>
 
-          <Field>
-            <FieldLabel>Interacts with</FieldLabel>
-            <Input
-              {...register("interacts_with", {
-                required: "Interact with is required",
-              })}
-            />
-            {errors.interacts_with && (
-              <FieldError>{errors.interacts_with.message}</FieldError>
-            )}
-          </Field>
-        </FieldGroup>
+        <Field>
+          <FieldLabel>Interacts with</FieldLabel>
+          <Input
+            {...register("interacts_with", {
+              required: "Interact with is required",
+            })}
+          />
+          {errors.interacts_with && (
+            <FieldError>{errors.interacts_with.message}</FieldError>
+          )}
+        </Field>
+      </FieldGroup>
 
-        <Button type="submit" disabled={isPending} className="mt-4">
+      {/* <Button type="submit" disabled={isPending} className="mt-4">
           {isPending ? "Adding..." : "Add Reporting"}
-        </Button>
-      </form>
-    </div>
+        </Button> */}
+    </form>
   );
 };
 

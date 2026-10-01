@@ -2,6 +2,7 @@ import {
   CircleCheckBig,
   CircleXIcon,
   EyeIcon,
+  Loader,
   PencilLineIcon,
   SparklesIcon,
   UsersIcon,
@@ -9,8 +10,10 @@ import {
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -31,6 +34,7 @@ interface BasicDetailsProps {
 
 const BasicDetails = ({ job }: BasicDetailsProps) => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { hasPermission } = useRolePermissions();
 
@@ -46,7 +50,7 @@ const BasicDetails = ({ job }: BasicDetailsProps) => {
           <div className="flex items-center gap-4 text-sm">
             <Badge className="bg-orange-100 text-orange-700 p-2">
               <EyeIcon size={16} />
-              <p>{job?.statistics?.[0]?.job_views ?? 0} Views</p>
+              <p>{job?.jobStatistics?.[0]?.job_views ?? 0} Views</p>
             </Badge>
 
             <Badge className="bg-blue-100 text-primary">
@@ -118,14 +122,41 @@ const BasicDetails = ({ job }: BasicDetailsProps) => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-3xl">
               <DialogHeader>
-                <DialogTitle>Update Job</DialogTitle>
+                <DialogTitle>Basic Information</DialogTitle>
                 <DialogDescription>
-                  Edit job basic information.
+                  Update job basic information.
                 </DialogDescription>
               </DialogHeader>
-              <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-                <BasicInfoForm job={job} onSuccess={() => setOpen(false)} />
+
+              <div className="-mx-4 max-h-[60vh] overflow-y-auto px-4">
+                <BasicInfoForm
+                  job={job}
+                  onSuccess={() => setOpen(false)}
+                  onLoadingChange={setIsSubmitting}
+                />
               </div>
+
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline" disabled={isSubmitting}>
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  form="basic-info-form"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    "Update"
+                  )}
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         )}

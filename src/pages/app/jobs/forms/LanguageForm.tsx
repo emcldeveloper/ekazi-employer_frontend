@@ -3,7 +3,7 @@ import SearchSelect from "react-select";
 import { toast } from "sonner";
 
 import type { Language } from "@/@types/language";
-import { Button } from "@/components/ui/button";
+
 import {
   Field,
   FieldError,
@@ -29,12 +29,15 @@ interface LanguageFormProps {
   jobId: number;
   language?: LanguageRequirement;
   onSuccess?: () => void;
+  onBack?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 const LanguageForm = ({
   jobId,
   language,
   onSuccess: closeModal,
+  onLoadingChange,
 }: LanguageFormProps) => {
   const {
     handleSubmit,
@@ -44,7 +47,13 @@ const LanguageForm = ({
   } = useForm<JobLanguageForm>();
 
   const { mutate: createJobLanguage, isPending: isCreating } = useAddLanguage();
-  const { mutate: editJobLanguage, isPending: isEditing } = useEditLanguage();
+  const { mutate: editJobLanguage, isPending: isUpdating } = useEditLanguage();
+
+  const isPending = isCreating || isUpdating;
+
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   // Fetch Languages
   const { data: languagesData } = useLanguage();
@@ -137,7 +146,7 @@ const LanguageForm = ({
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form id="language-form" onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field>
             <FieldLabel htmlFor="education_level_id">Language</FieldLabel>
@@ -265,13 +274,13 @@ const LanguageForm = ({
           </Field>
         </FieldGroup>
 
-        <Button
+        {/* <Button
           type="submit"
-          disabled={isCreating || isEditing}
+          disabled={isCreating || isUpdating}
           className="mt-4"
         >
-          {isCreating || isEditing ? "Adding..." : "Add Language"}
-        </Button>
+          {isCreating || isUpdating ? "Adding..." : "Add Language"}
+        </Button> */}
       </form>
     </div>
   );

@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BriefcaseBusinessIcon, PencilLineIcon } from "lucide-react";
+import { BriefcaseBusinessIcon, Loader, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
 import RequirementsForm from "../forms/RequirementsForm";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +31,7 @@ interface SpecificationDetailsProps {
 
 const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { hasPermission } = useRolePermissions();
 
@@ -153,9 +156,36 @@ const SpecificationDetails = ({ job }: SpecificationDetailsProps) => {
                 Edit candidate specification information.
               </DialogDescription>
             </DialogHeader>
+
             <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              <RequirementsForm job={job} onSuccess={() => setOpen(false)} />
+              <RequirementsForm
+                job={job}
+                onSuccess={() => setOpen(false)}
+                onLoadingChange={setIsSubmitting}
+              />
             </div>
+
+            <DialogFooter>
+              <DialogClose>
+                <Button variant="outline" disabled={isSubmitting}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                type="submit"
+                form="requirements-form"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader className="animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  "Update"
+                )}
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}

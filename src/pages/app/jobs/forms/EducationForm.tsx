@@ -12,7 +12,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
 
 import {
   useAddEducation,
@@ -26,12 +25,15 @@ interface EducationFormProps {
   jobId: number;
   education?: Education;
   onSuccess?: () => void;
+  onBack?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 const EducationForm = ({
   jobId,
   education,
   onSuccess: closeModal,
+  onLoadingChange,
 }: EducationFormProps) => {
   const [courseSearch, setCourseSearch] = useState("");
   const [majorSearch, setMajorSearch] = useState("");
@@ -45,12 +47,19 @@ const EducationForm = ({
 
   const { mutate: createJobEducation, isPending: isCreating } =
     useAddEducation();
-  const { mutate: editJobEducation, isPending: isEditing } = useEditEducation();
+  const { mutate: editJobEducation, isPending: isUpdating } =
+    useEditEducation();
+
+  const isPending = isCreating || isUpdating;
+
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   // Fetch education levels
   const { data: levels } = useEducationLevels();
   const levelOptions: OptionType[] =
-    levels?.map((level: EducationLevel) => ({
+    levels?.data?.map((level: EducationLevel) => ({
       value: level.id,
       label: level.education_level,
     })) ?? [];
@@ -58,7 +67,7 @@ const EducationForm = ({
   // fetch courses
   const { data: courses } = useCourses(courseSearch);
   const courseOptions: OptionType[] =
-    courses?.map((course: Course) => ({
+    courses?.data?.map((course: Course) => ({
       value: course.id,
       label: course.name,
     })) ?? [];
@@ -66,7 +75,7 @@ const EducationForm = ({
   // fetch majors
   const { data: majors } = useMajors(majorSearch);
   const majorOptions: OptionType[] =
-    majors?.map((major: Major) => ({
+    majors?.data?.map((major: Major) => ({
       value: major.id,
       label: major.name,
     })) ?? [];
@@ -120,7 +129,7 @@ const EducationForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form id="education-form" onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field>
           <FieldLabel htmlFor="education_level_id">Education Level</FieldLabel>
@@ -202,9 +211,9 @@ const EducationForm = ({
         </Field>
       </FieldGroup>
 
-      <Button type="submit" disabled={isCreating || isEditing} className="mt-4">
-        {isCreating || isEditing ? "Saving..." : "Save"}
-      </Button>
+      {/* <Button type="submit" disabled={isCreating || isUpdating} className="mt-4">
+        {isCreating || isUpdating ? "Saving..." : "Save"}
+      </Button> */}
     </form>
   );
 };

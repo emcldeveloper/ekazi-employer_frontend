@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PencilLineIcon, UsersIcon } from "lucide-react";
+import { Loader, PencilLineIcon, UsersIcon } from "lucide-react";
 import ReportingForm from "../forms/ReportingForm";
 import { useState } from "react";
 import type { Job } from "@/@types/job";
@@ -20,6 +22,7 @@ interface ReportingDetailsProps {
 
 const ReportingDetails = ({ job }: ReportingDetailsProps) => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { hasPermission } = useRolePermissions();
 
@@ -57,11 +60,40 @@ const ReportingDetails = ({ job }: ReportingDetailsProps) => {
           <DialogContent className="sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle>Reporting Structure</DialogTitle>
-              <DialogDescription>Edit reporting structure.</DialogDescription>
+              <DialogDescription>
+                Update job reporting structure.
+              </DialogDescription>
             </DialogHeader>
+
             <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-              <ReportingForm job={job} onSuccess={() => setOpen(false)} />
+              <ReportingForm
+                job={job}
+                onSuccess={() => setOpen(false)}
+                onLoadingChange={setIsSubmitting}
+              />
             </div>
+
+            <DialogFooter>
+              <DialogClose>
+                <Button variant="outline" disabled={isSubmitting}>
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                type="submit"
+                form="reporting-form"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader className="animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  "Update"
+                )}
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}

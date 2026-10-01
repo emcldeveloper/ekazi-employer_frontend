@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ListPlusIcon, PencilLineIcon } from "lucide-react";
+import { ListPlusIcon, Loader, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
 import OtherRequirementsForm from "../forms/OtherRequirementsForm";
 import type { Job } from "@/@types/job";
@@ -20,6 +22,7 @@ interface OtherRequirementsDetailsProps {
 
 const OtherRequirementsDetails = ({ job }: OtherRequirementsDetailsProps) => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { hasPermission } = useRolePermissions();
 
@@ -53,12 +56,36 @@ const OtherRequirementsDetails = ({ job }: OtherRequirementsDetailsProps) => {
                   information.
                 </DialogDescription>
               </DialogHeader>
+
               <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
                 <OtherRequirementsForm
                   job={job}
                   onSuccess={() => setOpen(false)}
+                  onLoadingChange={setIsSubmitting}
                 />
               </div>
+
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline" disabled={isSubmitting}>
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  form="other-requirements-form"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    "Update"
+                  )}
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         )}

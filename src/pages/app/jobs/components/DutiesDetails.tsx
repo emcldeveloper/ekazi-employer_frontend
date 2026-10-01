@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ListIcon, PencilLineIcon } from "lucide-react";
+import { ListIcon, Loader, PencilLineIcon } from "lucide-react";
 import { useState } from "react";
 import MainDutiesForm from "../forms/MainDutiesForm";
 import type { Job } from "@/@types/job";
@@ -20,6 +22,7 @@ interface DutiesDetailsProps {
 
 const DutiesDetails = ({ job }: DutiesDetailsProps) => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { hasPermission } = useRolePermissions();
 
@@ -52,9 +55,36 @@ const DutiesDetails = ({ job }: DutiesDetailsProps) => {
                   {mainDuties ? "Edit" : "Add"} main duties information.
                 </DialogDescription>
               </DialogHeader>
+
               <div className="-mx-4 max-h-[70vh] overflow-y-auto px-4">
-                <MainDutiesForm job={job} onSuccess={() => setOpen(false)} />
+                <MainDutiesForm
+                  job={job}
+                  onSuccess={() => setOpen(false)}
+                  onLoadingChange={setIsSubmitting}
+                />
               </div>
+
+              <DialogFooter>
+                <DialogClose>
+                  <Button variant="outline" disabled={isSubmitting}>
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="submit"
+                  form="main-duties-form"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    "Update"
+                  )}
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         )}

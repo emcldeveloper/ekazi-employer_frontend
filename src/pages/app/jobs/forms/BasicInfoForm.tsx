@@ -4,7 +4,6 @@ import { Controller, useForm } from "react-hook-form";
 import SearchSelect from "react-select";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldError,
@@ -33,18 +32,21 @@ import {
 } from "@/hooks/universals";
 import { usePositionLevels } from "@/hooks/universals/usePositionLevels";
 import { usePositions } from "@/hooks/universals/usePositions";
-import { useNavigate } from "react-router-dom";
 import type { Job } from "@/@types/job";
 import type { JobCreateForm } from "@/@types/job-forms";
 
 interface BasicInfoFormProps {
   job?: Job;
-  onSuccess?: () => void;
+  onSuccess?: (id: number) => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
-const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
+const BasicInfoForm = ({
+  job,
+  onSuccess: closeModal,
+  onLoadingChange,
+}: BasicInfoFormProps) => {
   const jobId = job?.id;
-  const navigate = useNavigate();
 
   const [positionSearch, setPositionSearch] = useState("");
   const [industrySearch, setIndustrySearch] = useState("");
@@ -64,6 +66,12 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
 
   // Editing Job
   const { mutate: updateJob, isPending: isUpdating } = useEditJob();
+
+  const isPending = isCreating || isUpdating;
+
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   // fetch job types
   const { data: jobTypes } = useJobTypes();
@@ -116,6 +124,8 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
   // fetch regions
   const { data: regions } = useRegions();
 
+  console.log(job);
+
   // PRE FILL DATA FOR EDITING
   useEffect(() => {
     if (job) {
@@ -164,7 +174,7 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
           onSuccess: (res) => {
             toast.success(res?.message || "Job updated succesfully");
             reset();
-            closeModal?.();
+            closeModal?.(jobId);
           },
         },
       );
@@ -173,7 +183,9 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
         onSuccess: (res) => {
           const jobId = res.data.id;
           toast.success(res?.message || "Job created succesfully");
-          navigate(`/jobs/${jobId}`);
+
+          closeModal?.(jobId);
+
           reset();
         },
       });
@@ -181,7 +193,7 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form id="basic-info-form" onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Job title */}
         <Field>
@@ -461,9 +473,9 @@ const BasicInfoForm = ({ job, onSuccess: closeModal }: BasicInfoFormProps) => {
           )}
         </Field>
 
-        <Button type="submit" disabled={isCreating || isUpdating}>
+        {/* <Button type="submit" disabled={isCreating || isUpdating}>
           {isCreating || isUpdating ? "Saving..." : jobId ? "Update" : "Create"}
-        </Button>
+        </Button> */}
       </FieldGroup>
     </form>
   );
