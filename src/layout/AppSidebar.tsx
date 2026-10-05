@@ -30,6 +30,7 @@ import {
   UserSearchIcon,
   UserCheckIcon,
   SettingsIcon,
+  Settings2,
 } from "lucide-react";
 import { isRouteActive } from "@/utils/helpers";
 import { NavUser } from "@/components/nav-user";
@@ -98,6 +99,12 @@ const navItems: NavItem[] = [
     url: "/app/staff",
     icon: Users,
     permission: PERMISSIONS.VIEW_STAFF,
+  },
+  {
+    title: "Forms",
+    url: "/app/forms",
+    icon: Settings2,
+    permission: PERMISSIONS.VIEW_FORMS,
   },
   {
     title: "Subscription",

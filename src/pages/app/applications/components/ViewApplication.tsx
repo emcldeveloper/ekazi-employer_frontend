@@ -23,6 +23,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import type { Application } from "@/@types/applications";
 import ApplicationDetails from "./ApplicationDetails";
 import ShortlistCandidate from "@/pages/app/jobs/actions/ShortlistCandidate";
+import EvaluateCandidate from "../evaluation/EvaluateCandidate";
 
 interface ViewApplicationProps {
   application: Application;
@@ -62,6 +63,8 @@ const ViewApplication = ({ application }: ViewApplicationProps) => {
               {jobStage === 1 && (
                 <ShortlistCandidate jobId={jobId} applicantId={applicantId} />
               )}
+
+              {jobStage === 4 && <EvaluateCandidate />}
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
@@ -91,6 +94,8 @@ const ViewApplication = ({ application }: ViewApplicationProps) => {
                 {jobStage === 1 && (
                   <ShortlistCandidate jobId={jobId} applicantId={applicantId} />
                 )}
+
+                {jobStage === 4 && <EvaluateCandidate />}
               </div>
             </SheetFooter>
           </SheetContent>

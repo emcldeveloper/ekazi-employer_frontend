@@ -78,6 +78,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import Permissions from "./pages/admin/universals/permissions/Permissions";
 import PreviewJobs from "./pages/app/jobs/preview-ekazi/PreviewJobs";
+import FormsPage from "./pages/app/forms/FormsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -146,6 +147,7 @@ const App = () => {
                     <Route path="clients/:id" element={<ClientDetails />} />
                     <Route path="tasks" element={<TasksPage />} />
                     <Route path="staff" element={<StaffPage />} />
+                    <Route path="forms" element={<FormsPage />} />
                     <Route path="subscription" element={<SubscriptionPage />} />
                     <Route path="reports" element={<Dashboard />} />
                     <Route path="settings" element={<SettingsPage />} />

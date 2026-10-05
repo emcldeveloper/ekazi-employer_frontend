@@ -49,6 +49,12 @@ export const PERMISSIONS = {
   EDIT_STAFF: "edit-staff",
   DELETE_STAFF: "delete-staff",
 
+  // Forms
+  VIEW_FORMS: "view-forms",
+  CREATE_EVALUATION_QUESTION: "create-evaluation-question",
+  UPDATE_EVALUATION_QUESTION: "edit-evaluation-question",
+  DELETE_EVALUATION_QUESTION: "delete-evaluation-question",
+
   // Subscription
   VIEW_SUBSCRIPTION: "view-subscription",
   UPGRADE_PLAN: "upgrade-subscription",
