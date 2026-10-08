@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FileStack, UserCheck, Users } from "lucide-react";
+import { CircleAlert, FileStack, UserCheck, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -17,14 +17,20 @@ interface JobActionsProps {
 }
 
 const JobActions = ({ job }: JobActionsProps) => {
-  // job published status, 1 === true or 0 === false
   const jobId = job?.id;
   const publishedStatus = Number(job?.published);
   const published = publishedStatus === 1;
 
   const navigate = useNavigate();
-
   const { hasPermission } = useRolePermissions();
+
+  const hasAnyActionPermission =
+    hasPermission(PERMISSIONS.PUBLISH_JOB) ||
+    hasPermission(PERMISSIONS.VIEW_JOB_APPLICATIONS) ||
+    hasPermission(PERMISSIONS.VIEW_POTENTIAL_CANDIDATES) ||
+    hasPermission(PERMISSIONS.VIEW_SELECTED_CANDIDATES) ||
+    hasPermission(PERMISSIONS.VIEW_JOB_SETTINGS) ||
+    hasPermission(PERMISSIONS.DELETE_JOB);
 
   const handleViewApplications = () => {
     navigate(`/app/jobs/${jobId}/applications/applied`);
@@ -35,67 +41,76 @@ const JobActions = ({ job }: JobActionsProps) => {
   };
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Actions</CardTitle>
-          <Separator />
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {hasPermission(PERMISSIONS.PUBLISH_JOB) && (
-            <PublishJob jobId={jobId} published={published} />
-          )}
+    <Card>
+      <CardHeader>
+        <CardTitle>Actions</CardTitle>
+        <Separator />
+      </CardHeader>
 
-          {hasPermission(PERMISSIONS.VIEW_JOB_APPLICATIONS) && (
-            <Button
-              variant="outline"
-              onClick={handleViewApplications}
-              className="w-full justify-between"
-            >
-              View Applications
-              <FileStack size={16} />
-            </Button>
-          )}
+      <CardContent className="space-y-3">
+        {!hasAnyActionPermission ? (
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+              <CircleAlert className="h-6 w-6 text-muted-foreground" />
+            </div>
 
-          {hasPermission(PERMISSIONS.VIEW_POTENTIAL_CANDIDATES) && (
-            <Button
-              variant="outline"
-              onClick={handlePotentialCandidates}
-              className="w-full justify-between"
-            >
-              Potential Candidates
-              <Users size={16} />
-            </Button>
-          )}
+            <h3 className="font-medium text-sm">No actions available</h3>
 
-          {hasPermission(PERMISSIONS.VIEW_SELECTED_CANDIDATES) && (
-            <Button
-              variant="outline"
-              onClick={() => {}}
-              className="w-full justify-between"
-            >
-              Selected Applicants
-              <UserCheck size={16} />
-            </Button>
-          )}
-          {/* 
-          <Button
-            variant="outline"
-            onClick={() => {}}
-            className="w-full justify-between"
-          >
-            Add Screener
-            <Plus size={16} />
-          </Button> */}
+            <p className="mt-1 max-w-xs text-sm text-muted-foreground">
+              You don't have permission to perform any actions on this job at
+              the moment.
+            </p>
+          </div>
+        ) : (
+          <>
+            {hasPermission(PERMISSIONS.PUBLISH_JOB) && (
+              <PublishJob jobId={jobId} published={published} />
+            )}
 
-          {hasPermission(PERMISSIONS.VIEW_JOB_SETTINGS) && (
-            <JobSettings job={job} />
-          )}
+            {hasPermission(PERMISSIONS.VIEW_JOB_APPLICATIONS) && (
+              <Button
+                variant="outline"
+                onClick={handleViewApplications}
+                className="w-full justify-between"
+              >
+                View Applications
+                <FileStack size={16} />
+              </Button>
+            )}
 
-          {hasPermission(PERMISSIONS.DELETE_JOB) && <DeleteJob jobId={jobId} />}
-        </CardContent>
-      </Card>
-    </>
+            {hasPermission(PERMISSIONS.VIEW_POTENTIAL_CANDIDATES) && (
+              <Button
+                variant="outline"
+                onClick={handlePotentialCandidates}
+                className="w-full justify-between"
+              >
+                Potential Candidates
+                <Users size={16} />
+              </Button>
+            )}
+
+            {hasPermission(PERMISSIONS.VIEW_SELECTED_CANDIDATES) && (
+              <Button
+                variant="outline"
+                onClick={() => {}}
+                className="w-full justify-between"
+              >
+                Selected Applicants
+                <UserCheck size={16} />
+              </Button>
+            )}
+
+            {hasPermission(PERMISSIONS.VIEW_JOB_SETTINGS) && (
+              <JobSettings job={job} />
+            )}
+
+            {hasPermission(PERMISSIONS.DELETE_JOB) && (
+              <DeleteJob jobId={jobId} />
+            )}
+          </>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

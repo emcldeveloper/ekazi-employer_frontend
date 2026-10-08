@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Spinner } from "@/components/ui/spinner";
 
 import {
@@ -23,16 +23,19 @@ import {
 } from "@/components/ui/input-group";
 import { useState } from "react";
 import { usePotentialCandidates } from "@/hooks/jobs";
-import { SearchIcon } from "lucide-react";
+import { ArrowLeft, SearchIcon } from "lucide-react";
 import { DataPagination } from "@/components/data-pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import type { PotentialCandidate } from "@/@types/potential-candidates";
 import ViewCandidate from "./ViewCandidate";
 import { capitalizeText } from "@/utils/helpers";
+import { Button } from "@/components/ui/button";
 
 const PotentialCandidates = () => {
   const { id } = useParams();
   const jobId = Number(id);
+
+  const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(25);
@@ -51,7 +54,11 @@ const PotentialCandidates = () => {
   const potentialCandidates = potentialData?.data ?? [];
 
   return (
-    <div className="space-y-6">
+    <div>
+      <Button variant="link" onClick={() => navigate(-1)} className="mb-2">
+        <ArrowLeft /> Back
+      </Button>
+
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold">{title}</CardTitle>

@@ -15,7 +15,7 @@ const FormsPage = () => {
       <Tabs defaultValue="evaluation">
         <TabsList variant="line">
           <TabsTrigger value="evaluation">Evaluation</TabsTrigger>
-          <TabsTrigger value="screening">Screening</TabsTrigger>
+          {/* <TabsTrigger value="screening">Screening</TabsTrigger> */}
         </TabsList>
 
         <TabsContent value="evaluation">

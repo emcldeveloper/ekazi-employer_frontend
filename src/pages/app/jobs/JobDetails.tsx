@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -14,67 +14,76 @@ import LanguageDetails from "./components/LanguageDetails";
 import SpecificationDetails from "./components/SpecificationDetails";
 import DutiesDetails from "./components/DutiesDetails";
 import OtherRequirementsDetails from "./components/OtherRequirementsDetails";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const JobDetails = () => {
   const { id } = useParams();
   const jobId = Number(id);
 
+  const navigate = useNavigate();
+
   const { data: job } = useJob(jobId);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-      <div className="md:col-span-2 space-y-4">
-        <Card>
-          <CardContent className="space-y-8">
-            {/* Basic Info */}
-            <BasicDetails job={job} />
+    <div>
+      <Button variant="link" onClick={() => navigate(-1)} className="mb-2">
+        <ArrowLeft /> Back
+      </Button>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+        <div className="md:col-span-2 space-y-4">
+          <Card>
+            <CardContent className="space-y-8">
+              {/* Basic Info */}
+              <BasicDetails job={job} />
 
-            <Separator />
+              <Separator />
 
-            {/* Job Location */}
-            <JobLocationDetails job={job} />
+              {/* Job Location */}
+              <JobLocationDetails job={job} />
 
-            <Separator />
+              <Separator />
 
-            {/* Keywords */}
-            <KeywordsDetails job={job} />
+              {/* Keywords */}
+              <KeywordsDetails job={job} />
 
-            <Separator />
+              <Separator />
 
-            {/* Reporting Structure */}
-            <ReportingDetails job={job} />
+              {/* Reporting Structure */}
+              <ReportingDetails job={job} />
 
-            <Separator />
+              <Separator />
 
-            {/* Education */}
-            <EducationDetails job={job} />
+              {/* Education */}
+              <EducationDetails job={job} />
 
-            <Separator />
+              <Separator />
 
-            {/* Languages */}
-            <LanguageDetails job={job} />
+              {/* Languages */}
+              <LanguageDetails job={job} />
 
-            <Separator />
+              <Separator />
 
-            {/* Candidate Specification */}
-            <SpecificationDetails job={job} />
+              {/* Candidate Specification */}
+              <SpecificationDetails job={job} />
 
-            <Separator />
+              <Separator />
 
-            {/* Main Duties */}
-            <DutiesDetails job={job} />
+              {/* Main Duties */}
+              <DutiesDetails job={job} />
 
-            <Separator />
+              <Separator />
 
-            {/* Other requirements */}
-            <OtherRequirementsDetails job={job} />
-          </CardContent>
-        </Card>
-      </div>
+              {/* Other requirements */}
+              <OtherRequirementsDetails job={job} />
+            </CardContent>
+          </Card>
+        </div>
 
-      <div className="md:col-span-1 ">
-        <div className="sticky top-4 space-y-4">
-          <JobActions job={job} />
+        <div className="md:col-span-1 ">
+          <div className="sticky top-4 space-y-4">
+            <JobActions job={job} />
+          </div>
         </div>
       </div>
     </div>

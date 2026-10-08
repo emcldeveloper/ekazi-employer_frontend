@@ -139,7 +139,7 @@ const JobseekersPage = () => {
                       )}
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell className="max-w-50 truncate">
                       {capitalizeText(candidate.applicant_position) ||
                         "No Experience"}
                     </TableCell>

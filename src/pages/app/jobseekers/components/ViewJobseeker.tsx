@@ -22,7 +22,6 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useIsMobile } from "@/hooks/use-mobile";
 import JobseekerDetails from "./JobseekerDetails";
 import ShortlistJobseeker from "./ShortlistJobseeker";
-import CollectJobseeker from "./CollectJobseeker";
 import { useRolePermissions } from "@/hooks/useRolePermissions";
 import { PERMISSIONS } from "@/constants/role-permissions";
 
@@ -64,9 +63,9 @@ const ViewJobseeker = ({ jobseekerId }: ViewJobseekerProps) => {
                   <ShortlistJobseeker jobseekerId={jobseekerId} />
                 )}
 
-                {hasPermission(PERMISSIONS.COLLECT_JOBSEEKER_CV) && (
+                {/* {hasPermission(PERMISSIONS.COLLECT_JOBSEEKER_CV) && (
                   <CollectJobseeker />
-                )}
+                )} */}
               </div>
             </DrawerFooter>
           </DrawerContent>
@@ -98,9 +97,9 @@ const ViewJobseeker = ({ jobseekerId }: ViewJobseekerProps) => {
                   <ShortlistJobseeker jobseekerId={jobseekerId} />
                 )}
 
-                {hasPermission(PERMISSIONS.COLLECT_JOBSEEKER_CV) && (
+                {/* {hasPermission(PERMISSIONS.COLLECT_JOBSEEKER_CV) && (
                   <CollectJobseeker />
-                )}
+                )} */}
               </div>
             </SheetFooter>
           </SheetContent>

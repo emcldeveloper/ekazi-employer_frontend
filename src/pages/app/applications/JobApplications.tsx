@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Search } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, Search } from "lucide-react";
 
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -33,6 +33,7 @@ import { MoveStage } from "./components/MoveStage";
 import { DataPagination } from "@/components/data-pagination";
 import { useDebounce } from "@/hooks/useDebounce";
 import ViewApplication from "./components/ViewApplication";
+import { Button } from "@/components/ui/button";
 
 type ApplicationsByStageResponse = {
   data?: {
@@ -48,6 +49,8 @@ const JobApplications = () => {
   const jobId = Number(id);
   const jobStage = String(stage);
   const isStageView = !!stage;
+
+  const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(25);
@@ -101,7 +104,11 @@ const JobApplications = () => {
   };
 
   return (
-    <>
+    <div>
+      <Button variant="link" onClick={() => navigate(-1)} className="mb-2">
+        <ArrowLeft /> Back
+      </Button>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* left side */}
         <div className="md:col-span-2 space-y-4">
@@ -252,7 +259,7 @@ const JobApplications = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
