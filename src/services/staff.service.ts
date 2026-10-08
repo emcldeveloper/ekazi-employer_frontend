@@ -19,7 +19,7 @@ export const getStaff = async (search: string, page: number, limit: number) => {
 
 export const getStaffDetails = async (id: number) => {
   const res = await api.get(`/client-staffs/${id}`);
-  return res.data;
+  return res.data?.data;
 };
 
 export const updateStaff = async ({

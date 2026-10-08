@@ -40,7 +40,7 @@ const JobseekerDetails = ({ jobseekerId }: JobseekerDetailsProps) => {
   const location = jobseeker?.address?.[0];
 
   return (
-    <div className="py-8 px-2">
+    <div className="p-4">
       {isLoading ? (
         <div className="h-40 flex items-center justify-center">
           <Spinner className="size-8" />

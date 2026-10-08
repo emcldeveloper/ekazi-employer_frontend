@@ -124,8 +124,6 @@ const BasicInfoForm = ({
   // fetch regions
   const { data: regions } = useRegions();
 
-  console.log(job);
-
   // PRE FILL DATA FOR EDITING
   useEffect(() => {
     if (job) {

@@ -1,26 +1,31 @@
-import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useEffect } from "react";
+
 import {
   Field,
   FieldLabel,
   FieldGroup,
   FieldError,
 } from "@/components/ui/field";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
+
 import type { MessageFormData } from "@/@types/applications";
 import { useOffer } from "@/hooks/jobs";
-import { Textarea } from "@/components/ui/textarea";
+import { getErrorMessage } from "@/utils/axios-helpers";
 
 interface ScreeningFormProps {
   jobId: number;
   selectedApplications: number[];
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onSuccess?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 const OfferForm = ({
   jobId,
   selectedApplications,
-  setOpen,
+  onLoadingChange,
+  onSuccess: closeModal,
 }: ScreeningFormProps) => {
   const {
     register,
@@ -31,6 +36,10 @@ const OfferForm = ({
 
   // Creating Job
   const { mutate: screenCandidates, isPending } = useOffer();
+
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   const onSubmit = async (data: MessageFormData) => {
     const payload = {
@@ -44,15 +53,22 @@ const OfferForm = ({
       {
         onSuccess: (res) => {
           toast.success(res?.message || "Moved stage succesfully");
-          setOpen(false);
+          closeModal?.();
           reset();
+        },
+        onError: (err) => {
+          toast.success(getErrorMessage(err));
         },
       },
     );
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      id="offer-form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-4"
+    >
       <FieldGroup>
         <Field>
           <FieldLabel>Message</FieldLabel>
@@ -66,10 +82,6 @@ const OfferForm = ({
           )}
         </Field>
       </FieldGroup>
-
-      <Button type="submit" disabled={isPending}>
-        {isPending ? "Moving..." : `Move Candidate(s)`}
-      </Button>
     </form>
   );
 };

@@ -24,6 +24,12 @@ import type { Application } from "@/@types/applications";
 import ApplicationDetails from "./ApplicationDetails";
 import ShortlistCandidate from "@/pages/app/jobs/actions/ShortlistCandidate";
 import EvaluateCandidate from "../evaluation/EvaluateCandidate";
+import ScreenCandidate from "../actions/ScreenCandidate";
+import InterviewCandidate from "../actions/InterviewCandidate";
+import SelectCandidate from "../actions/SelectCandidate";
+import BackgroundCheckCandidate from "../actions/BackgroundCheckCandidate";
+import OfferCandidate from "../actions/OfferCandidate";
+import EmployCandidate from "../actions/EmployCandidate";
 
 interface ViewApplicationProps {
   application: Application;
@@ -41,7 +47,7 @@ const ViewApplication = ({ application }: ViewApplicationProps) => {
       {isMobile ? (
         // For mobile devices
         <Drawer>
-          <DrawerTrigger>
+          <DrawerTrigger asChild>
             <Button size="xs" variant="secondary">
               View
             </Button>
@@ -64,7 +70,13 @@ const ViewApplication = ({ application }: ViewApplicationProps) => {
                 <ShortlistCandidate jobId={jobId} applicantId={applicantId} />
               )}
 
-              {jobStage === 4 && <EvaluateCandidate />}
+              {jobStage === 2 && (
+                <ShortlistCandidate jobId={jobId} applicantId={applicantId} />
+              )}
+
+              {jobStage === 4 && (
+                <EvaluateCandidate applicantId={applicantId} jobId={jobId} />
+              )}
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
@@ -91,11 +103,49 @@ const ViewApplication = ({ application }: ViewApplicationProps) => {
 
             <SheetFooter>
               <div>
+                {/* applied */}
                 {jobStage === 1 && (
                   <ShortlistCandidate jobId={jobId} applicantId={applicantId} />
                 )}
 
-                {jobStage === 4 && <EvaluateCandidate />}
+                {/* shortlisted */}
+                {jobStage === 2 && (
+                  <ScreenCandidate jobId={jobId} applicantId={applicantId} />
+                )}
+
+                {/* screening */}
+                {jobStage === 3 && (
+                  <InterviewCandidate applicantId={applicantId} jobId={jobId} />
+                )}
+
+                {/* interview */}
+                {jobStage === 4 && (
+                  <div className="flex items-center gap-2">
+                    <SelectCandidate applicantId={applicantId} jobId={jobId} />
+                    <EvaluateCandidate
+                      applicantId={applicantId}
+                      jobId={jobId}
+                    />
+                  </div>
+                )}
+
+                {/* selection */}
+                {jobStage === 5 && (
+                  <BackgroundCheckCandidate
+                    applicantId={applicantId}
+                    jobId={jobId}
+                  />
+                )}
+
+                {/* background check */}
+                {jobStage === 6 && (
+                  <OfferCandidate applicantId={applicantId} jobId={jobId} />
+                )}
+
+                {/* offer */}
+                {jobStage === 93 && (
+                  <EmployCandidate applicantId={applicantId} jobId={jobId} />
+                )}
               </div>
             </SheetFooter>
           </SheetContent>

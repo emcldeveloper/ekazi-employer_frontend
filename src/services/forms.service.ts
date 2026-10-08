@@ -1,4 +1,5 @@
 import type {
+  EvaluationPayload,
   EvaluationQuestionPayload,
   QuestionCriteriaPayload,
 } from "@/@types/forms";
@@ -88,4 +89,20 @@ export const updateQuestionCriteria = async ({
 export const deleteQuestionCriteria = async (id: number) => {
   const res = await api.delete(`/evaluation-criterias/${id}`);
   return res.data;
+};
+
+/**
+ * Evaluation
+ */
+export const evaluateCandidate = async (payload: EvaluationPayload) => {
+  const res = await api.post("/evaluations/results", payload);
+  return res.data;
+};
+
+export const evaluationResult = async (
+  applicant_id: number,
+  job_id: number,
+) => {
+  const res = await api.get(`/evaluations/results/${applicant_id}/${job_id}`);
+  return res.data?.data;
 };

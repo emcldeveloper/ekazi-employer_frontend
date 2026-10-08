@@ -1,18 +1,14 @@
 import SearchSelect from "react-select";
 import CreatableSelect from "react-select/creatable";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldLabel,
   FieldGroup,
   FieldError,
 } from "@/components/ui/field";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { InterviewFormData, InterviewType } from "@/@types/applications";
-import { useInterview } from "@/hooks/jobs";
 import {
   Select,
   SelectContent,
@@ -22,24 +18,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+
+import { useInterview } from "@/hooks/jobs";
 import { useInterviewTypes } from "@/hooks/universals/useInterviewTypes";
 import { useCountries, useRegions } from "@/hooks/universals";
+import { useStaffs } from "@/hooks/staff";
+import type { InterviewFormData, InterviewType } from "@/@types/applications";
 import type { Country, Region } from "@/@types/universals";
 import type { OptionType } from "@/@types/jobs";
 import { Textarea } from "@/components/ui/textarea";
-import { useStaffs } from "@/hooks/staff";
 import type { ClientStaff } from "@/@types/staff";
+import { useEffect } from "react";
+import { getErrorMessage } from "@/utils/axios-helpers";
 
 interface InterviewFormProps {
   jobId: number;
   selectedApplications: number[];
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onSuccess?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 const InterviewForm = ({
   jobId,
   selectedApplications,
-  setOpen,
+  onLoadingChange,
+  onSuccess: closeModal,
 }: InterviewFormProps) => {
   const {
     register,
@@ -81,6 +85,10 @@ const InterviewForm = ({
   // Creating Job
   const { mutate: screenCandidates, isPending } = useInterview();
 
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
+
   const onSubmit = async (data: InterviewFormData) => {
     const payload = {
       stage_id: 4,
@@ -101,18 +109,25 @@ const InterviewForm = ({
       {
         onSuccess: (res) => {
           toast.success(res?.message || "Moved stage succesfully");
-          setOpen(false);
+          closeModal?.();
           reset();
+        },
+        onError: (err) => {
+          toast.error(getErrorMessage(err));
         },
       },
     );
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      id="interview-form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-4"
+    >
       <FieldGroup className="grid grid-cols-2">
         <Field>
-          <FieldLabel>Interview Date*</FieldLabel>
+          <FieldLabel>Interview Date *</FieldLabel>
           <Input
             type="date"
             {...register("invite_date", {
@@ -276,7 +291,7 @@ const InterviewForm = ({
                 isClearable
                 isMulti
                 options={staffOptions}
-                value={staffOptions.filter((option: OptionType) =>
+                value={staffOptions?.filter((option: OptionType) =>
                   field.value?.includes(option.value),
                 )}
                 onChange={(selectedOptions) =>
@@ -320,10 +335,6 @@ const InterviewForm = ({
           )}
         </Field>
       </FieldGroup>
-
-      <Button type="submit" disabled={isPending}>
-        {isPending ? "Moving..." : `Move Candidate(s)`}
-      </Button>
     </form>
   );
 };

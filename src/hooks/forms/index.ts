@@ -11,3 +11,7 @@ export * from "./useQuestionCriterias";
 export * from "./useQuestionCriteria";
 export * from "./useUpdateQuestionCriteria";
 export * from "./useDeleteQuestionCriteria";
+
+// evaluate candidate
+export * from "./useEvaluateCandidate";
+export * from "./useEvaluationResults";

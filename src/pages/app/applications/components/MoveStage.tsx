@@ -1,7 +1,9 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -26,6 +28,7 @@ import SelectionForm from "../forms/SelectionForm";
 import BackgroundCheckForm from "../forms/BackgroundCheckForm";
 import OfferForm from "../forms/OfferForm";
 import EmployedForm from "../forms/EmployedForm";
+import { Loader } from "lucide-react";
 
 interface MoveStageProps {
   jobId: number;
@@ -41,7 +44,8 @@ export function MoveStage({
   selectedApplications,
 }: MoveStageProps) {
   const [stage, setStage] = useState("");
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // stages
   const { data: stages = [] } = useApplicationStages();
@@ -56,8 +60,19 @@ export function MoveStage({
     ? sortedStages.filter((s) => s.id > currentStage.id)
     : sortedStages;
 
+  const formIdByStage: Record<string, string> = {
+    "3": "screening-form",
+    "4": "interview-form",
+    "5": "selection-form",
+    "6": "background-check-form",
+    "92": "offer-form",
+    "93": "employed-form",
+  };
+
+  const activeFormId = formIdByStage[stage];
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button>Move Stage</Button>
       </DialogTrigger>
@@ -68,7 +83,8 @@ export function MoveStage({
             Move the selected candidate(s) to another stage.
           </DialogDescription>
         </DialogHeader>
-        <div className="-mx-4 scrollbar max-h-[60vh] overflow-y-auto px-4">
+
+        <div className="-mx-4 scrollbar max-h-[60vh] overflow-y-auto p-4">
           <FieldGroup>
             <Field>
               <FieldLabel>Select Stage</FieldLabel>
@@ -93,7 +109,8 @@ export function MoveStage({
               <ScreeningForm
                 jobId={jobId}
                 selectedApplications={selectedApplications}
-                setOpen={setOpen}
+                onSuccess={() => setIsOpen(false)}
+                onLoadingChange={setIsSubmitting}
               />
             )}
 
@@ -101,7 +118,8 @@ export function MoveStage({
               <InterviewForm
                 jobId={jobId}
                 selectedApplications={selectedApplications}
-                setOpen={setOpen}
+                onSuccess={() => setIsOpen(false)}
+                onLoadingChange={setIsSubmitting}
               />
             )}
 
@@ -109,7 +127,8 @@ export function MoveStage({
               <SelectionForm
                 jobId={jobId}
                 selectedApplications={selectedApplications}
-                setOpen={setOpen}
+                onSuccess={() => setIsOpen(false)}
+                onLoadingChange={setIsSubmitting}
               />
             )}
 
@@ -117,7 +136,8 @@ export function MoveStage({
               <BackgroundCheckForm
                 jobId={jobId}
                 selectedApplications={selectedApplications}
-                setOpen={setOpen}
+                onSuccess={() => setIsOpen(false)}
+                onLoadingChange={setIsSubmitting}
               />
             )}
 
@@ -125,7 +145,8 @@ export function MoveStage({
               <OfferForm
                 jobId={jobId}
                 selectedApplications={selectedApplications}
-                setOpen={setOpen}
+                onSuccess={() => setIsOpen(false)}
+                onLoadingChange={setIsSubmitting}
               />
             )}
 
@@ -133,11 +154,28 @@ export function MoveStage({
               <EmployedForm
                 jobId={jobId}
                 selectedApplications={selectedApplications}
-                setOpen={setOpen}
+                onSuccess={() => setIsOpen(false)}
+                onLoadingChange={setIsSubmitting}
               />
             )}
           </FieldGroup>
         </div>
+
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button type="submit" form={activeFormId} disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader className="animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

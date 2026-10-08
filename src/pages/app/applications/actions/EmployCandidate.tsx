@@ -12,36 +12,35 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import EmployedForm from "../forms/EmployedForm";
 
-import EvaluationForm from "./EvaluationForm";
-
-interface EvaluateCandidateProps {
+interface EmployCandidateProps {
   applicantId: number;
   jobId: number;
 }
 
-const EvaluateCandidate = ({ applicantId, jobId }: EvaluateCandidateProps) => {
+const EmployCandidate = ({ applicantId, jobId }: EmployCandidateProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Evaluate Candidate</Button>
+        <Button>Employ Candidate</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-4xl">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Job Interview Evaluation Form</DialogTitle>
+          <DialogTitle>Move Candidate to Employment</DialogTitle>
           <DialogDescription>
-            Evaluate the candidate’s performance and suitability for the
-            position.
+            This candidate will be moved from the offer stage to employment
+            stage
           </DialogDescription>
         </DialogHeader>
 
-        <div className="-mx-4 no-scrollbar max-h-[65vh] overflow-y-auto p-4">
-          <EvaluationForm
-            applicantId={applicantId}
+        <div className="-mx-4 no-scrollbar max-h-[70vh] overflow-y-auto p-4">
+          <EmployedForm
             jobId={jobId}
+            selectedApplications={[applicantId]}
             onLoadingChange={setIsSubmitting}
             onSuccess={() => setIsOpen(false)}
           />
@@ -51,14 +50,14 @@ const EvaluateCandidate = ({ applicantId, jobId }: EvaluateCandidateProps) => {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="evaluation-form" disabled={isSubmitting}>
+          <Button type="submit" form="employed-form" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader className="animate-spin" />
                 Submitting...
               </>
             ) : (
-              "Submit Evaluation"
+              "Submit"
             )}
           </Button>
         </DialogFooter>
@@ -67,4 +66,4 @@ const EvaluateCandidate = ({ applicantId, jobId }: EvaluateCandidateProps) => {
   );
 };
 
-export default EvaluateCandidate;
+export default EmployCandidate;

@@ -28,7 +28,7 @@ const DeleteJob = ({ jobId }: DeleteJobProps) => {
   const handleDeleteJob = () => {
     deleteJob(undefined, {
       onSuccess: (res) => {
-        navigate("/jobs");
+        navigate("/app/jobs");
         toast.success(res?.message || "Job Deleted Succesfully");
       },
       onError: (error) => {
