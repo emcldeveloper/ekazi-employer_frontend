@@ -54,6 +54,7 @@ export interface Job {
 
   addresses: Address[];
   jobStatistics: Statistic[];
+  statistics: Statistic[];
 
   job_type: JobTypeData;
   gender: Gender;

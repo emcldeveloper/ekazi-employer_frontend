@@ -50,7 +50,7 @@ const BasicDetails = ({ job }: BasicDetailsProps) => {
           <div className="flex items-center gap-4 text-sm">
             <Badge className="bg-orange-100 text-orange-700 p-2">
               <EyeIcon size={16} />
-              <p>{job?.jobStatistics[0]?.job_views ?? 0} Views</p>
+              <p>{job?.jobStatistics?.[0]?.job_views ?? 0} Views</p>
             </Badge>
 
             <Badge className="bg-blue-100 text-primary">
