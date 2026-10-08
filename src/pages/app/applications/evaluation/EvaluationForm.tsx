@@ -252,9 +252,17 @@ const EvaluationForm = ({
                             selectedScore ? String(selectedScore) : undefined
                           }
                           onValueChange={(value) => {
+                            const score = Number(value);
+
                             setValue(
-                              `scores.${evaluation.id}.${criterion.id}`,
-                              Number(value),
+                              "scores",
+                              {
+                                ...scores,
+                                [evaluation.id]: {
+                                  ...scores?.[evaluation.id],
+                                  [criterion.id]: score,
+                                },
+                              },
                               {
                                 shouldDirty: true,
                               },
