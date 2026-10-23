@@ -15,6 +15,7 @@ import {
 import AuthLayout from "./AuthLayout";
 import { Button } from "@/components/ui/button";
 import { useResend, useVerification } from "@/hooks/auth";
+import { getErrorMessage } from "@/utils/axios-helpers";
 
 const VerifyPage = () => {
   const navigate = useNavigate();
@@ -51,9 +52,8 @@ const VerifyPage = () => {
             res?.message || "A new verification code has been sent.",
           );
         },
-        onError: (err: any) => {
-          const message = err?.response?.data?.error || "Verification failed";
-          toast.error(message);
+        onError: (err) => {
+          toast.error(getErrorMessage(err));
         },
       },
     );
@@ -91,9 +91,8 @@ const VerifyPage = () => {
           reset();
           setOtp("");
         },
-        onError: (err: any) => {
-          const message = err?.response?.data?.error || "Verification failed";
-          toast.error(message);
+        onError: (err) => {
+          toast.error(getErrorMessage(err));
         },
       },
     );

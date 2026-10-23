@@ -34,9 +34,9 @@ const JobseekerDetails = ({ jobseekerId }: JobseekerDetailsProps) => {
   const cultures = jobseeker?.culture ?? [];
   const personalities = jobseeker?.applicant_personality ?? [];
   const proficiencies = jobseeker?.proficiency ?? [];
-  const knowledges = jobseeker?.skills?.knowledge ?? [];
-  const softwares = jobseeker?.skills?.software ?? [];
-  const tools = jobseeker?.skills?.tools ?? [];
+  const knowledges = jobseeker?.knowledge ?? [];
+  const softwares = jobseeker?.software ?? [];
+  const tools = jobseeker?.tools ?? [];
   const location = jobseeker?.address?.[0];
 
   return (
