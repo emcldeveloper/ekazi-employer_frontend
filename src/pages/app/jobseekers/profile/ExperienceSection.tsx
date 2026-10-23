@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import type { Experience, ExperienceGroup } from "@/@types/applicants";
 import { Building2 } from "lucide-react";
 import { capitalizeText } from "@/utils/helpers";
+import { Separator } from "@/components/ui/separator";
 
 interface ExperienceSectionProps {
   experiences: Experience[];
@@ -41,29 +42,33 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
   const groupedExperience = useMemo(() => {
     if (!experiences?.length) return [];
 
-    const groups = Object.values(
-      experiences.reduce((acc: Record<string, ExperienceGroup>, experience) => {
-        if (!acc[experience.employer]) {
-          acc[experience.employer] = {
-            employer: experience.employer,
-            region: experience.region,
-            sub_location: experience.sub_location,
+    const groups = experiences.reduce(
+      (acc: Record<string, ExperienceGroup>, experience) => {
+        // Group by the unique employer ID
+        const employerId = String(experience.employer?.id);
+
+        if (!acc[employerId]) {
+          acc[employerId] = {
+            employer: experience.employer?.name ?? "Unknown Company",
+            region: experience.region?.name ?? "",
+            sub_location: experience.sub_location ?? "",
             positions: [],
           };
         }
 
-        acc[experience.employer].positions.push(experience);
+        acc[employerId].positions.push(experience);
 
         return acc;
-      }, {}),
+      },
+      {},
     );
 
-    return groups.map((group) => ({
+    return Object.values(groups).map((group) => ({
       ...group,
       positions: [...group.positions].sort(
         (a, b) =>
-          (b.end_date ? new Date(b.end_date).getTime() : Date.now()) -
-          (a.end_date ? new Date(a.end_date).getTime() : Date.now()),
+          new Date(b.end_date ?? Date.now()).getTime() -
+          new Date(a.end_date ?? Date.now()).getTime(),
       ),
     }));
   }, [experiences]);
@@ -88,68 +93,95 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
           <div className="space-y-6">
             {groupedExperience.map((group) => {
               const employer = capitalizeText(group.employer);
-              const subLocation = group.sub_location;
-              const region = group.region;
-              // const country = group.country;
-
               const duration = calculateDuration(group.positions);
+              const hasMultiplePositions = group.positions.length > 1;
 
               return (
-                <div key={employer} className="flex-1 space-y-2">
-                  <h5 className="font-semibold">{employer}</h5>
+                <div key={group.employer} className="space-y-3">
+                  {hasMultiplePositions && (
+                    <>
+                      <h5 className=" font-semibold">{employer}</h5>
 
-                  <p className="text-sm text-muted-foreground">
-                    {subLocation}, {region}
-                  </p>
+                      <p className="text-sm text-muted-foreground">
+                        {[group.sub_location, group.region]
+                          .filter(Boolean)
+                          .join(", ")}
+                      </p>
 
-                  <Badge variant="secondary" className="w-fit">
-                    {duration.text}
-                  </Badge>
+                      <Badge variant="secondary" className="w-fit">
+                        {duration.text}
+                      </Badge>
+                    </>
+                  )}
 
-                  <div className="relative mt-3 space-y-4 border-l pl-4">
-                    {group.positions.map((position, idx: number) => (
-                      <div key={position.id || idx} className="relative">
-                        <span className="absolute -left-5.5 top-1.5 h-3 w-3 rounded-full bg-blue-600" />
+                  <div
+                    className={
+                      hasMultiplePositions
+                        ? "relative mt-3 space-y-4 border-l pl-4"
+                        : "space-y-2"
+                    }
+                  >
+                    {group.positions.map((position) => (
+                      <div key={position.id} className="relative space-y-1">
+                        {hasMultiplePositions && (
+                          <span className="absolute -left-5.5 top-1.5 h-3 w-3 rounded-full bg-blue-600" />
+                        )}
 
-                        <div className="space-y-1">
-                          <p className="text-base font-bold">
-                            {capitalizeText(position.position)}
-                          </p>
+                        {!hasMultiplePositions && (
+                          <>
+                            <h5 className="text-base mb-0 font-semibold">
+                              {employer}
+                            </h5>
 
-                          {position.industry && (
-                            <p className="text-sm">
-                              {capitalizeText(position.industry)} Industry
+                            <p className="text-sm text-muted-foreground">
+                              {[position.sub_location, position.region?.name]
+                                .filter(Boolean)
+                                .join(", ")}
+                            </p>
+                          </>
+                        )}
+
+                        <p className="text-base font-medium">
+                          {capitalizeText(position.position?.name ?? "")}
+                        </p>
+
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {position.industry?.name && (
+                            <p className="text-sm text-muted-foreground">
+                              {capitalizeText(position.industry.name)} Industry
                             </p>
                           )}
 
-                          <p className="text-xs text-muted-foreground">
+                          <Separator orientation="vertical" />
+
+                          <p className="text-sm text-muted-foreground">
                             {moment(position.start_date).format("MMM YYYY")} -{" "}
                             {position.end_date
                               ? moment(position.end_date).format("MMM YYYY")
                               : "Present"}
                           </p>
+                        </div>
 
-                          <div className="text-sm">
-                            <strong>Responsibility:</strong>{" "}
+                        <div className="text-sm">
+                          <strong>Responsibility:</strong>{" "}
+                          <span
+                            className="prose prose-sm"
+                            dangerouslySetInnerHTML={{
+                              __html: position.responsibility || "",
+                            }}
+                          />
+                        </div>
+
+                        {position.remark && (
+                          <p className="text-sm">
+                            <strong>Reason:</strong>{" "}
                             <span
-                              className="prose prose-sm"
                               dangerouslySetInnerHTML={{
-                                __html: position.responsibility || "",
+                                __html: position.remark,
                               }}
                             />
-                          </div>
-
-                          {position.remark && (
-                            <p className="text-sm">
-                              <strong>Reason:</strong>{" "}
-                              <span
-                                dangerouslySetInnerHTML={{
-                                  __html: position.remark,
-                                }}
-                              />
-                            </p>
-                          )}
-                        </div>
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>

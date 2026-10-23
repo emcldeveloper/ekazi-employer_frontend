@@ -28,31 +28,25 @@ export type Address = {
 };
 
 // Experience
-export type Experience = {
+export interface Experience {
   id: number;
-  position: string;
-  position_level: string;
-  industry: string;
-  employer: string;
-  region: string;
-  sub_location: string;
-
-  responsibility: string;
-  remark: string | null;
-
+  position: { id: number; name: string };
+  industry: { id: number; name: string } | null;
+  employer: { id: number; name: string };
+  region: { id: number; name: string } | null;
+  sub_location: string | null;
   start_date: string;
   end_date: string | null;
+  responsibility: string | null;
+  remark: string | null;
+}
 
-  start_salary: number | null;
-  end_salary: number | null;
-};
-
-export type ExperienceGroup = {
+export interface ExperienceGroup {
   employer: string;
   region: string;
   sub_location: string;
   positions: Experience[];
-};
+}
 
 // Education
 export type College = {
@@ -124,17 +118,32 @@ export type Skills = {
 // Languages
 export type Language = {
   id: number;
-  language: string;
-  read: string;
-  write: string;
-  speak: string;
-  understand: string;
+  language: Skill;
+  read: Skill;
+  write: Skill;
+  speak: Skill;
+  understand: Skill;
 };
 
 // Culture
+export type Knowledge = {
+  id: number;
+  knowledge: Skill;
+};
+
 export type Culture = {
   id: number;
-  name: string;
+  culture: Skill;
+};
+
+export type Software = {
+  id: number;
+  software: Skill;
+};
+
+export type Tool = {
+  id: number;
+  tool: Skill;
 };
 
 // Proficiency

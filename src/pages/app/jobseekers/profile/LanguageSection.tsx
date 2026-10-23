@@ -41,11 +41,11 @@ const LanguageSection = ({ languages }: LanguageSectionProps) => {
           <TableBody>
             {languages.map((item: Language) => (
               <TableRow key={item.id}>
-                <TableCell>{capitalizeText(item.language)}</TableCell>
-                <TableCell>{capitalizeText(item.read)}</TableCell>
-                <TableCell>{capitalizeText(item.write)}</TableCell>
-                <TableCell>{capitalizeText(item.speak)}</TableCell>
-                <TableCell>{capitalizeText(item.understand)}</TableCell>
+                <TableCell>{capitalizeText(item.language?.name)}</TableCell>
+                <TableCell>{capitalizeText(item.read?.name)}</TableCell>
+                <TableCell>{capitalizeText(item.write?.name)}</TableCell>
+                <TableCell>{capitalizeText(item.speak?.name)}</TableCell>
+                <TableCell>{capitalizeText(item.understand?.name)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

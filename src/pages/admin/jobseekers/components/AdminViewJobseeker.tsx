@@ -48,7 +48,7 @@ const AdminViewJobseeker = ({ jobseekerId }: ViewJobseekerProps) => {
               </DrawerHeader>
             </VisuallyHidden>
 
-            <div className="flex-1 scroll-fade overflow-y-auto p-4">
+            <div className="flex-1 scroll-fade overflow-y-auto">
               <JobseekerDetails jobseekerId={jobseekerId} />
             </div>
 

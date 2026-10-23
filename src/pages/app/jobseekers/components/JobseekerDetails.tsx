@@ -24,6 +24,8 @@ interface JobseekerDetailsProps {
 const JobseekerDetails = ({ jobseekerId }: JobseekerDetailsProps) => {
   const { data: jobseeker, isLoading } = useJobseeker(jobseekerId);
 
+  console.log(jobseeker);
+
   const profile = jobseeker?.applicant_profile;
   const objectives = jobseeker?.objective;
   const educations = jobseeker?.education ?? [];
@@ -90,7 +92,7 @@ const JobseekerDetails = ({ jobseekerId }: JobseekerDetailsProps) => {
 
                       <div className="flex items-center gap-1">
                         <MapPinIcon className="h-4 w-4" />
-                        {location?.sub_location}, {location?.region}
+                        {location?.sub_location}, {location?.region?.name}
                       </div>
                     </div>
                   </div>

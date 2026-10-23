@@ -23,7 +23,7 @@ const ProficiencySection = ({ proficiencies }: ProficiencySectionProps) => {
           {proficiencies.map((item: Proficiency) => (
             <div key={item.id} className="flex-1 space-y-1">
               <h3 className="text-base font-semibold">
-                {capitalizeText(item.proficiency.name)}
+                {capitalizeText(item.proficiency?.name)}
                 <span className="ml-2 text-xs text-muted-foreground font-normal">
                   – {formatDate(item.started)} - {formatDate(item.ended)}
                 </span>

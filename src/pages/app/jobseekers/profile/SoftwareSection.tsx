@@ -1,11 +1,11 @@
-import type { Skill } from "@/@types/applicants";
+import type { Software } from "@/@types/applicants";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { capitalizeText } from "@/utils/helpers";
 import { LaptopMinimal } from "lucide-react";
 
 interface SoftwareSectionProps {
-  softwares: Skill[];
+  softwares: Software[];
 }
 
 const SoftwareSection = ({ softwares }: SoftwareSectionProps) => {
@@ -21,9 +21,9 @@ const SoftwareSection = ({ softwares }: SoftwareSectionProps) => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
-          {softwares.map((item: Skill) => (
+          {softwares.map((item: Software) => (
             <Badge key={item.id} variant="secondary">
-              {capitalizeText(item.name)}
+              {capitalizeText(item.software?.name)}
             </Badge>
           ))}
         </div>

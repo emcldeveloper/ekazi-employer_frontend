@@ -24,7 +24,7 @@ const CultureSection = ({ cultures }: CultureSectionProps) => {
           {cultures.map((item: Culture) => {
             return (
               <Badge key={item.id} variant="secondary">
-                {capitalizeText(item.name)}
+                {capitalizeText(item.culture?.name)}
               </Badge>
             );
           })}
