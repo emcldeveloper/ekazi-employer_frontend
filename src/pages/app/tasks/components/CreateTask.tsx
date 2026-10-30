@@ -5,6 +5,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -13,6 +14,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -24,7 +26,9 @@ import TaskForm from "./TaskForm";
 
 const CreateTask = () => {
   const isMobile = useIsMobile();
+
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <>
@@ -46,8 +50,17 @@ const CreateTask = () => {
             </DrawerHeader>
 
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <TaskForm onSuccess={() => setOpen(false)} />
+              <TaskForm
+                onSuccess={() => setOpen(false)}
+                onLoadingChange={setIsSubmitting}
+              />
             </div>
+
+            <DrawerFooter>
+              <Button type="submit" form="task-form" disabled={isSubmitting}>
+                {isSubmitting ? "Creating..." : "Create Task"}
+              </Button>
+            </DrawerFooter>
           </DrawerContent>
         </Drawer>
       ) : (
@@ -68,8 +81,19 @@ const CreateTask = () => {
             </SheetHeader>
 
             <div className="scrollbar overflow-y-auto px-4 pb-10">
-              <TaskForm onSuccess={() => setOpen(false)} />
+              <TaskForm
+                onSuccess={() => setOpen(false)}
+                onLoadingChange={setIsSubmitting}
+              />
             </div>
+
+            <SheetFooter>
+              <div>
+                <Button type="submit" form="task-form" disabled={isSubmitting}>
+                  {isSubmitting ? "Creating..." : "Create Task"}
+                </Button>
+              </div>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       )}

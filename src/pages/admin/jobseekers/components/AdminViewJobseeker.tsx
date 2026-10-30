@@ -79,7 +79,11 @@ const AdminViewJobseeker = ({ jobseekerId }: ViewJobseekerProps) => {
             </div>
 
             <SheetFooter>
-              <div className="flex items-center gap-4">Actions</div>
+              <div className="flex gap-2">
+                <Button>Verify Account</Button>
+                <Button variant="outline">Dectivate</Button>
+                <Button variant="outline">Reset Password</Button>
+              </div>
             </SheetFooter>
           </SheetContent>
         </Sheet>

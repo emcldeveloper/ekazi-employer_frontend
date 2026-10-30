@@ -1,6 +1,7 @@
 import {
   Drawer,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -8,6 +9,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -17,9 +19,12 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlusIcon } from "lucide-react";
 import StaffForm from "./StaffForm";
+import { useState } from "react";
 
 const CreateStaff = () => {
   const isMobile = useIsMobile();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <>
@@ -38,8 +43,14 @@ const CreateStaff = () => {
             </DrawerHeader>
 
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <StaffForm />
+              <StaffForm onLoadingChange={setIsSubmitting} />
             </div>
+
+            <DrawerFooter>
+              <Button type="submit" form="staff-form" disabled={isSubmitting}>
+                {isSubmitting ? "Creating..." : "Create"}
+              </Button>
+            </DrawerFooter>
           </DrawerContent>
         </Drawer>
       ) : (
@@ -57,8 +68,16 @@ const CreateStaff = () => {
             </SheetHeader>
 
             <div className="scrollbar overflow-y-auto px-4">
-              <StaffForm />
+              <StaffForm onLoadingChange={setIsSubmitting} />
             </div>
+
+            <SheetFooter>
+              <div>
+                <Button type="submit" form="staff-form" disabled={isSubmitting}>
+                  {isSubmitting ? "Creating..." : "Create"}
+                </Button>
+              </div>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       )}

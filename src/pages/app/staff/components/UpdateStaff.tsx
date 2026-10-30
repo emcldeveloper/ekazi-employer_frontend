@@ -1,6 +1,7 @@
 import {
   Drawer,
   DrawerContent,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -8,6 +9,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -18,6 +20,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import StaffForm from "./StaffForm";
 import { PencilLine } from "lucide-react";
 import type { ClientStaff } from "@/@types/staff";
+import { useState } from "react";
 
 interface UpdateStaffProps {
   staff: ClientStaff;
@@ -25,6 +28,9 @@ interface UpdateStaffProps {
 
 const UpdateStaff = ({ staff }: UpdateStaffProps) => {
   const isMobile = useIsMobile();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeactivating] = useState(false);
 
   return (
     <>
@@ -43,8 +49,14 @@ const UpdateStaff = ({ staff }: UpdateStaffProps) => {
             </DrawerHeader>
 
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <StaffForm staff={staff} />
+              <StaffForm staff={staff} onLoadingChange={setIsSubmitting} />
             </div>
+
+            <DrawerFooter>
+              <Button type="submit" form="staff-form" disabled={isSubmitting}>
+                {isSubmitting ? "Updating..." : "Update"}
+              </Button>
+            </DrawerFooter>
           </DrawerContent>
         </Drawer>
       ) : (
@@ -62,8 +74,20 @@ const UpdateStaff = ({ staff }: UpdateStaffProps) => {
             </SheetHeader>
 
             <div className="scrollbar overflow-y-auto px-4">
-              <StaffForm staff={staff} />
+              <StaffForm staff={staff} onLoadingChange={setIsSubmitting} />
             </div>
+
+            <SheetFooter>
+              <div className="flex gap-2">
+                <Button type="submit" form="staff-form" disabled={isSubmitting}>
+                  {isSubmitting ? "Updating..." : "Update"}
+                </Button>
+
+                <Button type="button" variant="destructive">
+                  {isDeactivating ? "Deactivating..." : "Deactivate"}
+                </Button>
+              </div>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       )}

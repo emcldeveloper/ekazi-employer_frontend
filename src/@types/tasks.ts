@@ -9,7 +9,7 @@ export type CreateTaskForm = {
   priority?: Priority;
   status?: TaskStatus;
   assignees: number[];
-  attachments: File[];
+  attachments?: File[];
 };
 
 export type Task = {

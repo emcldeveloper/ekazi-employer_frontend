@@ -33,13 +33,7 @@ export const createPlan = async (payload: PlanPayload) => {
   return res.data;
 };
 
-export const updatePlan = async ({
-  id,
-  payload,
-}: {
-  id: number;
-  payload: PlanPayload;
-}) => {
+export const updatePlan = async (id: number, payload: PlanPayload) => {
   const res = await api.put(`/subscription-plans/${id}`, payload);
   return res.data;
 };

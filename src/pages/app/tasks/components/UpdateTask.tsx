@@ -4,6 +4,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -12,6 +13,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -29,7 +31,9 @@ interface UpdateTaskProps {
 
 const UpdateTask = ({ task }: UpdateTaskProps) => {
   const isMobile = useIsMobile();
+
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <>
@@ -49,8 +53,18 @@ const UpdateTask = ({ task }: UpdateTaskProps) => {
             </DrawerHeader>
 
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <TaskForm task={task} onSuccess={() => setOpen(false)} />
+              <TaskForm
+                task={task}
+                onSuccess={() => setOpen(false)}
+                onLoadingChange={setIsSubmitting}
+              />
             </div>
+
+            <DrawerFooter>
+              <Button type="submit" form="task-form" disabled={isSubmitting}>
+                {isSubmitting ? "Updating..." : "Update Task"}
+              </Button>
+            </DrawerFooter>
           </DrawerContent>
         </Drawer>
       ) : (
@@ -69,8 +83,20 @@ const UpdateTask = ({ task }: UpdateTaskProps) => {
             </SheetHeader>
 
             <div className="scrollbar overflow-y-auto px-4 pb-10">
-              <TaskForm task={task} onSuccess={() => setOpen(false)} />
+              <TaskForm
+                task={task}
+                onSuccess={() => setOpen(false)}
+                onLoadingChange={setIsSubmitting}
+              />
             </div>
+
+            <SheetFooter>
+              <div>
+                <Button type="submit" form="task-form" disabled={isSubmitting}>
+                  {isSubmitting ? "Updating..." : "Update Task"}
+                </Button>
+              </div>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       )}

@@ -27,11 +27,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const roles = [
-  { label: "Employer", value: "employer" },
-  { label: "Job Seeker", value: "applicant" },
-];
-
 const activeStates = [
   { label: "True", value: "true" },
   { label: "False", value: "false" },
@@ -174,25 +169,23 @@ const PlanForm = ({ plan }: PlanFormProps) => {
           <Controller
             name="role"
             control={control}
+            defaultValue={plan?.role}
             rules={{
               required: "Role is required",
             }}
             render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
+              <Select
+                key={field.value}
+                value={field.value || ""}
+                onValueChange={field.onChange}
+              >
                 <SelectTrigger id="role" className="w-full">
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
 
                 <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Roles</SelectLabel>
-
-                    {roles.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
+                  <SelectItem value="employer">Employer</SelectItem>
+                  <SelectItem value="applicant">Job Seeker</SelectItem>
                 </SelectContent>
               </Select>
             )}

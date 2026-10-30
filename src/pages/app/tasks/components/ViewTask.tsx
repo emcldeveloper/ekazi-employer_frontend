@@ -21,7 +21,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import TaskDetails from "./TaskDetails";
 import { Eye } from "lucide-react";
 
-const ViewTask = () => {
+interface ViewTaskProps {
+  task: any;
+}
+
+const ViewTask = ({ task }: ViewTaskProps) => {
   const isMobile = useIsMobile();
 
   return (
@@ -44,7 +48,7 @@ const ViewTask = () => {
             </VisuallyHidden>
 
             <div className="flex-1 scroll-fade overflow-y-auto p-4">
-              <TaskDetails />
+              <TaskDetails task={task} />
             </div>
           </DrawerContent>
         </Drawer>
@@ -66,7 +70,7 @@ const ViewTask = () => {
             </VisuallyHidden>
 
             <div className="scrollbar overflow-y-auto px-4 py-8">
-              <TaskDetails />
+              <TaskDetails task={task} />
             </div>
           </SheetContent>
         </Sheet>

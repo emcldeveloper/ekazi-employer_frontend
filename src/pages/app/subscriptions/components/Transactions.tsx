@@ -92,11 +92,11 @@ const Transactions = () => {
 
                     <TableCell className="text-right">
                       <Button
-                        variant="ghost"
-                        size="icon"
+                        variant="secondary"
+                        size="xs"
                         onClick={() => generatePaymentReceipt(payment)}
                       >
-                        <Download />
+                        <Download /> Invoice
                       </Button>
                     </TableCell>
                   </TableRow>

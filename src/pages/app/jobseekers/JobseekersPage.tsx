@@ -133,7 +133,7 @@ const JobseekersPage = () => {
               ) : (
                 jobseekers.map((candidate: Jobseeker) => (
                   <TableRow key={candidate.id}>
-                    <TableCell className="font-medium">
+                    <TableCell className="font-medium max-w-50 truncate">
                       {capitalizeText(
                         `${candidate.first_name} ${candidate.last_name}`,
                       )}

@@ -8,7 +8,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -19,9 +18,10 @@ import { usePermissions } from "@/hooks/universals/permissions";
 
 type UserFormProps = {
   staff?: ClientStaff;
+  onLoadingChange?: (loading: boolean) => void;
 };
 
-const StaffForm = ({ staff }: UserFormProps) => {
+const StaffForm = ({ staff, onLoadingChange }: UserFormProps) => {
   const {
     register,
     handleSubmit,
@@ -41,6 +41,10 @@ const StaffForm = ({ staff }: UserFormProps) => {
   const { mutate: updateUser, isPending: isUpdating } = useUpdateStaff();
 
   const isPending = isCreating || isUpdating;
+
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   const { data: permissionsData } = usePermissions();
   const permissions = permissionsData?.data ?? [];
@@ -150,7 +154,7 @@ const StaffForm = ({ staff }: UserFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mb-8">
+    <form id="staff-form" onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup className="mb-4 grid grid-cols-2 gap-4">
         <Field>
           <FieldLabel>First Name</FieldLabel>
@@ -221,6 +225,7 @@ const StaffForm = ({ staff }: UserFormProps) => {
         <Field>
           <FieldLabel>Password</FieldLabel>
           <Input
+            defaultValue="qwerty"
             type="password"
             {...register("password", {
               required: staff ? false : "Password is required",
@@ -254,16 +259,6 @@ const StaffForm = ({ staff }: UserFormProps) => {
           </Field>
         ))}
       </FieldGroup>
-
-      <Button type="submit" disabled={isPending}>
-        {isPending
-          ? staff
-            ? "Updating..."
-            : "Creating..."
-          : staff
-            ? "Update"
-            : "Create"}
-      </Button>
     </form>
   );
 };

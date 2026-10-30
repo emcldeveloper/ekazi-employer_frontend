@@ -4,7 +4,6 @@ import { toast } from "sonner";
 
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -17,7 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useCreateTask, useUpdateTask } from "@/hooks/tasks";
@@ -31,14 +29,18 @@ import { useEffect } from "react";
 interface TaskFormProps {
   task?: Task;
   onSuccess?: () => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
-const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
+const TaskForm = ({
+  task,
+  onSuccess: closeModal,
+  onLoadingChange,
+}: TaskFormProps) => {
   const {
     register,
     handleSubmit,
     control,
-    setValue,
     reset,
     formState: { errors },
   } = useForm<CreateTaskForm>({
@@ -48,7 +50,6 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
       priority: "Medium",
       status: "Pending",
       assignees: [],
-      attachments: [],
     },
   });
 
@@ -58,6 +59,10 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
   const { mutate: updateTask, isPending: isUpdating } = useUpdateTask();
 
   const isPending = isCreating || isUpdating;
+
+  useEffect(() => {
+    onLoadingChange?.(isPending);
+  }, [isPending, onLoadingChange]);
 
   const { data: users } = useUsers({});
   const userOptions =
@@ -74,8 +79,8 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
         description: task.description,
         priority: task.priority,
         status: task.status,
-        // assignees: task.assignments,
-        // attachments: task.attachments,
+        deadline: task.deadline,
+        assignees: task.assignments.map((assignment) => assignment.user_id),
       });
     }
   }, [task, reset]);
@@ -112,7 +117,7 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form id="task-form" onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup>
         <Field>
           <FieldLabel>Task Title</FieldLabel>
@@ -143,7 +148,6 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
             }}
             render={({ field }) => (
               <SearchSelect
-                {...field}
                 isClearable
                 isMulti
                 options={userOptions}
@@ -151,7 +155,9 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
                   field.value?.includes(option.value),
                 )}
                 onChange={(options) =>
-                  field.onChange(options.map((option) => option.value))
+                  field.onChange(
+                    options ? options.map((option) => option.value) : [],
+                  )
                 }
               />
             )}
@@ -168,7 +174,6 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
             <Controller
               name="priority"
               control={control}
-              rules={{ required: "Priority is required" }}
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger>
@@ -194,7 +199,6 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
             <Controller
               name="status"
               control={control}
-              rules={{ required: "Status is required" }}
               render={({ field }) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger>
@@ -226,7 +230,7 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
           )}
         </Field>
 
-        <Field>
+        {/* <Field>
           <FieldLabel>Attachment(s)</FieldLabel>
 
           <Input
@@ -239,11 +243,7 @@ const TaskForm = ({ task, onSuccess: closeModal }: TaskFormProps) => {
           />
 
           <FieldDescription>Select one or more files.</FieldDescription>
-        </Field>
-
-        <Button type="submit" disabled={isPending}>
-          {isCreating ? "Creating..." : "Create Task"}
-        </Button>
+        </Field> */}
       </FieldGroup>
     </form>
   );

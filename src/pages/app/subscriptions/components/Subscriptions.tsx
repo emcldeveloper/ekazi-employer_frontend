@@ -2,16 +2,26 @@ import {
   CalendarDays,
   CheckCircle2,
   CreditCard,
+  PackageOpen,
   FileText,
   BriefcaseBusiness,
 } from "lucide-react";
 
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
+
 import { useClientSubscriptions } from "@/hooks/subscriptions";
 import { formatCurrency, formatDate } from "@/utils/helpers";
 import Transactions from "./Transactions";
@@ -26,24 +36,63 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
   const { hasPermission } = useRolePermissions();
 
   const { data: subscriptionsData, isLoading } = useClientSubscriptions();
-  const subscription = subscriptionsData?.data?.[0];
+  const currentSubscription = subscriptionsData?.data?.[0];
 
   const jobPostUsed =
-    subscription?.plan?.job_post_limit - subscription?.job_post_remaining;
+    currentSubscription?.plan?.job_post_limit -
+    currentSubscription?.job_post_remaining;
 
   const cvDownloadUsed =
-    subscription?.plan?.cv_download_limit - subscription?.cv_download_remaining;
+    currentSubscription?.plan?.cv_download_limit -
+    currentSubscription?.cv_download_remaining;
 
   const jobPostProgress =
-    (jobPostUsed / subscription?.plan?.job_post_limit) * 100;
+    (jobPostUsed / currentSubscription?.plan?.job_post_limit) * 100;
 
   const cvDownloadProgress =
-    (cvDownloadUsed / subscription?.plan?.cv_download_limit) * 100;
+    (cvDownloadUsed / currentSubscription?.plan?.cv_download_limit) * 100;
 
   if (isLoading) {
     return (
       <div className="flex h-40 items-center justify-center">
         <Spinner className="size-8" />
+      </div>
+    );
+  }
+
+  if (!currentSubscription) {
+    return (
+      <div className="space-y-4">
+        <Card>
+          <CardContent className="py-10">
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <PackageOpen />
+                </EmptyMedia>
+
+                <EmptyTitle>No Active Subscription</EmptyTitle>
+
+                <EmptyDescription className="max-w-md">
+                  You don't currently have an active subscription plan.
+                  Subscribe to a plan to unlock job postings, CV downloads, and
+                  other platform features.
+                </EmptyDescription>
+              </EmptyHeader>
+
+              {hasPermission(PERMISSIONS.UPGRADE_PLAN) && (
+                <EmptyContent>
+                  <Button onClick={onUpgrade}>
+                    <CreditCard className="mr-2 size-4" />
+                    Explore Subscription Plans
+                  </Button>
+                </EmptyContent>
+              )}
+            </Empty>
+          </CardContent>
+        </Card>
+
+        <Transactions />
       </div>
     );
   }
@@ -58,10 +107,10 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
               <p className="text-sm text-muted-foreground">Current plan</p>
               <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-2xl font-semibold">
-                  {subscription?.plan?.name}
+                  {currentSubscription?.plan?.name}
                 </h2>
 
-                {subscription?.is_active && (
+                {currentSubscription?.is_active && (
                   <Badge
                     variant="outline"
                     className="border-green-200 bg-green-50 text-green-700"
@@ -76,13 +125,13 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
               <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <CreditCard size={14} />
-                  {formatCurrency(subscription?.plan?.price)} /
-                  {subscription?.plan?.current_type}
+                  {formatCurrency(currentSubscription?.plan?.price)} /
+                  {currentSubscription?.plan?.current_type}
                 </span>
 
                 <span className="flex items-center gap-1.5">
                   <CalendarDays size={14} />
-                  renews {formatDate(subscription?.end_date)}
+                  renews {formatDate(currentSubscription?.end_date)}
                 </span>
               </div>
             </div>
@@ -104,13 +153,13 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
               <p className="text-base font-semibold">Subscription period</p>
               <p className="text-muted-foreground">
                 Your current plan expires on{" "}
-                {formatDate(subscription?.end_date)}
+                {formatDate(currentSubscription?.end_date)}
               </p>
             </div>
 
             <div className="text-right">
               <p className="text-2xl font-bold">
-                {subscription?.remaining_days}
+                {currentSubscription?.remaining_days}
               </p>
               <p className="text-muted-foreground">Days remaining</p>
             </div>
@@ -147,16 +196,18 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
                     </div>
 
                     <span className="text-sm font-semibold">
-                      {subscription?.job_post_remaining}/
-                      {subscription?.plan?.job_post_limit}
+                      {currentSubscription?.job_post_remaining}/
+                      {currentSubscription?.plan?.job_post_limit}
                     </span>
                   </div>
 
                   <Progress value={jobPostProgress} className="h-2" />
 
                   <p className="mt-2 text-xs text-muted-foreground">
-                    {subscription?.job_post_remaining} job{" "}
-                    {subscription?.job_post_remaining === 1 ? "post" : "posts"}{" "}
+                    {currentSubscription?.job_post_remaining} job{" "}
+                    {currentSubscription?.job_post_remaining === 1
+                      ? "post"
+                      : "posts"}{" "}
                     remaining
                   </p>
                 </CardContent>
@@ -180,15 +231,16 @@ const Subscriptions = ({ onUpgrade }: SubscriptionsProps) => {
                     </div>
 
                     <span className="text-sm font-semibold">
-                      {subscription?.cv_download_remaining}/
-                      {subscription?.plan?.cv_download_limit}
+                      {currentSubscription?.cv_download_remaining}/
+                      {currentSubscription?.plan?.cv_download_limit}
                     </span>
                   </div>
 
                   <Progress value={cvDownloadProgress} className="h-2" />
 
                   <p className="mt-2 text-xs text-muted-foreground">
-                    {subscription?.cv_download_remaining} downloads remaining
+                    {currentSubscription?.cv_download_remaining} downloads
+                    remaining
                   </p>
                 </CardContent>
               </Card>

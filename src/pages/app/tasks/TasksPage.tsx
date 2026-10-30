@@ -203,7 +203,7 @@ const TasksPage = () => {
 
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <ViewTask />
+                        <ViewTask task={task} />
 
                         {hasPermission(PERMISSIONS.EDIT_TASK) && (
                           <UpdateTask task={task} />
